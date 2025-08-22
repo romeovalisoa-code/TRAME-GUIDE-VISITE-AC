@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</title>
+<style>
+  body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; }
+  h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; }
+  form { max-width: 1100px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  fieldset { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 12px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
+  legend { font-weight: bold; color: #34495e; padding: 5px 10px; background: #ecf0f1; border-radius: 8px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+  label { display: block; margin-top: 10px; font-weight: bold; color: #2c3e50; }
+  input, select, textarea { width: 95%; padding: 8px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #2980b9; box-shadow: 0 0 8px #3498db; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  table th, table td { border: 1px solid #bbb; padding: 8px; text-align: center; background: #fdfdfd; }
+  table th { background: #ecf0f1; }
+  button { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); transition: all 0.2s ease-in-out; }
+  button:hover { transform: scale(1.05); }
+  .add-btn { background: #27ae60; color: white; }
+  .del-btn { background: #e74c3c; color: white; }
+  .submit-btn { background: #2980b9; color: white; font-size: 16px; display: block; margin: 20px auto 0; }
+  .warning { color: red; font-weight: bold; }
+  #total_objet { font-weight: bold; font-size:16px; text-align:left; }
+  #total_objet.warning { background: #e74c3c; color: #fff; padding: 2px 5px; border-radius: 5px; }
+  #total_objet.normal { background: #2980B9; color: #fff; padding: 2px 5px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<h1>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</h1>
+<form>
+
+<!-- INFORMATIONS SUR LA DEMANDE DE CREDIT -->
+<fieldset>
+  <legend>INFORMATIONS SUR LA DEMANDE DE CREDIT</legend>
+  <label>Agence :
+    <select required>
+      <option value="">-- Sélectionner --</option>
+      <option>ANTANANARIVO RP - FLAGSHIP</option>
+      <option>ANDOHARANOFOTSY</option>
+      <option>ANTSIRABE RP</option>
+      <option>VITRINE POSTALE</option>
+      <option>SABOTSY NAMEHANA</option>
+      <option>FIANARANTSOA RP</option>
+      <option>TOAMASINA RP</option>
+      <option>MAHAJANGA RP</option>
+      <option>TOLIARY RP (TULEAR RP)</option>
+      <option>DIEGO RP</option>
+      <option>MANAKARA</option>
+    </select>
+  </label>
+  <label>AC traitant : <input type="text" required></label>
+  <label>Date de visite : <input type="date" required></label>
+  <label>Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly></label>
+  <label>Durée (mois) : <input type="number" required></label>
+  <label>Capacité de paiement (MGA) : <input type="text" oninput="formatInputMGA(this)" required></label>
+  <label>Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly></label>
+  <label>Date de remboursement demandée : <input type="date" required></label>
+
+  <h3>Objet du crédit</h3>
+  <table id="table_objet">
+    <thead>
+      <tr><th>Libellé</th><th>Montant (MGA)</th><th>Action</th></tr>
+    </thead>
+    <tbody id="tbody_objet">
+      <tr>
+        <td><input type="text" name="libelle[]" required></td>
+        <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
+        <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="add-btn" onclick="ajouterLigne()">+ Ajouter ligne</button>
+  <br><br>
+  <label>Total Objet Crédit (MGA) : <input type="text" id="total_objet" readonly class="normal"></label>
+  <p id="warning_total" class="warning"></p>
+</fieldset>
+
+<!-- INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION -->
+<fieldset>
+  <legend>INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION</legend>
+  <div class="grid-2">
+    <div>
+      <h3>Demandeur</h3>
+      <label>ID client : <input type="text" id="id_client"></label>
+      <label>Rang de crédit :
+        <select>
+          <option>1er crédit</option>
+          <option>2ème crédit</option>
+          <option>3ème crédit</option>
+          <option>4ème crédit</option>
+          <option>5ème crédit</option>
+        </select>
+      </label>
+      <label>Nom et prénoms : <input type="text" id="nom_prenom_client"></label>
+      <label>Âge : <input type="number"></label>
+      <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
+      <label>Nb pers à charge : <input type="number" id="nb_client"></label>
+      <label>Adresse domicile : <textarea id="adresse_domicile_client"></textarea></label>
+    </div>
+    <div>
+      <h3>Caution</h3>
+      <label>ID caution : <input type="text"></label>
+      <label>Lien avec le demandeur : 
+        <select id="lien_demandeur">
+          <option value="">--Sélectionner--</option>
+          <option>Epoux(se)</option>
+          <option>Concubin(e)</option>
+          <option>Fratrie</option>
+          <option>Ami/Collègue</option>
+        </select>
+      </label>
+      <label>Nom et prénoms : <input type="text"></label>
+      <label>Âge : <input type="number"></label>
+      <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
+      <label>Nb pers à charge : <input type="number" id="nb_caution"></label>
+      <label>Adresse domicile : <textarea id="adresse_domicile_caution"></textarea></label>
+    </div>
+  </div>
+</fieldset>
+
+<!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
+<fieldset>
+  <legend>HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT</legend>
+  <table id="table_activite">
+    <thead>
+      <tr>
+        <th>Nom de l'activité</th>
+        <th>Marge</th>
+        <th>Ancienneté (années)</th>
+        <th>Secteur</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tbody_activite">
+      <tr>
+        <td><select name="nom_activite[]" required></select></td>
+        <td><input type="number" name="marge_activite[]" min="0" required></td>
+        <td><input type="number" name="anciennete_activite[]" min="0" required></td>
+        <td>
+          <select name="secteur_activite[]" required>
+            <option value="">--Sélectionner--</option>
+            <option>Commerce</option>
+            <option>Élevage</option>
+            <option>Production</option>
+            <option>Salarié</option>
+            <option>Transport</option>
+            <option>Services</option>
+          </select>
+        </td>
+        <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
+</fieldset>
+
+<button type="button" onclick="reinitialiserFormulaire()">Réinitialiser</button>
+
+
+
+<script>
+// --- LISTE DES ACTIVITES ---
+const ACTIVITES = [
+"Epicerie","Epi-bar","Boulangerie","Pâtisserie","Menuiserie","Murisserie de banane","Confection",
+"Collecteurs produits riz","Collecteurs produits locaux","Poissonnerie","Commerce Provende animale",
+"Vente cosmétiques","Quincailleries","Pharmacie","Vente de pneus","Taxiphone = vente de carte",
+"Vente d'articles divers","Vente de fourniture scolaire","Multiservices","Pièces pour véhicules, accessoires",
+"Pièces pour moto, accessoires","Pièces pour bicyclette, accessoires","Fruits et légumes",
+"Boucherie : viande bovine, porcine et volaille","Production yaourt","Vente Vêtement: produits neufs",
+"Vente chaussures: produits neufs","Vêtement chaussures: produits usés","Vêtement textiles: produits usés",
+"Grossiste PPN","Bijouterie","Lapidaire","Vente produit en plastique","Vente produit laitier",
+"Production yaourt","Vente d'œuf","Kafé sy mofo","Grillade/Snack","Location maison","Gargote","Restaurant",
+"Poulets de chair","Poules pondeuses","Vente de riz blanc en gros","Vente de riz blanc au détail",
+"Vente de poissons secs en gros","Vente de poissons secs au détail","Vente de produits locaux en gros",
+"Vente de produits locaux au détail","Cordonnier et réparateur de chaussures","Coiffure et esthétique",
+"Vulca – Service de Réparation de Pneus","Cybercafé","Pharmacie","Dépôt de médicament",
+"Cliniques de soins de base","Ecole","Location voiture","Tranport des personnes","Transport des marchandises",
+"Taxi-ville","Taxi-moto","Autres services","Cyclo-pousse","Pousse-pousse","Tuc-tuc"
+];
+
+// --- FONCTIONS UTILITAIRES ---
+function remplirSelectActivite(select){
+  select.innerHTML = '<option value="">--Sélectionner--</option>';
+  ACTIVITES.forEach(act => {
+    let option = document.createElement('option');
+    option.value = act;
+    option.textContent = act;
+    select.appendChild(option);
+  });
+}
+
+function formatInputMGA(input){
+  let val = parseFloat(input.value.replace(/\s/g,'')) || 0;
+  input.value = Math.round(val).toLocaleString('fr-FR');
+}
+
+// --- OBJET DU CREDIT ---
+function ajouterLigne(){
+  let tbody = document.getElementById('tbody_objet');
+  let tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="text" name="libelle[]" required></td>
+                  <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
+                  <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
+  tbody.appendChild(tr);
+}
+function supprimerLigne(btn){ 
+  btn.closest('tr').remove(); 
+  updateTotalDepuisObjet(); 
+}
+function updateTotalDepuisObjet(input){
+  if(input) formatInputMGA(input);
+  let total = 0;
+  document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{
+    total += parseFloat(i.value.replace(/\s/g,'')) || 0;
+  });
+  let totalInput = document.getElementById('total_objet');
+  totalInput.value = total.toLocaleString('fr-FR');
+  totalInput.className = total>2500000?"warning":"normal";
+  document.getElementById('montant_demande').value = totalInput.value;
+  document.getElementById('warning_total').innerText = total>2500000?"⚠ Le total dépasse 2 500 000 MGA !": "";
+}
+
+// --- ACTIVITES ---
+function ajouterActivite(){
+  let tbody = document.getElementById('tbody_activite');
+  let tr = document.createElement('tr');
+  tr.innerHTML = `<td><select name="nom_activite[]" required></select></td>
+                  <td><input type="text" name="marge_activite[]" readonly></td>
+                  <td><input type="number" name="anciennete_activite[]" min="0" required></td>
+                    <td><select name="secteur_activite[]" required>
+                      <option value="">--Sélectionner--</option>
+                      <option>Commerce</option>
+                      <option>Élevage</option>
+                      <option>Production</option>
+                      <option>Salarié</option>
+                      <option>Transport</option>
+                      <option>Services</option>
+                    </select>
+                  </td>
+                  <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>`;
+  tbody.appendChild(tr);
+  remplirSelectActivite(tr.querySelector('select[name="nom_activite[]"]'));
+}
+function supprimerActivite(btn){ btn.closest('tr').remove(); }
+
+// --- SYNCHRONISATION DEMANDEUR / CAUTION ---
+function synchroniserCaution(){
+  let lien = document.getElementById('lien_demandeur').value;
+  if(lien === "Epoux(se)" || lien === "Concubin(e)"){
+    document.getElementById('etat_civil_caution').value = document.getElementById('etat_civil_client').value;
+    document.getElementById('nb_caution').value = document.getElementById('nb_client').value;
+    document.getElementById('adresse_domicile_caution').value = document.getElementById('adresse_domicile_client').value;
+  } else {
+    document.getElementById('etat_civil_caution').value = "";
+    document.getElementById('nb_caution').value = "";
+    document.getElementById('adresse_domicile_caution').value = "";
+  }
+}
+
+// --- VERIFICATION ET SAUVEGARDE ---
+function verifierMontant(){
+  let total = parseFloat(document.getElementById('total_objet').value.replace(/\s/g,'')) || 0;
+  if(total>2500000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 500 000 MGA !"); return false; }
+  return true;
+}
+
+function sauvegarderHTML(){
+  if(!verifierMontant()) return;
+  let nomPrenom = document.querySelector('#nom_prenom_client').value || "Demandeur";
+  let date = new Date();
+  let dateStr = date.getFullYear()+("0"+(date.getMonth()+1)).slice(-2)+("0"+date.getDate()).slice(-2)+("0"+date.getHours()).slice(-2)+("0"+date.getMinutes()).slice(-2);
+
+  let cloneBody = document.body.cloneNode(true);
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
+    if(el.tagName === "TEXTAREA") el.innerHTML = el.value;
+    else if(el.tagName === "SELECT"){
+      el.querySelectorAll("option").forEach(opt=>{
+        if(opt.value === el.value) opt.setAttribute("selected", "selected");
+        else opt.removeAttribute("selected");
+      });
+    } else el.setAttribute("value", el.value);
+    el.setAttribute("readonly","true");
+    el.setAttribute("disabled","true");
+  });
+  cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = "none");
+
+  let htmlContent = "<!DOCTYPE html>\n<html lang='fr'>\n"+document.head.outerHTML+"\n<body>\n"+cloneBody.innerHTML+"\n</body>\n</html>";
+  let blob = new Blob([htmlContent], {type:"text/html"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
+  a.click();
+}
+
+// --- INITIALISATION ---
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.querySelectorAll('#tbody_activite select[name="nom_activite[]"]').forEach(s => remplirSelectActivite(s));
+  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
+  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
+});
+</script>
+<!-- Toutes tes autres parties du formulaire ici -->
+
+<!-- FIN DU FORMULAIRE -->
+
+
+
+<!-- INSÉRER ICI LE CODE DE SYNCHRONISATION ET SAUVEGARDE -->
+<script>
+  // --- SYNCHRONISATION DEMANDEUR / CAUTION (champs modifiables) ---
+  function synchroniserCaution(){
+    let lien = document.getElementById('lien_demandeur').value;
+    if(lien === "Epoux(se)" || lien === "Concubin(e)"){
+      document.getElementById('etat_civil_caution').value = document.getElementById('etat_civil_client').value;
+      document.getElementById('nb_caution').value = document.getElementById('nb_client').value;
+      document.getElementById('adresse_domicile_caution').value = document.getElementById('adresse_domicile_client').value;
+    }
+  }
+
+  // ÉVÉNEMENTS
+  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
+  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
+
+  // SAUVEGARDE HTML
+  function sauvegarderHTML(){
+    if(!verifierMontant()) return;
+    let nomPrenom = document.querySelector('#nom_prenom_client').value || "Demandeur";
+    let date = new Date();
+    let dateStr = date.getFullYear()+("0"+(date.getMonth()+1)).slice(-2)+("0"+date.getDate()).slice(-2)+("0"+date.getHours()).slice(-2)+("0"+date.getMinutes()).slice(-2);
+
+    let cloneBody = document.body.cloneNode(true);
+    cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
+      if(el.tagName === "TEXTAREA") el.innerHTML = el.value;
+      else if(el.tagName === "SELECT"){
+        el.querySelectorAll("option").forEach(opt=>{
+          if(opt.value === el.value) opt.setAttribute("selected", "selected");
+          else opt.removeAttribute("selected");
+        });
+      } else el.setAttribute("value", el.value);
+      // Les champs restent modifiables
+    });
+    cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = "none");
+
+    let htmlContent = "<!DOCTYPE html>\n<html lang='fr'>\n"+document.head.outerHTML+"\n<body>\n"+cloneBody.innerHTML+"\n</body>\n</html>";
+    let blob = new Blob([htmlContent], {type:"text/html"});
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
+    a.click();
+  }
+</script>
+</form>
+<script>
+// --- BASE DE DONNÉES DES ACTIVITÉS ---
+const activites = {
+  "Epicerie": "16%", "Epi-bar": "23%", "Boulangerie": "5%", "Pâtisserie": "25%", "Menuiserie": "30%",
+  "Murisserie de banane": "8%", "Confection": "25%", "Collecteurs produits riz": "7%", "Collecteurs produits locaux": "20%",
+  "Poissonnerie": "15%", "Commerce Provende animale": "18%", "Vente cosmétiques": "20%", "Quincailleries": "18%",
+  "Pharmacie": "12%", "Vente de pneus": "14%", "Taxiphone = vente de carte": "5%", "Vente d'articles divers": "15%",
+  "Vente de fourniture scolaire": "18%", "Multiservices": "0%", "Pièces pour véhicules, accessoires": "23%",
+  "Pièces pour moto, accessoires": "15%", "Pièces pour bicyclette, accessoires": "15%", "Fruits et légumes": "15%",
+  "Boucherie : viande bovine, porcine et volaille de chair, charcuterie": "18%", "Production yaourt": "35%",
+  "Vente Vêtement: produits neufs": "23%", "Vente chaussures: produits neufs": "30%", "Vêtement chaussures: produits usés": "25%",
+  "Vêtement textiles: produits usés": "18%", "Grossiste PPN": "5%", "Bijouterie": "23%", "Lapidaire": "35%",
+  "Vente produit en plastique": "13%", "Vente produit laitier": "10%", "Vente d'œuf": "10%", "Kafé sy mofo": "60%",
+  "Grillade/Snack": "50%", "Location maison": "0%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
+  "Poules pondeuses": "21%", "Vente de riz blanc en gros": "15%", "Vente de riz blanc au détail": "30%",
+  "Vente de poissons secs en gros": "23%", "Vente de poissons secs au détail": "28%", "Vente de produits locaux en gros": "18%",
+  "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "0%", "Coiffure et esthétique": "0%",
+  "Vulca – Service de Réparation de Pneus": "0%", "Cybercafé": "0%", "Dépôt de médicament": "0%",
+  "Cliniques de soins de base": "0%", "Ecole": "0%", "Location voiture": "0%", "Tranport des personnes": "0%",
+  "Transport des marchandises": "0%", "Taxi-ville": "0%", "Taxi-moto": "0%", "Autres services": "0%",
+  "Cyclo-pousse": "0%", "Pousse-pousse": "0%", "Tuc-tuc": "0%"
+};
+
+// --- AJOUTER UNE ACTIVITÉ ---
+function ajouterActivite(){
+  let tbody = document.getElementById('tbody_activite');
+  let tr = document.createElement('tr');
+  tr.innerHTML = `<td><select name="nom_activite[]" required></select></td>
+                  <td><input type="text" name="marge_activite[]" readonly></td>
+                  <td><input type="number" name="anciennete_activite[]" min="0" required></td>
+                  <td><select name="secteur_activite[]" required>
+                      <option value="">--Sélectionner--</option>
+                      <option>Commerce</option>
+                      <option>Élevage</option>
+                      <option>Production</option>
+                      <option>Salarié</option>
+                      <option>Transport</option>
+                      <option>Services</option>
+                    </select>
+                  </td>
+                  <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>`;
+  tbody.appendChild(tr);
+
+  let selectActivite = tr.querySelector('select[name="nom_activite[]"]');
+  let inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+
+  remplirSelectActivite(selectActivite);
+
+  selectActivite.addEventListener('change', function() {
+    let activite = this.value;
+    inputMarge.value = activites[activite] || "0%";
+  });
+}
+
+// --- REMPLIR LE SELECT AVEC LES ACTIVITÉS ---
+function remplirSelectActivite(select){
+  select.innerHTML = '<option value="">--Sélectionner--</option>';
+  for (let nom in activites) {
+    let option = document.createElement('option');
+    option.value = nom;
+    option.textContent = nom;
+    select.appendChild(option);
+  }
+}
+// --- INITIALISER LA LIGNE PAR DÉFAUT ---
+window.addEventListener('DOMContentLoaded', () => {
+  let lignes = document.querySelectorAll('#tbody_activite tr');
+
+  lignes.forEach(tr => {
+    let select = tr.querySelector('select[name="nom_activite[]"]');
+    let inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+
+    if (select && inputMarge) {
+      // Remplir le select avec toutes les options
+      remplirSelectActivite(select);
+
+      // Si une activité est déjà sélectionnée, afficher sa marge
+      let activiteChoisie = select.value;
+      if (activiteChoisie) {
+        inputMarge.value = activites[activiteChoisie] || "0%";
+      }
+
+      // Mettre à jour la marge si l'utilisateur change l'activité
+      select.addEventListener('change', function() {
+        inputMarge.value = activites[this.value] || "0%";
+      });
+    }
+  });
+});
+
+// --- SUPPRIMER UNE ACTIVITÉ ---
+function supprimerActivite(btn){
+  btn.closest('tr').remove();
+}
+</script>
+</script>
+<script>
+// ... tes autres fonctions ici ...
+
+// --- SUPPRIMER LA PREMIÈRE LIGNE PAR DÉFAUT ---
+window.addEventListener('DOMContentLoaded', () => {
+  let tbody = document.getElementById('tbody_activite');
+  let premiereLigne = tbody.querySelector('tr');
+  if (premiereLigne) {
+    premiereLigne.remove();
+  }
+});
+function sauvegarder() {
+  // Affiche un message de confirmation
+  alert("Données sauvegardées avec succès !");
+
+  // Collecte les données du tableau
+  let donnees = [];
+  document.querySelectorAll('#tbody_activite tr').forEach(tr => {
+    let activite = tr.querySelector('select[name="nom_activite[]"]')?.value || "";
+    let marge = tr.querySelector('input[name="marge_activite[]"]')?.value || "";
+    let anciennete = tr.querySelector('input[name="anciennete_activite[]"]')?.value || "";
+    let secteur = tr.querySelector('select[name="secteur_activite[]"]')?.value || "";
+
+    donnees.push({ activite, marge, anciennete, secteur });
+  });
+
+  console.log("Activités enregistrées :", donnees);
+
+  // Ne pas réinitialiser ni désactiver les champs
+  // document.querySelector('form').reset(); // ❌ à éviter
+  // document.querySelectorAll('input, select').forEach(el => el.disabled = true); // ❌ à éviter
+}
+
+</script>
+
+</body>
+</html>
+
+</form>
+
+</body>
+</html>
