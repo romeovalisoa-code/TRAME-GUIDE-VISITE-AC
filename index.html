@@ -156,10 +156,6 @@
   <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
 </fieldset>
 
-<button type="button" onclick="reinitialiserFormulaire()">Réinitialiser</button>
-
-
-
 <script>
 // --- LISTE DES ACTIVITES ---
 const ACTIVITES = [
@@ -304,6 +300,61 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 </script>
 <!-- Toutes tes autres parties du formulaire ici -->
+<!-- FONCTIONNEMENT DE L'ACTIVITE -->
+<fieldset>
+  <fieldset>
+  <legend>FONCTIONNEMENT DE L'ACTIVITE</legend>
+  <div class="grid-2">
+    <div>
+      <label>Nom de l'activité (1ère ligne) :
+        <input type="text" id="nom_activite_premiere_ligne" readonly>
+      </label>
+
+      <label>Fréquence de vente (par mois) :
+        <input type="number" id="frequence_vente" min="0" placeholder="0">
+      </label>
+
+      <label>Vente selon derniers jours :</label>
+      <div style="display: flex; gap: 10px; margin-top: 5px;">
+        <input type="text" id="vente_jour_v3" placeholder="V-3" oninput="majVenteMensuelle()">
+        <input type="text" id="vente_jour_v2" placeholder="V-2" oninput="majVenteMensuelle()">
+        <input type="text" id="vente_jour_v1" placeholder="V-1" oninput="majVenteMensuelle()">
+        <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
+               style="background:#fff9c4;font-weight:bold;color:darkblue;">
+      </div>
+
+      <label>Vente selon registre :</label>
+      <div style="display: flex; gap: 10px; margin-top: 5px;">
+        <input type="text" id="vente_registre_m3" placeholder="M-3" oninput="majVenteMensRV()">
+        <input type="text" id="vente_registre_m2" placeholder="M-2" oninput="majVenteMensRV()">
+        <input type="text" id="vente_registre_m1" placeholder="M-1" oninput="majVenteMensRV()">
+        <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
+               style="background:#fff9c4;font-weight:bold;color:darkgreen;">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="ca_ligne1" style="width: 150px;">CA (ligne 1) :</label>
+        <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
+               style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+    </div>
+  </div>
+</fieldset>
+
+
+<script>
+// --- Remplir automatiquement le nom de l'activité de la 1ère ligne ---
+function majNomActivitePremiereLigne() {
+  let premiereActivite = document.querySelector('#tbody_activite tr select[name="nom_activite[]"]');
+  document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? premiereActivite.value : '';
+}
+
+// Mettre à jour à chaque changement dans le tableau activité
+document.addEventListener('DOMContentLoaded', () => {
+  majNomActivitePremiereLigne();
+  document.querySelector('#tbody_activite').addEventListener('change', majNomActivitePremiereLigne);
+});
+</script>
 
 <!-- FIN DU FORMULAIRE -->
 
@@ -491,6 +542,84 @@ function sauvegarder() {
 </html>
 
 </form>
+<script>
+function majVenteMensuelle() {
+  let v3 = parseFloat(document.getElementById('vente_jour_v3').value.replace(/\s/g,'')) || 0;
+  let v2 = parseFloat(document.getElementById('vente_jour_v2').value.replace(/\s/g,'')) || 0;
+  let v1 = parseFloat(document.getElementById('vente_jour_v1').value.replace(/\s/g,'')) || 0;
+  let freq = parseFloat(document.getElementById('frequence_vente').value) || 0;
+
+  let moyenne = (v3 + v2 + v1) / 3;
+  let resultat = moyenne * freq;
+
+  document.getElementById('vente_mensuelle').value =
+    resultat > 0 ? resultat.toLocaleString('fr-FR') + " MGA" : "";
+}
+
+// ⚡ brancher la fonction sur les champs concernés
+["vente_jour_v3","vente_jour_v2","vente_jour_v1","frequence_vente"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", majVenteMensuelle);
+});
+</script>
+<script>
+function majVenteMensRV() {
+  let m3 = parseFloat(document.getElementById('vente_registre_m3').value.replace(/\s/g,'')) || 0;
+  let m2 = parseFloat(document.getElementById('vente_registre_m2').value.replace(/\s/g,'')) || 0;
+  let m1 = parseFloat(document.getElementById('vente_registre_m1').value.replace(/\s/g,'')) || 0;
+
+  let moyenne = (m3 + m2 + m1) / 3;
+
+  document.getElementById('vente_registre_mensuelle').value =
+    moyenne > 0 ? moyenne.toLocaleString('fr-FR') + " MGA" : "";
+}
+
+["vente_registre_m3","vente_registre_m2","vente_registre_m1"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", majVenteMensRV);
+});
+</script>
+<script>
+// --- Formattage MGA ---
+function formatInputMGA(input){
+  let val = parseFloat(input.value.replace(/\s|MGA/g,'')) || 0;
+  input.value = val > 0 ? val.toLocaleString('fr-FR') : "";
+}
+
+// --- Calcul Vente Mensuelle ---
+function majVenteMensuelle() {
+  ["vente_jour_v3","vente_jour_v2","vente_jour_v1"].forEach(id=>{
+    formatInputMGA(document.getElementById(id));
+  });
+  let v3 = parseFloat(document.getElementById('vente_jour_v3').value.replace(/\s/g,'')) || 0;
+  let v2 = parseFloat(document.getElementById('vente_jour_v2').value.replace(/\s/g,'')) || 0;
+  let v1 = parseFloat(document.getElementById('vente_jour_v1').value.replace(/\s/g,'')) || 0;
+  let freq = parseFloat(document.getElementById('frequence_vente').value) || 0;
+  let moyenne = (v3 + v2 + v1) / 3;
+  let resultat = moyenne * freq;
+  document.getElementById('vente_mensuelle').value = resultat > 0 ? resultat.toLocaleString('fr-FR') + " MGA" : "";
+  majCALigne1();
+}
+
+// --- Calcul Vente Mens RV ---
+function majVenteMensRV() {
+  ["vente_registre_m3","vente_registre_m2","vente_registre_m1"].forEach(id=>{
+    formatInputMGA(document.getElementById(id));
+  });
+  let m3 = parseFloat(document.getElementById('vente_registre_m3').value.replace(/\s/g,'')) || 0;
+  let m2 = parseFloat(document.getElementById('vente_registre_m2').value.replace(/\s/g,'')) || 0;
+  let m1 = parseFloat(document.getElementById('vente_registre_m1').value.replace(/\s/g,'')) || 0;
+  let moyenne = (m3 + m2 + m1) / 3;
+  document.getElementById('vente_registre_mensuelle').value = moyenne > 0 ? moyenne.toLocaleString('fr-FR') + " MGA" : "";
+  majCALigne1();
+}
+
+// --- Calcul CA (ligne 1) ---
+function majCALigne1() {
+  let venteMensRV = parseFloat(document.getElementById('vente_registre_mensuelle').value.replace(/\s|MGA/g,'')) || 0;
+  let venteMensuelle = parseFloat(document.getElementById('vente_mensuelle').value.replace(/\s|MGA/g,'')) || 0;
+  let ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
+  document.getElementById('ca_ligne1').value = ca > 0 ? ca.toLocaleString('fr-FR') + " MGA" : "";
+}
+</script>
 
 </body>
 </html>
