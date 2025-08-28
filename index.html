@@ -29,7 +29,12 @@
 </style>
 </head>
 <body>
-<h1>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</h1>
+<div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
+  <!-- Titre à gauche -->
+  <h1 style="margin: 0;">TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</h1>
+  <!-- Logo à droite -->
+  <img src="logo.png" alt="Logo" style="height: 70px;">
+</div>
 <form>
 
 <!-- INFORMATIONS SUR LA DEMANDE DE CREDIT -->
@@ -198,7 +203,10 @@
         <input type="text" id="creances_actuelles" name="creances_actuelles" 
                style="flex: 1; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
       </div>
-      <label style="color: blue; font-weight: bold;">2-CAMV mensuel :</label>
+      <label style="color: blue; font-weight: bold; text-decoration: underline;">
+  2-CAMV mensuel :
+</label>
+
     </div>
       
     <!-- Colonne de droite : croisements + notes -->
@@ -457,13 +465,17 @@ function majCAMVSelonMarge(){
   let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
   let marge = parseFloat(margeStr.replace('%',''))/100 || 0;
 
-  // Calcul CAMV
-  let camv = Math.round (ca / (1 + marge));
+  let camv = 0;
+  if(marge === 0){
+    camv = 0; // Si marge = 0%, CAMV = 0
+  } else {
+    camv = Math.round(ca / (1 + marge)); // sinon calcul normal
+  }
 
   // Affichage avec séparateur et suffixe MGA
   document.getElementById('camv_selon_marge').value = camv > 0 
     ? camv.toLocaleString('fr-FR') + " MGA" 
-    : "";
+    : "0 MGA";
 }
 
 /*************************************************
