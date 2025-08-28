@@ -13,6 +13,7 @@
   input, select, textarea { width: 95%; padding: 8px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: #2980b9; box-shadow: 0 0 8px #3498db; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .inline-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; }
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   table th, table td { border: 1px solid #bbb; padding: 8px; text-align: center; background: #fdfdfd; }
   table th { background: #ecf0f1; }
@@ -20,7 +21,7 @@
   button:hover { transform: scale(1.05); }
   .add-btn { background: #27ae60; color: white; }
   .del-btn { background: #e74c3c; color: white; }
-  .submit-btn { background: #2980b9; color: white; font-size: 16px; display: block; margin: 20px auto 0; }
+  .submit-btn { background: #2980b9; color: white; font-size: 16px; display: inline-block; margin: 20px 10px 0 0; }
   .warning { color: red; font-weight: bold; }
   #total_objet { font-weight: bold; font-size:16px; text-align:left; }
   #total_objet.warning { background: #e74c3c; color: #fff; padding: 2px 5px; border-radius: 5px; }
@@ -50,10 +51,17 @@
       <option>MANAKARA</option>
     </select>
   </label>
+
   <label>AC traitant : <input type="text" required></label>
-  <label>Date de visite : <input type="date" required></label>
+
+  <!-- Date & Heure côte à côte -->
+  <div class="inline-2">
+    <label>Date de visite : <input type="date" id="date_visite" required></label>
+    <label>Heure de visite : <input type="time" id="heure_visite" required></label>
+  </div>
+
   <label>Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly></label>
-  <label>Durée (mois) : <input type="number" required></label>
+  <label>Durée (mois) : <input type="number" min="0" required></label>
   <label>Capacité de paiement (MGA) : <input type="text" oninput="formatInputMGA(this)" required></label>
   <label>Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly></label>
   <label>Date de remboursement demandée : <input type="date" required></label>
@@ -94,14 +102,16 @@
         </select>
       </label>
       <label>Nom et prénoms : <input type="text" id="nom_prenom_client"></label>
-      <label>Âge : <input type="number"></label>
+      <label>Âge : <input type="number" min="0"></label>
       <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
-      <label>Nb pers à charge : <input type="number" id="nb_client"></label>
+      <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
       <label>Adresse domicile : <textarea id="adresse_domicile_client"></textarea></label>
+      <label>Adresse activité : <textarea id="adresse_domicile_client"></textarea></label>
+
     </div>
     <div>
       <h3>Caution</h3>
-      <label>ID caution : <input type="text"></label>
+      <label>ID caution : <input type="text" id="id_caution"></label>
       <label>Lien avec le demandeur : 
         <select id="lien_demandeur">
           <option value="">--Sélectionner--</option>
@@ -111,10 +121,10 @@
           <option>Ami/Collègue</option>
         </select>
       </label>
-      <label>Nom et prénoms : <input type="text"></label>
-      <label>Âge : <input type="number"></label>
+      <label>Nom et prénoms : <input type="text" id="nom_prenom_caution"></label>
+      <label>Âge : <input type="number" min="0"></label>
       <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
-      <label>Nb pers à charge : <input type="number" id="nb_caution"></label>
+      <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
       <label>Adresse domicile : <textarea id="adresse_domicile_caution"></textarea></label>
     </div>
   </div>
@@ -134,184 +144,29 @@
       </tr>
     </thead>
     <tbody id="tbody_activite">
-      <tr>
-        <td><select name="nom_activite[]" required></select></td>
-        <td><input type="number" name="marge_activite[]" min="0" required></td>
-        <td><input type="number" name="anciennete_activite[]" min="0" required></td>
-        <td>
-          <select name="secteur_activite[]" required>
-            <option value="">--Sélectionner--</option>
-            <option>Commerce</option>
-            <option>Élevage</option>
-            <option>Production</option>
-            <option>Salarié</option>
-            <option>Transport</option>
-            <option>Services</option>
-          </select>
-        </td>
-        <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>
-      </tr>
+      <!-- Vide au chargement -->
     </tbody>
   </table>
   <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
 </fieldset>
 
-<script>
-// --- LISTE DES ACTIVITES ---
-const ACTIVITES = [
-"Epicerie","Epi-bar","Boulangerie","Pâtisserie","Menuiserie","Murisserie de banane","Confection",
-"Collecteurs produits riz","Collecteurs produits locaux","Poissonnerie","Commerce Provende animale",
-"Vente cosmétiques","Quincailleries","Pharmacie","Vente de pneus","Taxiphone = vente de carte",
-"Vente d'articles divers","Vente de fourniture scolaire","Multiservices","Pièces pour véhicules, accessoires",
-"Pièces pour moto, accessoires","Pièces pour bicyclette, accessoires","Fruits et légumes",
-"Boucherie : viande bovine, porcine et volaille","Production yaourt","Vente Vêtement: produits neufs",
-"Vente chaussures: produits neufs","Vêtement chaussures: produits usés","Vêtement textiles: produits usés",
-"Grossiste PPN","Bijouterie","Lapidaire","Vente produit en plastique","Vente produit laitier",
-"Production yaourt","Vente d'œuf","Kafé sy mofo","Grillade/Snack","Location maison","Gargote","Restaurant",
-"Poulets de chair","Poules pondeuses","Vente de riz blanc en gros","Vente de riz blanc au détail",
-"Vente de poissons secs en gros","Vente de poissons secs au détail","Vente de produits locaux en gros",
-"Vente de produits locaux au détail","Cordonnier et réparateur de chaussures","Coiffure et esthétique",
-"Vulca – Service de Réparation de Pneus","Cybercafé","Pharmacie","Dépôt de médicament",
-"Cliniques de soins de base","Ecole","Location voiture","Tranport des personnes","Transport des marchandises",
-"Taxi-ville","Taxi-moto","Autres services","Cyclo-pousse","Pousse-pousse","Tuc-tuc"
-];
 
-// --- FONCTIONS UTILITAIRES ---
-function remplirSelectActivite(select){
-  select.innerHTML = '<option value="">--Sélectionner--</option>';
-  ACTIVITES.forEach(act => {
-    let option = document.createElement('option');
-    option.value = act;
-    option.textContent = act;
-    select.appendChild(option);
-  });
-}
-
-function formatInputMGA(input){
-  let val = parseFloat(input.value.replace(/\s/g,'')) || 0;
-  input.value = Math.round(val).toLocaleString('fr-FR');
-}
-
-// --- OBJET DU CREDIT ---
-function ajouterLigne(){
-  let tbody = document.getElementById('tbody_objet');
-  let tr = document.createElement('tr');
-  tr.innerHTML = `<td><input type="text" name="libelle[]" required></td>
-                  <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
-                  <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
-  tbody.appendChild(tr);
-}
-function supprimerLigne(btn){ 
-  btn.closest('tr').remove(); 
-  updateTotalDepuisObjet(); 
-}
-function updateTotalDepuisObjet(input){
-  if(input) formatInputMGA(input);
-  let total = 0;
-  document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{
-    total += parseFloat(i.value.replace(/\s/g,'')) || 0;
-  });
-  let totalInput = document.getElementById('total_objet');
-  totalInput.value = total.toLocaleString('fr-FR');
-  totalInput.className = total>2500000?"warning":"normal";
-  document.getElementById('montant_demande').value = totalInput.value;
-  document.getElementById('warning_total').innerText = total>2500000?"⚠ Le total dépasse 2 500 000 MGA !": "";
-}
-
-// --- ACTIVITES ---
-function ajouterActivite(){
-  let tbody = document.getElementById('tbody_activite');
-  let tr = document.createElement('tr');
-  tr.innerHTML = `<td><select name="nom_activite[]" required></select></td>
-                  <td><input type="text" name="marge_activite[]" readonly></td>
-                  <td><input type="number" name="anciennete_activite[]" min="0" required></td>
-                    <td><select name="secteur_activite[]" required>
-                      <option value="">--Sélectionner--</option>
-                      <option>Commerce</option>
-                      <option>Élevage</option>
-                      <option>Production</option>
-                      <option>Salarié</option>
-                      <option>Transport</option>
-                      <option>Services</option>
-                    </select>
-                  </td>
-                  <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>`;
-  tbody.appendChild(tr);
-  remplirSelectActivite(tr.querySelector('select[name="nom_activite[]"]'));
-}
-function supprimerActivite(btn){ btn.closest('tr').remove(); }
-
-// --- SYNCHRONISATION DEMANDEUR / CAUTION ---
-function synchroniserCaution(){
-  let lien = document.getElementById('lien_demandeur').value;
-  if(lien === "Epoux(se)" || lien === "Concubin(e)"){
-    document.getElementById('etat_civil_caution').value = document.getElementById('etat_civil_client').value;
-    document.getElementById('nb_caution').value = document.getElementById('nb_client').value;
-    document.getElementById('adresse_domicile_caution').value = document.getElementById('adresse_domicile_client').value;
-  } else {
-    document.getElementById('etat_civil_caution').value = "";
-    document.getElementById('nb_caution').value = "";
-    document.getElementById('adresse_domicile_caution').value = "";
-  }
-}
-
-// --- VERIFICATION ET SAUVEGARDE ---
-function verifierMontant(){
-  let total = parseFloat(document.getElementById('total_objet').value.replace(/\s/g,'')) || 0;
-  if(total>2500000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 500 000 MGA !"); return false; }
-  return true;
-}
-
-function sauvegarderHTML(){
-  if(!verifierMontant()) return;
-  let nomPrenom = document.querySelector('#nom_prenom_client').value || "Demandeur";
-  let date = new Date();
-  let dateStr = date.getFullYear()+("0"+(date.getMonth()+1)).slice(-2)+("0"+date.getDate()).slice(-2)+("0"+date.getHours()).slice(-2)+("0"+date.getMinutes()).slice(-2);
-
-  let cloneBody = document.body.cloneNode(true);
-  cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
-    if(el.tagName === "TEXTAREA") el.innerHTML = el.value;
-    else if(el.tagName === "SELECT"){
-      el.querySelectorAll("option").forEach(opt=>{
-        if(opt.value === el.value) opt.setAttribute("selected", "selected");
-        else opt.removeAttribute("selected");
-      });
-    } else el.setAttribute("value", el.value);
-    el.setAttribute("readonly","true");
-    el.setAttribute("disabled","true");
-  });
-  cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = "none");
-
-  let htmlContent = "<!DOCTYPE html>\n<html lang='fr'>\n"+document.head.outerHTML+"\n<body>\n"+cloneBody.innerHTML+"\n</body>\n</html>";
-  let blob = new Blob([htmlContent], {type:"text/html"});
-  let a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
-  a.click();
-}
-
-// --- INITIALISATION ---
-document.addEventListener("DOMContentLoaded", ()=>{
-  document.querySelectorAll('#tbody_activite select[name="nom_activite[]"]').forEach(s => remplirSelectActivite(s));
-  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
-  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
-});
-</script>
-<!-- Toutes tes autres parties du formulaire ici -->
-<!-- FONCTIONNEMENT DE L'ACTIVITE -->
 <fieldset>
-  <fieldset>
   <legend>FONCTIONNEMENT DE L'ACTIVITE</legend>
-  <div class="grid-2">
-    <div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    
+    <!-- Colonne de gauche : champs existants -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
       <label>Nom de l'activité (1ère ligne) :
-        <input type="text" id="nom_activite_premiere_ligne" readonly>
-      </label>
+      <input type="text" id="nom_activite_premiere_ligne" readonly></label>
+      <label>Marge de l'activité (1ère ligne) :
+      <input type="text" id="marge_activite_premiere_ligne" readonly></label>
+      <label style="color: blue; font-weight: bold; text-decoration: underline;">
+  1-Chiffre d'affaire mensuel :
+</label>
 
       <label>Fréquence de vente (par mois) :
-        <input type="number" id="frequence_vente" min="0" placeholder="0">
+      <input type="number" id="frequence_vente" min="0" placeholder="0">
       </label>
 
       <label>Vente selon derniers jours :</label>
@@ -337,79 +192,82 @@ document.addEventListener("DOMContentLoaded", ()=>{
         <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
                style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
       </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="creances_actuelles" style="width: 150px;">Créances actuelles</label>
+        <input type="text" id="creances_actuelles" name="creances_actuelles" 
+               style="flex: 1; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+      <label style="color: blue; font-weight: bold;">2-CAMV mensuel :</label>
     </div>
+      
+    <!-- Colonne de droite : croisements + notes -->
+<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+  
+  <!-- Champ Croisements -->
+  <label style="font-weight:bold; color: darkred;">Croisements</label>
+  <textarea id="croisements" placeholder="Saisissez ici vos croisements"
+            style="
+              padding: 12px 8px;
+              height: 190px;
+              width: 100%;
+              background-color: #E0FFFF;
+              border: none;
+              border-radius: 5px;
+              font-weight: normal;
+              box-sizing: border-box;
+              resize: none;
+            "></textarea>
+
+  <!-- Champ Notes -->
+  <label style="font-weight:bold; color: darkred;">Notes</label>
+  <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
+            style="
+              padding: 12px 8px;
+              height: 190px;
+              width: 100%;
+              background-color: #E0FFFF;
+              border: none;
+              border-radius: 5px;
+              font-weight: normal;
+              box-sizing: border-box;
+              resize: none;
+            "></textarea>
+
+</div>
+
+
+ <label>Fréquence d'achat (par mois) :
+        <input type="number" id="frequence_achat" min="0" placeholder="0">
+      </label>
   </div>
+
+<label>Achat max/min/CAMV Mensuel:</label>
+<div style="display: flex; gap: 10px; margin-top: 5px; width: 50%;">
+  <input type="text" id="achat_max" placeholder="max" oninput="majCAMVMensuel()">
+  <input type="text" id="achat_min" placeholder="min" oninput="majCAMVMensuel()">
+  <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
+         style="background:#fff9c4;font-weight:bold;color:darkblue;">
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+  <label for="camv_selon_marge" style="width: 150px; font-weight: bold; text-decoration: ;">
+    CAMV selon marge
+  </label>
+  <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
+         style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+</div>
+
 </fieldset>
 
 
-<script>
-// --- Remplir automatiquement le nom de l'activité de la 1ère ligne ---
-function majNomActivitePremiereLigne() {
-  let premiereActivite = document.querySelector('#tbody_activite tr select[name="nom_activite[]"]');
-  document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? premiereActivite.value : '';
-}
-
-// Mettre à jour à chaque changement dans le tableau activité
-document.addEventListener('DOMContentLoaded', () => {
-  majNomActivitePremiereLigne();
-  document.querySelector('#tbody_activite').addEventListener('change', majNomActivitePremiereLigne);
-});
-</script>
-
-<!-- FIN DU FORMULAIRE -->
-
-
-
-<!-- INSÉRER ICI LE CODE DE SYNCHRONISATION ET SAUVEGARDE -->
-<script>
-  // --- SYNCHRONISATION DEMANDEUR / CAUTION (champs modifiables) ---
-  function synchroniserCaution(){
-    let lien = document.getElementById('lien_demandeur').value;
-    if(lien === "Epoux(se)" || lien === "Concubin(e)"){
-      document.getElementById('etat_civil_caution').value = document.getElementById('etat_civil_client').value;
-      document.getElementById('nb_caution').value = document.getElementById('nb_client').value;
-      document.getElementById('adresse_domicile_caution').value = document.getElementById('adresse_domicile_client').value;
-    }
-  }
-
-  // ÉVÉNEMENTS
-  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
-  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
-
-  // SAUVEGARDE HTML
-  function sauvegarderHTML(){
-    if(!verifierMontant()) return;
-    let nomPrenom = document.querySelector('#nom_prenom_client').value || "Demandeur";
-    let date = new Date();
-    let dateStr = date.getFullYear()+("0"+(date.getMonth()+1)).slice(-2)+("0"+date.getDate()).slice(-2)+("0"+date.getHours()).slice(-2)+("0"+date.getMinutes()).slice(-2);
-
-    let cloneBody = document.body.cloneNode(true);
-    cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
-      if(el.tagName === "TEXTAREA") el.innerHTML = el.value;
-      else if(el.tagName === "SELECT"){
-        el.querySelectorAll("option").forEach(opt=>{
-          if(opt.value === el.value) opt.setAttribute("selected", "selected");
-          else opt.removeAttribute("selected");
-        });
-      } else el.setAttribute("value", el.value);
-      // Les champs restent modifiables
-    });
-    cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = "none");
-
-    let htmlContent = "<!DOCTYPE html>\n<html lang='fr'>\n"+document.head.outerHTML+"\n<body>\n"+cloneBody.innerHTML+"\n</body>\n</html>";
-    let blob = new Blob([htmlContent], {type:"text/html"});
-    let a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
-    a.click();
-  }
-</script>
 </form>
+
 <script>
-// --- BASE DE DONNÉES DES ACTIVITÉS ---
-const activites = {
+/*************************************************
+ *  DONNÉES & CONSTANTES
+ *************************************************/
+// Base des activités avec marges
+const ACTIVITES_MARGES = {
   "Epicerie": "16%", "Epi-bar": "23%", "Boulangerie": "5%", "Pâtisserie": "25%", "Menuiserie": "30%",
   "Murisserie de banane": "8%", "Confection": "25%", "Collecteurs produits riz": "7%", "Collecteurs produits locaux": "20%",
   "Poissonnerie": "15%", "Commerce Provende animale": "18%", "Vente cosmétiques": "20%", "Quincailleries": "18%",
@@ -430,197 +288,328 @@ const activites = {
   "Cyclo-pousse": "0%", "Pousse-pousse": "0%", "Tuc-tuc": "0%"
 };
 
-// --- AJOUTER UNE ACTIVITÉ ---
-function ajouterActivite(){
-  let tbody = document.getElementById('tbody_activite');
-  let tr = document.createElement('tr');
-  tr.innerHTML = `<td><select name="nom_activite[]" required></select></td>
-                  <td><input type="text" name="marge_activite[]" readonly></td>
-                  <td><input type="number" name="anciennete_activite[]" min="0" required></td>
-                  <td><select name="secteur_activite[]" required>
-                      <option value="">--Sélectionner--</option>
-                      <option>Commerce</option>
-                      <option>Élevage</option>
-                      <option>Production</option>
-                      <option>Salarié</option>
-                      <option>Transport</option>
-                      <option>Services</option>
-                    </select>
-                  </td>
-                  <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>`;
-  tbody.appendChild(tr);
+/*************************************************
+ *  UTILITAIRES
+ *************************************************/
+function formatInputMGA(input){
+  if(!input) return;
+  let val = parseFloat(String(input.value || "").replace(/\s|MGA/g,'')) || 0;
+  input.value = val > 0 ? val.toLocaleString('fr-FR') : "";
+}
 
-  let selectActivite = tr.querySelector('select[name="nom_activite[]"]');
-  let inputMarge = tr.querySelector('input[name="marge_activite[]"]');
-
-  remplirSelectActivite(selectActivite);
-
-  selectActivite.addEventListener('change', function() {
-    let activite = this.value;
-    inputMarge.value = activites[activite] || "0%";
+function remplirSelectActivite(select){
+  if(!select) return;
+  select.innerHTML = '<option value="">--Sélectionner--</option>';
+  Object.keys(ACTIVITES_MARGES).forEach(nom => {
+    const opt = document.createElement('option');
+    opt.value = nom; opt.textContent = nom; select.appendChild(opt);
   });
 }
 
-// --- REMPLIR LE SELECT AVEC LES ACTIVITÉS ---
-function remplirSelectActivite(select){
-  select.innerHTML = '<option value="">--Sélectionner--</option>';
-  for (let nom in activites) {
-    let option = document.createElement('option');
-    option.value = nom;
-    option.textContent = nom;
-    select.appendChild(option);
+/*************************************************
+ *  OBJET DU CRÉDIT
+ *************************************************/
+function ajouterLigne(){
+  const tbody = document.getElementById('tbody_objet');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" name="libelle[]" required></td>
+    <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
+    <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function supprimerLigne(btn){
+  btn.closest('tr')?.remove();
+  updateTotalDepuisObjet();
+}
+
+function updateTotalDepuisObjet(input){
+  if(input) formatInputMGA(input);
+  let total = 0;
+  document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{
+    total += parseFloat(String(i.value||"").replace(/\s/g,'')) || 0;
+  });
+  const totalInput = document.getElementById('total_objet');
+  totalInput.value = total.toLocaleString('fr-FR');
+  totalInput.className = total>2575000?"warning":"normal";
+  document.getElementById('montant_demande').value = totalInput.value;
+  document.getElementById('warning_total').innerText = total>2575000?"⚠ Le total dépasse 2 575 000 MGA !": "";
+}
+
+function verifierMontant(){
+  const total = parseFloat(String(document.getElementById('total_objet').value||"").replace(/\s/g,'')) || 0;
+  if(total>2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return false; }
+  return true;
+}
+
+function ajouterActivite(){
+  const tbody = document.getElementById('tbody_activite');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><select name="nom_activite[]" required></select></td>
+    <td><input type="text" name="marge_activite[]" readonly></td>
+    <td><input type="number" name="anciennete_activite[]" min="0" required></td>
+    <td><select name="secteur_activite[]" required>
+        <option value="">--Sélectionner--</option>
+        <option>Commerce</option>
+        <option>Élevage</option>
+        <option>Production</option>
+        <option>Salarié</option>
+        <option>Transport</option>
+        <option>Services</option>
+      </select></td>
+    <td><button type="button" class="del-btn" onclick="supprimerActivite(this)">Supprimer</button></td>`;
+  tbody.appendChild(tr);
+
+  const selectActivite = tr.querySelector('select[name="nom_activite[]"]');
+  const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+  remplirSelectActivite(selectActivite);
+
+  selectActivite.addEventListener('change', function(){
+    inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
+    majNomActivitePremiereLigne();
+    majMargeActivitePremiereLigne(); // <-- mise à jour automatique de la première marge
+  });
+}
+
+function supprimerActivite(btn){ 
+  btn.closest('tr')?.remove(); 
+  majNomActivitePremiereLigne(); 
+  majMargeActivitePremiereLigne();
+}
+
+function majNomActivitePremiereLigne(){
+  const premiereActivite = document.querySelector('#tbody_activite tr select[name="nom_activite[]"]');
+  document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? (premiereActivite.value||'') : '';
+}
+
+function majMargeActivitePremiereLigne() {
+  const premiereActiviteMarge = document.querySelector('#tbody_activite tr:first-child input[name="marge_activite[]"]');
+  document.getElementById('marge_activite_premiere_ligne').value = premiereActiviteMarge ? premiereActiviteMarge.value : '';
+}
+
+
+/*************************************************
+ *  SYNCHRO DEMANDEUR / CAUTION
+ *************************************************/
+function synchroniserCaution(){
+  const lien = document.getElementById('lien_demandeur').value;
+  if(lien === "Epoux(se)" || lien === "Concubin(e)"){
+    document.getElementById('etat_civil_caution').value = document.getElementById('etat_civil_client').value;
+    document.getElementById('nb_caution').value = document.getElementById('nb_client').value;
+    document.getElementById('adresse_domicile_caution').value = document.getElementById('adresse_domicile_client').value;
   }
 }
-// --- INITIALISER LA LIGNE PAR DÉFAUT ---
-window.addEventListener('DOMContentLoaded', () => {
-  let lignes = document.querySelectorAll('#tbody_activite tr');
 
-  lignes.forEach(tr => {
-    let select = tr.querySelector('select[name="nom_activite[]"]');
-    let inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+/*************************************************
+ *  VENTES & CA (ligne 1)
+ *************************************************/
+function majVenteMensuelle(){
+  ['vente_jour_v3','vente_jour_v2','vente_jour_v1'].forEach(id=>formatInputMGA(document.getElementById(id)));
+  const v3 = parseFloat((document.getElementById('vente_jour_v3').value||'').replace(/\s/g,''))||0;
+  const v2 = parseFloat((document.getElementById('vente_jour_v2').value||'').replace(/\s/g,''))||0;
+  const v1 = parseFloat((document.getElementById('vente_jour_v1').value||'').replace(/\s/g,''))||0;
+  const freq = parseFloat(document.getElementById('frequence_vente').value)||0;
+  const moyenne = (v3 + v2 + v1) / 3;
+  const resultat = moyenne * freq;
+  document.getElementById('vente_mensuelle').value = resultat>0 ? resultat.toLocaleString('fr-FR')+" MGA" : "";
+  majCALigne1();
+}
 
-    if (select && inputMarge) {
-      // Remplir le select avec toutes les options
-      remplirSelectActivite(select);
+function majVenteMensRV(){
+  ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>formatInputMGA(document.getElementById(id)));
+  const m3 = parseFloat((document.getElementById('vente_registre_m3').value||'').replace(/\s/g,''))||0;
+  const m2 = parseFloat((document.getElementById('vente_registre_m2').value||'').replace(/\s/g,''))||0;
+  const m1 = parseFloat((document.getElementById('vente_registre_m1').value||'').replace(/\s/g,''))||0;
+  const moyenne = Math.round((m3 + m2 + m1) / 3);
+  document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? moyenne.toLocaleString('fr-FR')+" MGA" : "";
+  majCALigne1();
+}
 
-      // Si une activité est déjà sélectionnée, afficher sa marge
-      let activiteChoisie = select.value;
-      if (activiteChoisie) {
-        inputMarge.value = activites[activiteChoisie] || "0%";
-      }
+function majCALigne1(){
+  const venteMensRV = parseFloat((document.getElementById('vente_registre_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
+  const venteMensuelle = parseFloat((document.getElementById('vente_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
+  const ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
+  document.getElementById('ca_ligne1').value = ca>0 ? ca.toLocaleString('fr-FR')+" MGA" : "";
+}
 
-      // Mettre à jour la marge si l'utilisateur change l'activité
-      select.addEventListener('change', function() {
-        inputMarge.value = activites[this.value] || "0%";
-      });
+function majCAMVMensuel(){
+  ['achat_max','achat_min'].forEach(id=>formatInputMGA(document.getElementById(id)));
+  const max = parseFloat((document.getElementById('achat_max').value||'').replace(/\s|MGA/g,''))||0;
+  const min = parseFloat((document.getElementById('achat_min').value||'').replace(/\s|MGA/g,''))||0;
+  const freq = parseFloat(document.getElementById('frequence_achat').value)||0;
+  const moyenne = (max + min) / 2;
+  const resultat = moyenne * freq;
+  document.getElementById('camv_mensuel').value = resultat>0 ? resultat.toLocaleString('fr-FR')+" MGA" : "";
+  majCALigne1();
+}
+
+/*************************************************
+ *  CALCUL AUTOMATIQUE DU CAMV SELON MARGE
+ *************************************************/
+function majCAMVSelonMarge(){
+  // Récupérer le CA (ligne 1)
+  let caStr = document.getElementById('ca_ligne1').value || "0";
+  let ca = parseFloat(caStr.replace(/\s|MGA/g,'')) || 0;
+
+  // Récupérer la marge de la première activité
+  let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
+  let marge = parseFloat(margeStr.replace('%',''))/100 || 0;
+
+  // Calcul CAMV
+  let camv = Math.round (ca / (1 + marge));
+
+  // Affichage avec séparateur et suffixe MGA
+  document.getElementById('camv_selon_marge').value = camv > 0 
+    ? camv.toLocaleString('fr-FR') + " MGA" 
+    : "";
+}
+
+/*************************************************
+ *  LANCER LE CALCUL AU BON MOMENT
+ *************************************************/
+
+// Appeler après mise à jour de CA (ligne 1)
+function majCALigne1EtCAMV() {
+  majCALigne1();        // calcul existant du CA
+  majCAMVSelonMarge();  // recalcul CAMV selon marge
+}
+
+// Appeler après mise à jour de marge de la première activité
+function majMargePremiereLigneEtCAMV() {
+  majMargeActivitePremiereLigne();
+  majCAMVSelonMarge();
+}
+
+// Remplacer les appels existants
+document.querySelectorAll('#tbody_activite').forEach(tbody => {
+  tbody.addEventListener('change', e => {
+    if(e.target && e.target.name === 'nom_activite[]') {
+      majNomActivitePremiereLigne();
+      majMargePremiereLigneEtCAMV();
     }
   });
 });
 
-// --- SUPPRIMER UNE ACTIVITÉ ---
-function supprimerActivite(btn){
-  btn.closest('tr').remove();
+// Recalcul après modification des ventes
+['vente_jour_v3','vente_jour_v2','vente_jour_v1','vente_registre_m3','vente_registre_m2','vente_registre_m1','frequence_vente'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', majCALigne1EtCAMV);
+});
+
+
+// Ajout de listener pour recalcul automatique
+document.addEventListener('DOMContentLoaded', ()=>{
+  const freqAchat = document.getElementById('frequence_achat');
+  if(freqAchat) freqAchat.addEventListener('input', majCAMVMensuel);
+});
+ 
+
+/*************************************************
+ *  SAUVEGARDE
+ *************************************************/
+function sauvegarder(){
+  // Exemple minimal de sauvegarde (console + alerte). À brancher vers un backend si besoin
+  const donneesActivites = [];
+  document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
+    donneesActivites.push({
+      activite: tr.querySelector('select[name="nom_activite[]"]').value,
+      marge: tr.querySelector('input[name="marge_activite[]"]').value,
+      anciennete: tr.querySelector('input[name="anciennete_activite[]"]').value,
+      secteur: tr.querySelector('select[name="secteur_activite[]"]').value
+    });
+  });
+  console.log('Activités enregistrées :', donneesActivites);
+  alert('Données sauvegardées avec succès !');
 }
-</script>
+
+function sauvegarderHTML(){
+  if(!verifierMontant()) return;
+  const nomPrenom = document.querySelector('#nom_prenom_client').value || 'Demandeur';
+  const date = new Date();
+  const pad = n=>('0'+n).slice(-2);
+  const dateStr = `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
+
+  const cloneBody = document.body.cloneNode(true);
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
+    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
+    else if(el.tagName === 'SELECT'){
+      el.querySelectorAll('option').forEach(opt=>{
+        if(opt.value === el.value) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected');
+      });
+    } else el.setAttribute('value', el.value);
+    // on laisse les champs modifiables dans la version exportée
+  });
+  cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = 'none');
+
+  const htmlContent = `<!DOCTYPE html>\n<html lang='fr'>\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
+  a.click();
+}
+
+/*************************************************
+ *  INITIALISATION
+ *************************************************/
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Initialiser la ligne d'activité par défaut
+  document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
+    const select = tr.querySelector('select[name="nom_activite[]"]');
+    const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+    if(select && inputMarge){
+      remplirSelectActivite(select);
+      if(select.value){ inputMarge.value = ACTIVITES_MARGES[select.value] || '0%'; }
+      select.addEventListener('change', function(){ inputMarge.value = ACTIVITES_MARGES[this.value] || '0%'; majNomActivitePremiereLigne(); });
+    }
+  });
+
+  // Nom activité (1ère ligne)
+  majNomActivitePremiereLigne();
+  document.querySelector('#tbody_activite').addEventListener('change', e=>{
+    if(e.target && e.target.name === 'nom_activite[]') majNomActivitePremiereLigne();
+  });
+
+  // Synchro caution
+  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
+  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
+  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
+
+  // Ventes -> listeners complémentaires (sécurité)
+  ['vente_jour_v3','vente_jour_v2','vente_jour_v1','frequence_vente'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.addEventListener('input', majVenteMensuelle);
+  });
+  ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.addEventListener('input', majVenteMensRV);
+  });
+
+  // Objet crédit -> total initial
+  updateTotalDepuisObjet();
+});
 </script>
 <script>
-// ... tes autres fonctions ici ...
+const input = document.getElementById('creances_actuelles');
 
-// --- SUPPRIMER LA PREMIÈRE LIGNE PAR DÉFAUT ---
-window.addEventListener('DOMContentLoaded', () => {
-  let tbody = document.getElementById('tbody_activite');
-  let premiereLigne = tbody.querySelector('tr');
-  if (premiereLigne) {
-    premiereLigne.remove();
+input.addEventListener('input', function(e) {
+  let value = this.value.replace(/\D/g, ''); // supprime tout sauf les chiffres
+  if(value) {
+    value = parseInt(value).toLocaleString('fr-FR'); // format avec séparateurs de milliers
+    this.value = value + ' MGA'; // ajoute le suffixe MGA
+  } else {
+    this.value = '';
   }
 });
-function sauvegarder() {
-  // Affiche un message de confirmation
-  alert("Données sauvegardées avec succès !");
 
-  // Collecte les données du tableau
-  let donnees = [];
-  document.querySelectorAll('#tbody_activite tr').forEach(tr => {
-    let activite = tr.querySelector('select[name="nom_activite[]"]')?.value || "";
-    let marge = tr.querySelector('input[name="marge_activite[]"]')?.value || "";
-    let anciennete = tr.querySelector('input[name="anciennete_activite[]"]')?.value || "";
-    let secteur = tr.querySelector('select[name="secteur_activite[]"]')?.value || "";
-
-    donnees.push({ activite, marge, anciennete, secteur });
-  });
-
-  console.log("Activités enregistrées :", donnees);
-
-  // Ne pas réinitialiser ni désactiver les champs
-  // document.querySelector('form').reset(); // ❌ à éviter
-  // document.querySelectorAll('input, select').forEach(el => el.disabled = true); // ❌ à éviter
-}
-
-</script>
-
-</body>
-</html>
-
-</form>
-<script>
-function majVenteMensuelle() {
-  let v3 = parseFloat(document.getElementById('vente_jour_v3').value.replace(/\s/g,'')) || 0;
-  let v2 = parseFloat(document.getElementById('vente_jour_v2').value.replace(/\s/g,'')) || 0;
-  let v1 = parseFloat(document.getElementById('vente_jour_v1').value.replace(/\s/g,'')) || 0;
-  let freq = parseFloat(document.getElementById('frequence_vente').value) || 0;
-
-  let moyenne = (v3 + v2 + v1) / 3;
-  let resultat = moyenne * freq;
-
-  document.getElementById('vente_mensuelle').value =
-    resultat > 0 ? resultat.toLocaleString('fr-FR') + " MGA" : "";
-}
-
-// ⚡ brancher la fonction sur les champs concernés
-["vente_jour_v3","vente_jour_v2","vente_jour_v1","frequence_vente"].forEach(id=>{
-  document.getElementById(id).addEventListener("input", majVenteMensuelle);
+// Optionnel : retirer le "MGA" lors de la sélection pour faciliter la modification
+input.addEventListener('focus', function() {
+  this.value = this.value.replace(' MGA', '');
+});
+input.addEventListener('blur', function() {
+  if(this.value) this.value = parseInt(this.value.replace(/\D/g,'')).toLocaleString('fr-FR') + ' MGA';
 });
 </script>
-<script>
-function majVenteMensRV() {
-  let m3 = parseFloat(document.getElementById('vente_registre_m3').value.replace(/\s/g,'')) || 0;
-  let m2 = parseFloat(document.getElementById('vente_registre_m2').value.replace(/\s/g,'')) || 0;
-  let m1 = parseFloat(document.getElementById('vente_registre_m1').value.replace(/\s/g,'')) || 0;
-
-  let moyenne = (m3 + m2 + m1) / 3;
-
-  document.getElementById('vente_registre_mensuelle').value =
-    moyenne > 0 ? moyenne.toLocaleString('fr-FR') + " MGA" : "";
-}
-
-["vente_registre_m3","vente_registre_m2","vente_registre_m1"].forEach(id=>{
-  document.getElementById(id).addEventListener("input", majVenteMensRV);
-});
-</script>
-<script>
-// --- Formattage MGA ---
-function formatInputMGA(input){
-  let val = parseFloat(input.value.replace(/\s|MGA/g,'')) || 0;
-  input.value = val > 0 ? val.toLocaleString('fr-FR') : "";
-}
-
-// --- Calcul Vente Mensuelle ---
-function majVenteMensuelle() {
-  ["vente_jour_v3","vente_jour_v2","vente_jour_v1"].forEach(id=>{
-    formatInputMGA(document.getElementById(id));
-  });
-  let v3 = parseFloat(document.getElementById('vente_jour_v3').value.replace(/\s/g,'')) || 0;
-  let v2 = parseFloat(document.getElementById('vente_jour_v2').value.replace(/\s/g,'')) || 0;
-  let v1 = parseFloat(document.getElementById('vente_jour_v1').value.replace(/\s/g,'')) || 0;
-  let freq = parseFloat(document.getElementById('frequence_vente').value) || 0;
-  let moyenne = (v3 + v2 + v1) / 3;
-  let resultat = moyenne * freq;
-  document.getElementById('vente_mensuelle').value = resultat > 0 ? resultat.toLocaleString('fr-FR') + " MGA" : "";
-  majCALigne1();
-}
-
-// --- Calcul Vente Mens RV ---
-function majVenteMensRV() {
-  ["vente_registre_m3","vente_registre_m2","vente_registre_m1"].forEach(id=>{
-    formatInputMGA(document.getElementById(id));
-  });
-  let m3 = parseFloat(document.getElementById('vente_registre_m3').value.replace(/\s/g,'')) || 0;
-  let m2 = parseFloat(document.getElementById('vente_registre_m2').value.replace(/\s/g,'')) || 0;
-  let m1 = parseFloat(document.getElementById('vente_registre_m1').value.replace(/\s/g,'')) || 0;
-  let moyenne = (m3 + m2 + m1) / 3;
-  document.getElementById('vente_registre_mensuelle').value = moyenne > 0 ? moyenne.toLocaleString('fr-FR') + " MGA" : "";
-  majCALigne1();
-}
-
-// --- Calcul CA (ligne 1) ---
-function majCALigne1() {
-  let venteMensRV = parseFloat(document.getElementById('vente_registre_mensuelle').value.replace(/\s|MGA/g,'')) || 0;
-  let venteMensuelle = parseFloat(document.getElementById('vente_mensuelle').value.replace(/\s|MGA/g,'')) || 0;
-  let ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
-  document.getElementById('ca_ligne1').value = ca > 0 ? ca.toLocaleString('fr-FR') + " MGA" : "";
-}
-</script>
-
 </body>
 </html>
-
