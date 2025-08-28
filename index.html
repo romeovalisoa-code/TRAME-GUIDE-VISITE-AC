@@ -29,12 +29,12 @@
 </style>
 </head>
 <body>
+
 <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
-  <!-- Titre à gauche -->
   <h1 style="margin: 0;">TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</h1>
-  <!-- Logo à droite -->
   <img src="logo.png" alt="Logo" style="height: 70px;">
 </div>
+
 <form>
 
 <!-- INFORMATIONS SUR LA DEMANDE DE CREDIT -->
@@ -59,7 +59,6 @@
 
   <label>AC traitant : <input type="text" required></label>
 
-  <!-- Date & Heure côte à côte -->
   <div class="inline-2">
     <label>Date de visite : <input type="date" id="date_visite" required></label>
     <label>Heure de visite : <input type="time" id="heure_visite" required></label>
@@ -111,8 +110,7 @@
       <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
       <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
       <label>Adresse domicile : <textarea id="adresse_domicile_client"></textarea></label>
-      <label>Adresse activité : <textarea id="adresse_domicile_client"></textarea></label>
-
+      <label>Adresse activité : <textarea id="adresse_activite_client"></textarea></label>
     </div>
     <div>
       <h3>Caution</h3>
@@ -155,23 +153,26 @@
   <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
 </fieldset>
 
-
 <fieldset>
-  <legend>FONCTIONNEMENT DE L'ACTIVITE</legend>
+  <legend id="legend_activite">FONCTIONNEMENT DE L'ACTIVITE</legend>
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
     
-    <!-- Colonne de gauche : champs existants -->
+    <!-- Colonne de gauche -->
     <div style="display: flex; flex-direction: column; gap: 10px;">
       <label>Nom de l'activité (1ère ligne) :
-      <input type="text" id="nom_activite_premiere_ligne" readonly></label>
+        <input type="text" id="nom_activite_premiere_ligne" readonly>
+      </label>
+
       <label>Marge de l'activité (1ère ligne) :
-      <input type="text" id="marge_activite_premiere_ligne" readonly></label>
+        <input type="text" id="marge_activite_premiere_ligne" readonly>
+      </label>
+
       <label style="color: blue; font-weight: bold; text-decoration: underline;">
-  1-Chiffre d'affaire mensuel :
-</label>
+        1-Chiffre d'affaires mensuel :
+      </label>
 
       <label>Fréquence de vente (par mois) :
-      <input type="number" id="frequence_vente" min="0" placeholder="0">
+        <input type="number" id="frequence_vente" min="0" placeholder="0">
       </label>
 
       <label>Vente selon derniers jours :</label>
@@ -203,70 +204,56 @@
         <input type="text" id="creances_actuelles" name="creances_actuelles" 
                style="flex: 1; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
       </div>
-      <label style="color: blue; font-weight: bold; text-decoration: underline;">
-  2-CAMV mensuel :
-</label>
 
+      <label style="color: blue; font-weight: bold; text-decoration: underline;">
+        2-CAMV mensuel :
+      </label>
     </div>
       
-    <!-- Colonne de droite : croisements + notes -->
-<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-  
-  <!-- Champ Croisements -->
-  <label style="font-weight:bold; color: darkred;">Croisements</label>
-  <textarea id="croisements" placeholder="Saisissez ici vos croisements"
-            style="
-              padding: 12px 8px;
-              height: 190px;
-              width: 100%;
-              background-color: #E0FFFF;
-              border: none;
-              border-radius: 5px;
-              font-weight: normal;
-              box-sizing: border-box;
-              resize: none;
-            "></textarea>
+    <!-- Colonne de droite -->
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+      <label style="font-weight:bold; color: darkred;">Croisements</label>
+      <textarea id="croisements" placeholder="Saisissez ici vos croisements"
+        style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
 
-  <!-- Champ Notes -->
-  <label style="font-weight:bold; color: darkred;">Notes</label>
-  <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
-            style="
-              padding: 12px 8px;
-              height: 190px;
-              width: 100%;
-              background-color: #E0FFFF;
-              border: none;
-              border-radius: 5px;
-              font-weight: normal;
-              box-sizing: border-box;
-              resize: none;
-            "></textarea>
-
-</div>
+      <label style="font-weight:bold; color: darkred;">Notes</label>
+      <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
+        style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+    </div>
 
 
- <label>Fréquence d'achat (par mois) :
-        <input type="number" id="frequence_achat" min="0" placeholder="0">
-      </label>
+
+    <label>Fréquence d'achat (par mois) :
+      <input type="number" id="frequence_achat" min="0" placeholder="0">
+    </label>
   </div>
 
-<label>Achat max/min/CAMV Mensuel:</label>
-<div style="display: flex; gap: 10px; margin-top: 5px; width: 50%;">
-  <input type="text" id="achat_max" placeholder="max" oninput="majCAMVMensuel()">
-  <input type="text" id="achat_min" placeholder="min" oninput="majCAMVMensuel()">
-  <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
-         style="background:#fff9c4;font-weight:bold;color:darkblue;">
-</div>
-<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-  <label for="camv_selon_marge" style="width: 150px; font-weight: bold; text-decoration: ;">
-    CAMV selon marge
-  </label>
-  <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
-         style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-</div>
+  <label>Achat max/min/CAMV Mensuel:</label>
+  <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
+    <input type="text" id="achat_max" placeholder="max" oninput="majCAMVMensuel()">
+    <input type="text" id="achat_min" placeholder="min" oninput="majCAMVMensuel()">
+    <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
+           style="background:#fff9c4;font-weight:bold;color:darkblue;">
+  </div>
 
+  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+    <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
+    <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
+           style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+    <label for="camv_final" style="width: 150px; font-weight: bold;">CAMV final</label>
+    <input type="text" id="camv_final" name="camv_final" readonly
+           style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+    <label for="dettes_fournisseurs" style="width: 150px;">Dettes fournisseurs</label>
+    <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" 
+           style="width: 30%; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
+  </div>
 </fieldset>
-
 
 </form>
 
@@ -274,13 +261,12 @@
 /*************************************************
  *  DONNÉES & CONSTANTES
  *************************************************/
-// Base des activités avec marges
 const ACTIVITES_MARGES = {
   "Epicerie": "16%", "Epi-bar": "23%", "Boulangerie": "5%", "Pâtisserie": "25%", "Menuiserie": "30%",
   "Murisserie de banane": "8%", "Confection": "25%", "Collecteurs produits riz": "7%", "Collecteurs produits locaux": "20%",
   "Poissonnerie": "15%", "Commerce Provende animale": "18%", "Vente cosmétiques": "20%", "Quincailleries": "18%",
   "Pharmacie": "12%", "Vente de pneus": "14%", "Taxiphone = vente de carte": "5%", "Vente d'articles divers": "15%",
-  "Vente de fourniture scolaire": "18%", "Multiservices": "0%", "Pièces pour véhicules, accessoires": "23%",
+  "Vente de fourniture scolaire": "18%", "Multiservices": "-100%", "Pièces pour véhicules, accessoires": "23%",
   "Pièces pour moto, accessoires": "15%", "Pièces pour bicyclette, accessoires": "15%", "Fruits et légumes": "15%",
   "Boucherie : viande bovine, porcine et volaille de chair, charcuterie": "18%", "Production yaourt": "35%",
   "Vente Vêtement: produits neufs": "23%", "Vente chaussures: produits neufs": "30%", "Vêtement chaussures: produits usés": "25%",
@@ -289,20 +275,41 @@ const ACTIVITES_MARGES = {
   "Grillade/Snack": "50%", "Location maison": "0%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
   "Poules pondeuses": "21%", "Vente de riz blanc en gros": "15%", "Vente de riz blanc au détail": "30%",
   "Vente de poissons secs en gros": "23%", "Vente de poissons secs au détail": "28%", "Vente de produits locaux en gros": "18%",
-  "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "0%", "Coiffure et esthétique": "0%",
-  "Vulca – Service de Réparation de Pneus": "0%", "Cybercafé": "0%", "Dépôt de médicament": "0%",
-  "Cliniques de soins de base": "0%", "Ecole": "0%", "Location voiture": "0%", "Tranport des personnes": "0%",
-  "Transport des marchandises": "0%", "Taxi-ville": "0%", "Taxi-moto": "0%", "Autres services": "0%",
-  "Cyclo-pousse": "0%", "Pousse-pousse": "0%", "Tuc-tuc": "0%"
+  "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "-100%", "Coiffure et esthétique": "-100%",
+  "Vulca – Service de Réparation de Pneus": "-100%", "Cybercafé": "-100%", "Dépôt de médicament": "-100%",
+  "Cliniques de soins de base": "-100%", "Ecole": "-100%", "Location voiture": "-100%", "Tranport des personnes": "-100%",
+  "Transport des marchandises": "-100%", "Taxi-ville": "-100%", "Taxi-moto": "-100%", "Autres services": "-100%",
+  "Cyclo-pousse": "-100%", "Pousse-pousse": "-100%", "Tuc-tuc": "-100%"
 };
 
 /*************************************************
  *  UTILITAIRES
  *************************************************/
+function fmt0(n){ return (n||0).toLocaleString('fr-FR', {maximumFractionDigits:0}); }
+
 function formatInputMGA(input){
   if(!input) return;
-  let val = parseFloat(String(input.value || "").replace(/\s|MGA/g,'')) || 0;
-  input.value = val > 0 ? val.toLocaleString('fr-FR') : "";
+  let val = parseFloat(String(input.value || "").replace(/\s|MGA/g,'')); 
+  if (isNaN(val)) { input.value = ""; return; }
+  input.value = fmt0(val);
+}
+
+// Suffixe MGA avec séparateurs, gestion focus/blur pour édition facile
+function attachMGAFormatter(inputId){
+  const el = document.getElementById(inputId);
+  if(!el) return;
+  el.addEventListener('input', function(){
+    let v = this.value.replace(/\D/g,''); // chiffres uniquement
+    if(!v){ this.value=''; return; }
+    this.value = fmt0(parseInt(v,10)) + ' MGA';
+  });
+  el.addEventListener('focus', function(){
+    this.value = this.value.replace(/\s?MGA$/,'');
+  });
+  el.addEventListener('blur', function(){
+    const digits = this.value.replace(/\D/g,'');
+    this.value = digits ? fmt0(parseInt(digits,10)) + ' MGA' : '';
+  });
 }
 
 function remplirSelectActivite(select){
@@ -339,7 +346,7 @@ function updateTotalDepuisObjet(input){
     total += parseFloat(String(i.value||"").replace(/\s/g,'')) || 0;
   });
   const totalInput = document.getElementById('total_objet');
-  totalInput.value = total.toLocaleString('fr-FR');
+  totalInput.value = fmt0(total);
   totalInput.className = total>2575000?"warning":"normal";
   document.getElementById('montant_demande').value = totalInput.value;
   document.getElementById('warning_total').innerText = total>2575000?"⚠ Le total dépasse 2 575 000 MGA !": "";
@@ -351,6 +358,9 @@ function verifierMontant(){
   return true;
 }
 
+/*************************************************
+ *  ACTIVITÉS
+ *************************************************/
 function ajouterActivite(){
   const tbody = document.getElementById('tbody_activite');
   const tr = document.createElement('tr');
@@ -377,7 +387,9 @@ function ajouterActivite(){
   selectActivite.addEventListener('change', function(){
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
     majNomActivitePremiereLigne();
-    majMargeActivitePremiereLigne(); // <-- mise à jour automatique de la première marge
+    majMargeActivitePremiereLigne();
+    majLegendActivite();
+    majCAMVSelonMarge();
   });
 }
 
@@ -385,6 +397,8 @@ function supprimerActivite(btn){
   btn.closest('tr')?.remove(); 
   majNomActivitePremiereLigne(); 
   majMargeActivitePremiereLigne();
+  majLegendActivite();
+  majCAMVSelonMarge();
 }
 
 function majNomActivitePremiereLigne(){
@@ -397,6 +411,11 @@ function majMargeActivitePremiereLigne() {
   document.getElementById('marge_activite_premiere_ligne').value = premiereActiviteMarge ? premiereActiviteMarge.value : '';
 }
 
+function majLegendActivite(){
+  const legend = document.getElementById('legend_activite');
+  const nom = document.getElementById('nom_activite_premiere_ligne').value;
+  legend.textContent = nom ? "FONCTIONNEMENT DE L'ACTIVITE " + nom : "FONCTIONNEMENT DE L'ACTIVITE";
+}
 
 /*************************************************
  *  SYNCHRO DEMANDEUR / CAUTION
@@ -420,9 +439,10 @@ function majVenteMensuelle(){
   const v1 = parseFloat((document.getElementById('vente_jour_v1').value||'').replace(/\s/g,''))||0;
   const freq = parseFloat(document.getElementById('frequence_vente').value)||0;
   const moyenne = (v3 + v2 + v1) / 3;
-  const resultat = moyenne * freq;
-  document.getElementById('vente_mensuelle').value = resultat>0 ? resultat.toLocaleString('fr-FR')+" MGA" : "";
+  const resultat = Math.round(moyenne * freq);
+  document.getElementById('vente_mensuelle').value = resultat>0 ? fmt0(resultat)+" MGA" : "";
   majCALigne1();
+  majCAMVSelonMarge();
 }
 
 function majVenteMensRV(){
@@ -431,98 +451,66 @@ function majVenteMensRV(){
   const m2 = parseFloat((document.getElementById('vente_registre_m2').value||'').replace(/\s/g,''))||0;
   const m1 = parseFloat((document.getElementById('vente_registre_m1').value||'').replace(/\s/g,''))||0;
   const moyenne = Math.round((m3 + m2 + m1) / 3);
-  document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? moyenne.toLocaleString('fr-FR')+" MGA" : "";
+  document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? fmt0(moyenne)+" MGA" : "";
   majCALigne1();
+  majCAMVSelonMarge();
 }
 
 function majCALigne1(){
   const venteMensRV = parseFloat((document.getElementById('vente_registre_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
   const venteMensuelle = parseFloat((document.getElementById('vente_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
   const ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
-  document.getElementById('ca_ligne1').value = ca>0 ? ca.toLocaleString('fr-FR')+" MGA" : "";
+  document.getElementById('ca_ligne1').value = ca>0 ? fmt0(ca)+" MGA" : "";
 }
 
+/*************************************************
+ *  CAMV (mensuel / selon marge / final)
+ *************************************************/
 function majCAMVMensuel(){
   ['achat_max','achat_min'].forEach(id=>formatInputMGA(document.getElementById(id)));
   const max = parseFloat((document.getElementById('achat_max').value||'').replace(/\s|MGA/g,''))||0;
   const min = parseFloat((document.getElementById('achat_min').value||'').replace(/\s|MGA/g,''))||0;
   const freq = parseFloat(document.getElementById('frequence_achat').value)||0;
   const moyenne = (max + min) / 2;
-  const resultat = moyenne * freq;
-  document.getElementById('camv_mensuel').value = resultat>0 ? resultat.toLocaleString('fr-FR')+" MGA" : "";
+  const resultat = Math.round(moyenne * freq);
+  document.getElementById('camv_mensuel').value = resultat>0 ? fmt0(resultat)+" MGA" : "0 MGA";
   majCALigne1();
+  majCAMVFinal();
 }
 
-/*************************************************
- *  CALCUL AUTOMATIQUE DU CAMV SELON MARGE
- *************************************************/
 function majCAMVSelonMarge(){
-  // Récupérer le CA (ligne 1)
+  // CA ligne 1
   let caStr = document.getElementById('ca_ligne1').value || "0";
   let ca = parseFloat(caStr.replace(/\s|MGA/g,'')) || 0;
 
-  // Récupérer la marge de la première activité
+  // Marge 1ère activité
   let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
-  let marge = parseFloat(margeStr.replace('%',''))/100 || 0;
+  let marge = parseFloat(margeStr.replace('%',''))/100;
+  if(isNaN(marge)) marge = 0;
 
   let camv = 0;
-  if(marge === 0){
-    camv = 0; // Si marge = 0%, CAMV = 0
+  // Sécurité : si marge <= 0 (0% ou codes -100%), CAMV = 0
+  if(marge <= 0){
+    camv = 0;
   } else {
-    camv = Math.round(ca / (1 + marge)); // sinon calcul normal
+    camv = Math.round(ca / (1 + marge));
   }
 
-  // Affichage avec séparateur et suffixe MGA
-  document.getElementById('camv_selon_marge').value = camv > 0 
-    ? camv.toLocaleString('fr-FR') + " MGA" 
-    : "0 MGA";
+  document.getElementById('camv_selon_marge').value = camv > 0 ? fmt0(camv) + " MGA" : "0 MGA";
+  majCAMVFinal();
+}
+
+function majCAMVFinal(){
+  const camvMensuel = parseFloat((document.getElementById('camv_mensuel').value||'').replace(/\s|MGA/g,''))||0;
+  const camvMarge   = parseFloat((document.getElementById('camv_selon_marge').value||'').replace(/\s|MGA/g,''))||0;
+  const camvFinal = Math.max(camvMensuel, camvMarge);
+  document.getElementById('camv_final').value = camvFinal>0 ? fmt0(camvFinal)+" MGA" : "0 MGA";
 }
 
 /*************************************************
- *  LANCER LE CALCUL AU BON MOMENT
- *************************************************/
-
-// Appeler après mise à jour de CA (ligne 1)
-function majCALigne1EtCAMV() {
-  majCALigne1();        // calcul existant du CA
-  majCAMVSelonMarge();  // recalcul CAMV selon marge
-}
-
-// Appeler après mise à jour de marge de la première activité
-function majMargePremiereLigneEtCAMV() {
-  majMargeActivitePremiereLigne();
-  majCAMVSelonMarge();
-}
-
-// Remplacer les appels existants
-document.querySelectorAll('#tbody_activite').forEach(tbody => {
-  tbody.addEventListener('change', e => {
-    if(e.target && e.target.name === 'nom_activite[]') {
-      majNomActivitePremiereLigne();
-      majMargePremiereLigneEtCAMV();
-    }
-  });
-});
-
-// Recalcul après modification des ventes
-['vente_jour_v3','vente_jour_v2','vente_jour_v1','vente_registre_m3','vente_registre_m2','vente_registre_m1','frequence_vente'].forEach(id => {
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('input', majCALigne1EtCAMV);
-});
-
-
-// Ajout de listener pour recalcul automatique
-document.addEventListener('DOMContentLoaded', ()=>{
-  const freqAchat = document.getElementById('frequence_achat');
-  if(freqAchat) freqAchat.addEventListener('input', majCAMVMensuel);
-});
- 
-
-/*************************************************
- *  SAUVEGARDE
+ *  SAUVEGARDE (exemple)
  *************************************************/
 function sauvegarder(){
-  // Exemple minimal de sauvegarde (console + alerte). À brancher vers un backend si besoin
   const donneesActivites = [];
   document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
     donneesActivites.push({
@@ -551,7 +539,6 @@ function sauvegarderHTML(){
         if(opt.value === el.value) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected');
       });
     } else el.setAttribute('value', el.value);
-    // on laisse les champs modifiables dans la version exportée
   });
   cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = 'none');
 
@@ -564,24 +551,44 @@ function sauvegarderHTML(){
 }
 
 /*************************************************
- *  INITIALISATION
+ *  ÉCOUTEURS & INIT
  *************************************************/
 document.addEventListener('DOMContentLoaded', ()=>{
-  // Initialiser la ligne d'activité par défaut
+  // Champs avec unité MGA
+  attachMGAFormatter('creances_actuelles');
+  attachMGAFormatter('dettes_fournisseurs');
+
+  // Initialiser une éventuelle ligne d'activité existante (si pré-rendue)
   document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
     const select = tr.querySelector('select[name="nom_activite[]"]');
     const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
     if(select && inputMarge){
       remplirSelectActivite(select);
       if(select.value){ inputMarge.value = ACTIVITES_MARGES[select.value] || '0%'; }
-      select.addEventListener('change', function(){ inputMarge.value = ACTIVITES_MARGES[this.value] || '0%'; majNomActivitePremiereLigne(); });
+      select.addEventListener('change', function(){
+        inputMarge.value = ACTIVITES_MARGES[this.value] || '0%';
+        majNomActivitePremiereLigne();
+        majMargeActivitePremiereLigne();
+        majLegendActivite();
+        majCAMVSelonMarge();
+      });
     }
   });
 
-  // Nom activité (1ère ligne)
+  // Nom activité (1ère ligne) & legend
   majNomActivitePremiereLigne();
-  document.querySelector('#tbody_activite').addEventListener('change', e=>{
-    if(e.target && e.target.name === 'nom_activite[]') majNomActivitePremiereLigne();
+  majMargeActivitePremiereLigne();
+  majLegendActivite();
+
+  // Écoute générale sur le tbody activités
+  const tbody = document.getElementById('tbody_activite');
+  tbody.addEventListener('change', e=>{
+    if(e.target && e.target.name === 'nom_activite[]'){
+      majNomActivitePremiereLigne();
+      majMargeActivitePremiereLigne();
+      majLegendActivite();
+      majCAMVSelonMarge();
+    }
   });
 
   // Synchro caution
@@ -590,37 +597,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
   document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
 
-  // Ventes -> listeners complémentaires (sécurité)
+  // Ventes -> listeners complémentaires
   ['vente_jour_v3','vente_jour_v2','vente_jour_v1','frequence_vente'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.addEventListener('input', majVenteMensuelle);
+    const el = document.getElementById(id); if(el) el.addEventListener('input', ()=>{ majVenteMensuelle(); });
   });
   ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.addEventListener('input', majVenteMensRV);
+    const el = document.getElementById(id); if(el) el.addEventListener('input', ()=>{ majVenteMensRV(); });
   });
+
+  // CAMV: recalculer selon marge quand CA change
+  ['vente_mensuelle','vente_registre_mensuelle','ca_ligne1'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.addEventListener('input', majCAMVSelonMarge);
+  });
+
+  // CAMV mensuel dépend de fréquence d'achat
+  const freqAchat = document.getElementById('frequence_achat');
+  if(freqAchat) freqAchat.addEventListener('input', majCAMVMensuel);
 
   // Objet crédit -> total initial
   updateTotalDepuisObjet();
-});
-</script>
-<script>
-const input = document.getElementById('creances_actuelles');
-
-input.addEventListener('input', function(e) {
-  let value = this.value.replace(/\D/g, ''); // supprime tout sauf les chiffres
-  if(value) {
-    value = parseInt(value).toLocaleString('fr-FR'); // format avec séparateurs de milliers
-    this.value = value + ' MGA'; // ajoute le suffixe MGA
-  } else {
-    this.value = '';
-  }
-});
-
-// Optionnel : retirer le "MGA" lors de la sélection pour faciliter la modification
-input.addEventListener('focus', function() {
-  this.value = this.value.replace(' MGA', '');
-});
-input.addEventListener('blur', function() {
-  if(this.value) this.value = parseInt(this.value.replace(/\D/g,'')).toLocaleString('fr-FR') + ' MGA';
 });
 </script>
 </body>
