@@ -26,6 +26,13 @@
   #total_objet { font-weight: bold; font-size:16px; text-align:left; }
   #total_objet.warning { background: #e74c3c; color: #fff; padding: 2px 5px; border-radius: 5px; }
   #total_objet.normal { background: #2980B9; color: #fff; padding: 2px 5px; border-radius: 5px; }
+  /* OPEX styles (kept as requested) */
+  .opex-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .opex-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
+  .opex-table th, .opex-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  .opex-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
+  .opex-total { font-weight: bold; background-color: #f0f0f0; }
+  .opex-label { text-align: left; font-weight: bold; color: darkred; margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -66,7 +73,7 @@
 
   <label>Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly></label>
   <label>Durée (mois) : <input type="number" min="0" required></label>
-  <label>Capacité de paiement (MGA) : <input type="text" oninput="formatInputMGA(this)" required></label>
+  <label>Capacité de paiement (MGA) : <input type="text" id="capacite_paiement" required></label>
   <label>Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly></label>
   <label>Date de remboursement demandée : <input type="date" required></label>
 
@@ -78,7 +85,7 @@
     <tbody id="tbody_objet">
       <tr>
         <td><input type="text" name="libelle[]" required></td>
-        <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
+        <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" onblur="formatMontantObjet(this)" /></td>
         <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>
       </tr>
     </tbody>
@@ -177,18 +184,18 @@
 
       <label>Vente selon derniers jours :</label>
       <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <input type="text" id="vente_jour_v3" placeholder="V-3" oninput="majVenteMensuelle()">
-        <input type="text" id="vente_jour_v2" placeholder="V-2" oninput="majVenteMensuelle()">
-        <input type="text" id="vente_jour_v1" placeholder="V-1" oninput="majVenteMensuelle()">
+        <input type="text" id="vente_jour_v3" placeholder="V-3">
+        <input type="text" id="vente_jour_v2" placeholder="V-2">
+        <input type="text" id="vente_jour_v1" placeholder="V-1">
         <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
                style="background:#fff9c4;font-weight:bold;color:darkblue;">
       </div>
 
       <label>Vente selon registre :</label>
       <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <input type="text" id="vente_registre_m3" placeholder="M-3" oninput="majVenteMensRV()">
-        <input type="text" id="vente_registre_m2" placeholder="M-2" oninput="majVenteMensRV()">
-        <input type="text" id="vente_registre_m1" placeholder="M-1" oninput="majVenteMensRV()">
+        <input type="text" id="vente_registre_m3" placeholder="M-3">
+        <input type="text" id="vente_registre_m2" placeholder="M-2">
+        <input type="text" id="vente_registre_m1" placeholder="M-1">
         <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
                style="background:#fff9c4;font-weight:bold;color:darkgreen;">
       </div>
@@ -201,8 +208,7 @@
 
       <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
         <label for="creances_actuelles" style="width: 150px;">Créances actuelles</label>
-        <input type="text" id="creances_actuelles" name="creances_actuelles" 
-               style="flex: 1; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
+        <input type="text" id="creances_actuelles" name="creances_actuelles">
       </div>
 
       <label style="color: blue; font-weight: bold; text-decoration: underline;">
@@ -214,14 +220,11 @@
     <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
       <label style="font-weight:bold; color: darkred;">Croisements</label>
       <textarea id="croisements" placeholder="Saisissez ici vos croisements"
-        style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-
+        style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
       <label style="font-weight:bold; color: darkred;">Notes</label>
       <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
         style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
     </div>
-
-
 
     <label>Fréquence d'achat (par mois) :
       <input type="number" id="frequence_achat" min="0" placeholder="0">
@@ -230,8 +233,8 @@
 
   <label>Achat max/min/CAMV Mensuel:</label>
   <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
-    <input type="text" id="achat_max" placeholder="max" oninput="majCAMVMensuel()">
-    <input type="text" id="achat_min" placeholder="min" oninput="majCAMVMensuel()">
+    <input type="text" id="achat_max" placeholder="max">
+    <input type="text" id="achat_min" placeholder="min">
     <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
            style="background:#fff9c4;font-weight:bold;color:darkblue;">
   </div>
@@ -249,10 +252,48 @@
   </div>
 
   <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-    <label for="dettes_fournisseurs" style="width: 150px;">Dettes fournisseurs</label>
-    <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" 
-           style="width: 30%; padding: 8px; background-color: #FFC0CB; color: black; font-weight: bold; border: none; border-radius: 5px;">
+    <label for="dettes_fournisseurs" style="width: 160px;">Dettes fournisseurs</label>
+    <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
   </div>
+
+   <label style="color: blue; font-weight: bold; text-decoration: underline;">
+        3-OPEX (Operating Expenses ou dépenses d’exploitation)
+      </label>
+
+  <div class="opex-wrapper">
+    <table class="opex-table">
+      <thead>
+        <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
+        <tr><td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
+  <td>
+    <input type="text" class="opex-input" style="height:40px;" />
+  </td>
+</tr>
+
+        <tr class="opex-total">
+          <td>Total OPEX</td>
+          <td><span id="opex-total">0 MGA</span></td>
+        </tr>
+      </tbody>
+    </table>
+<style>
+  .opex-total td {
+    background-color: #444;   /* gris foncé */
+    color: white;             /* texte en blanc */
+    font-weight: bold;
+    padding: 5px;
+  }
+</style>
+  </div>
+
 </fieldset>
 
 </form>
@@ -272,7 +313,7 @@ const ACTIVITES_MARGES = {
   "Vente Vêtement: produits neufs": "23%", "Vente chaussures: produits neufs": "30%", "Vêtement chaussures: produits usés": "25%",
   "Vêtement textiles: produits usés": "18%", "Grossiste PPN": "5%", "Bijouterie": "23%", "Lapidaire": "35%",
   "Vente produit en plastique": "13%", "Vente produit laitier": "10%", "Vente d'œuf": "10%", "Kafé sy mofo": "60%",
-  "Grillade/Snack": "50%", "Location maison": "0%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
+  "Grillade/Snack": "50%", "Location maison": "-100%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
   "Poules pondeuses": "21%", "Vente de riz blanc en gros": "15%", "Vente de riz blanc au détail": "30%",
   "Vente de poissons secs en gros": "23%", "Vente de poissons secs au détail": "28%", "Vente de produits locaux en gros": "18%",
   "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "-100%", "Coiffure et esthétique": "-100%",
@@ -283,42 +324,22 @@ const ACTIVITES_MARGES = {
 };
 
 /*************************************************
- *  UTILITAIRES
+ *  UTILITAIRES DE FORMATAGE
  *************************************************/
-function fmt0(n){ return (n||0).toLocaleString('fr-FR', {maximumFractionDigits:0}); }
-
-function formatInputMGA(input){
-  if(!input) return;
-  let val = parseFloat(String(input.value || "").replace(/\s|MGA/g,'')); 
-  if (isNaN(val)) { input.value = ""; return; }
-  input.value = fmt0(val);
+function fmt0(n){
+  // retourne chaîne sans décimales, format fr-FR (séparateur de milliers espace)
+  return (Number(n) || 0).toLocaleString('fr-FR', {maximumFractionDigits:0});
 }
 
-// Suffixe MGA avec séparateurs, gestion focus/blur pour édition facile
-function attachMGAFormatter(inputId){
-  const el = document.getElementById(inputId);
-  if(!el) return;
-  el.addEventListener('input', function(){
-    let v = this.value.replace(/\D/g,''); // chiffres uniquement
-    if(!v){ this.value=''; return; }
-    this.value = fmt0(parseInt(v,10)) + ' MGA';
-  });
-  el.addEventListener('focus', function(){
-    this.value = this.value.replace(/\s?MGA$/,'');
-  });
-  el.addEventListener('blur', function(){
-    const digits = this.value.replace(/\D/g,'');
-    this.value = digits ? fmt0(parseInt(digits,10)) + ' MGA' : '';
-  });
+function fmtMGA(n){
+  return fmt0(n) + " MGA";
 }
 
-function remplirSelectActivite(select){
-  if(!select) return;
-  select.innerHTML = '<option value="">--Sélectionner--</option>';
-  Object.keys(ACTIVITES_MARGES).forEach(nom => {
-    const opt = document.createElement('option');
-    opt.value = nom; opt.textContent = nom; select.appendChild(opt);
-  });
+function parseNumberFromString(s){
+  if(!s) return 0;
+  const digits = String(s).replace(/\s|MGA|[^\d\.-]/g,'');
+  const num = parseFloat(digits);
+  return isNaN(num) ? 0 : num;
 }
 
 /*************************************************
@@ -329,7 +350,7 @@ function ajouterLigne(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td><input type="text" name="libelle[]" required></td>
-    <td><input type="text" name="montant_objet[]" value="0" oninput="updateTotalDepuisObjet(this)" required></td>
+    <td><input type="text" name="montant_objet[]" value="" oninput="updateTotalDepuisObjet(this)" onblur="formatMontantObjet(this)" /></td>
     <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
   tbody.appendChild(tr);
 }
@@ -339,28 +360,41 @@ function supprimerLigne(btn){
   updateTotalDepuisObjet();
 }
 
+function formatMontantObjet(input){
+  if(!input) return;
+  const n = parseNumberFromString(input.value);
+  input.value = n>0 ? fmtMGA(n) : "";
+  updateTotalDepuisObjet();
+}
+
 function updateTotalDepuisObjet(input){
-  if(input) formatInputMGA(input);
+  if(input){
+    // laisser la saisie brute pendant input, mais si on passe ici par appel manuel on peut formater
+    // (formatage final est fait au blur)
+  }
   let total = 0;
   document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{
-    total += parseFloat(String(i.value||"").replace(/\s/g,'')) || 0;
+    total += parseNumberFromString(i.value);
   });
   const totalInput = document.getElementById('total_objet');
   totalInput.value = fmt0(total);
-  totalInput.className = total>2575000?"warning":"normal";
-  document.getElementById('montant_demande').value = totalInput.value;
-  document.getElementById('warning_total').innerText = total>2575000?"⚠ Le total dépasse 2 575 000 MGA !": "";
-}
-
-function verifierMontant(){
-  const total = parseFloat(String(document.getElementById('total_objet').value||"").replace(/\s/g,'')) || 0;
-  if(total>2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return false; }
-  return true;
+  totalInput.className = total>2575000 ? "warning" : "normal";
+  document.getElementById('montant_demande').value = fmt0(total);
+  document.getElementById('warning_total').innerText = total>2575000 ? "⚠ Le total dépasse 2 575 000 MGA !" : "";
 }
 
 /*************************************************
  *  ACTIVITÉS
  *************************************************/
+function remplirSelectActivite(select){
+  if(!select) return;
+  select.innerHTML = '<option value="">--Sélectionner--</option>';
+  Object.keys(ACTIVITES_MARGES).forEach(nom => {
+    const opt = document.createElement('option');
+    opt.value = nom; opt.textContent = nom; select.appendChild(opt);
+  });
+}
+
 function ajouterActivite(){
   const tbody = document.getElementById('tbody_activite');
   const tr = document.createElement('tr');
@@ -433,82 +467,102 @@ function synchroniserCaution(){
  *  VENTES & CA (ligne 1)
  *************************************************/
 function majVenteMensuelle(){
-  ['vente_jour_v3','vente_jour_v2','vente_jour_v1'].forEach(id=>formatInputMGA(document.getElementById(id)));
-  const v3 = parseFloat((document.getElementById('vente_jour_v3').value||'').replace(/\s/g,''))||0;
-  const v2 = parseFloat((document.getElementById('vente_jour_v2').value||'').replace(/\s/g,''))||0;
-  const v1 = parseFloat((document.getElementById('vente_jour_v1').value||'').replace(/\s/g,''))||0;
-  const freq = parseFloat(document.getElementById('frequence_vente').value)||0;
+  ['vente_jour_v3','vente_jour_v2','vente_jour_v1'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const v3 = parseNumberFromString(document.getElementById('vente_jour_v3').value);
+  const v2 = parseNumberFromString(document.getElementById('vente_jour_v2').value);
+  const v1 = parseNumberFromString(document.getElementById('vente_jour_v1').value);
+  const freq = parseFloat(document.getElementById('frequence_vente').value) || 0;
   const moyenne = (v3 + v2 + v1) / 3;
   const resultat = Math.round(moyenne * freq);
-  document.getElementById('vente_mensuelle').value = resultat>0 ? fmt0(resultat)+" MGA" : "";
+  document.getElementById('vente_mensuelle').value = resultat>0 ? fmtMGA(resultat) : "";
   majCALigne1();
   majCAMVSelonMarge();
 }
 
 function majVenteMensRV(){
-  ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>formatInputMGA(document.getElementById(id)));
-  const m3 = parseFloat((document.getElementById('vente_registre_m3').value||'').replace(/\s/g,''))||0;
-  const m2 = parseFloat((document.getElementById('vente_registre_m2').value||'').replace(/\s/g,''))||0;
-  const m1 = parseFloat((document.getElementById('vente_registre_m1').value||'').replace(/\s/g,''))||0;
+  ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const m3 = parseNumberFromString(document.getElementById('vente_registre_m3').value);
+  const m2 = parseNumberFromString(document.getElementById('vente_registre_m2').value);
+  const m1 = parseNumberFromString(document.getElementById('vente_registre_m1').value);
   const moyenne = Math.round((m3 + m2 + m1) / 3);
-  document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? fmt0(moyenne)+" MGA" : "";
+  document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? fmtMGA(moyenne) : "";
   majCALigne1();
   majCAMVSelonMarge();
 }
 
 function majCALigne1(){
-  const venteMensRV = parseFloat((document.getElementById('vente_registre_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
-  const venteMensuelle = parseFloat((document.getElementById('vente_mensuelle').value||'').replace(/\s|MGA/g,''))||0;
+  const venteMensRV = parseNumberFromString(document.getElementById('vente_registre_mensuelle').value) || 0;
+  const venteMensuelle = parseNumberFromString(document.getElementById('vente_mensuelle').value) || 0;
   const ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
-  document.getElementById('ca_ligne1').value = ca>0 ? fmt0(ca)+" MGA" : "";
+  document.getElementById('ca_ligne1').value = ca>0 ? fmtMGA(ca) : "";
 }
 
 /*************************************************
  *  CAMV (mensuel / selon marge / final)
  *************************************************/
 function majCAMVMensuel(){
-  ['achat_max','achat_min'].forEach(id=>formatInputMGA(document.getElementById(id)));
-  const max = parseFloat((document.getElementById('achat_max').value||'').replace(/\s|MGA/g,''))||0;
-  const min = parseFloat((document.getElementById('achat_min').value||'').replace(/\s|MGA/g,''))||0;
-  const freq = parseFloat(document.getElementById('frequence_achat').value)||0;
+  ['achat_max','achat_min'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const max = parseNumberFromString(document.getElementById('achat_max').value);
+  const min = parseNumberFromString(document.getElementById('achat_min').value);
+  const freq = parseFloat(document.getElementById('frequence_achat').value) || 0;
   const moyenne = (max + min) / 2;
   const resultat = Math.round(moyenne * freq);
-  document.getElementById('camv_mensuel').value = resultat>0 ? fmt0(resultat)+" MGA" : "0 MGA";
+  document.getElementById('camv_mensuel').value = resultat>0 ? fmtMGA(resultat) : "0 MGA";
   majCALigne1();
   majCAMVFinal();
 }
 
 function majCAMVSelonMarge(){
-  // CA ligne 1
-  let caStr = document.getElementById('ca_ligne1').value || "0";
-  let ca = parseFloat(caStr.replace(/\s|MGA/g,'')) || 0;
-
-  // Marge 1ère activité
+  let ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
   let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
-  let marge = parseFloat(margeStr.replace('%',''))/100;
+  let marge = parseFloat(String(margeStr).replace('%',''))/100;
   if(isNaN(marge)) marge = 0;
-
   let camv = 0;
-  // Sécurité : si marge <= 0 (0% ou codes -100%), CAMV = 0
   if(marge <= 0){
     camv = 0;
   } else {
     camv = Math.round(ca / (1 + marge));
   }
-
-  document.getElementById('camv_selon_marge').value = camv > 0 ? fmt0(camv) + " MGA" : "0 MGA";
+  document.getElementById('camv_selon_marge').value = camv > 0 ? fmtMGA(camv) : "0 MGA";
   majCAMVFinal();
 }
 
 function majCAMVFinal(){
-  const camvMensuel = parseFloat((document.getElementById('camv_mensuel').value||'').replace(/\s|MGA/g,''))||0;
-  const camvMarge   = parseFloat((document.getElementById('camv_selon_marge').value||'').replace(/\s|MGA/g,''))||0;
+  const camvMensuel = parseNumberFromString(document.getElementById('camv_mensuel').value) || 0;
+  const camvMarge   = parseNumberFromString(document.getElementById('camv_selon_marge').value) || 0;
   const camvFinal = Math.max(camvMensuel, camvMarge);
-  document.getElementById('camv_final').value = camvFinal>0 ? fmt0(camvFinal)+" MGA" : "0 MGA";
+  document.getElementById('camv_final').value = camvFinal>0 ? fmtMGA(camvFinal) : "0 MGA";
 }
 
 /*************************************************
- *  SAUVEGARDE (exemple)
+ *  OPEX: formatage et total (temps réel + blur)
+ *************************************************/
+function updateOpexTotal(){
+  let total = 0;
+  document.querySelectorAll('.opex-input').forEach(input => {
+    total += parseNumberFromString(input.value);
+  });
+  document.getElementById('opex-total').textContent = fmtMGA(total);
+}
+
+function formatInputMGA(el, keepSuffix=false){
+  if(!el) return;
+  // clean non-digit except minus and dot
+  let raw = String(el.value || "");
+  let digits = raw.replace(/[^\d\.-]/g,'');
+  if(digits === "" || digits === "-" || digits === ".") { el.value = ""; return; }
+  const num = parseFloat(digits);
+  if(isNaN(num)){ el.value = ""; return; }
+  if(keepSuffix){
+    el.value = fmtMGA(num);
+  } else {
+    // during typing we keep plain number (no suffix) to ease editing
+    el.value = String(Math.round(num));
+  }
+}
+
+/*************************************************
+ *  SAUVEGARDE & EXPORT
  *************************************************/
 function sauvegarder(){
   const donneesActivites = [];
@@ -525,7 +579,8 @@ function sauvegarder(){
 }
 
 function sauvegarderHTML(){
-  if(!verifierMontant()) return;
+  const total = parseNumberFromString(document.getElementById('total_objet').value);
+  if(total>2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
   const nomPrenom = document.querySelector('#nom_prenom_client').value || 'Demandeur';
   const date = new Date();
   const pad = n=>('0'+n).slice(-2);
@@ -554,11 +609,71 @@ function sauvegarderHTML(){
  *  ÉCOUTEURS & INIT
  *************************************************/
 document.addEventListener('DOMContentLoaded', ()=>{
-  // Champs avec unité MGA
-  attachMGAFormatter('creances_actuelles');
-  attachMGAFormatter('dettes_fournisseurs');
+  // attach listeners for dynamic and static inputs
 
-  // Initialiser une éventuelle ligne d'activité existante (si pré-rendue)
+  // OPEX: input => keep raw digits and update total; blur => format
+  document.querySelectorAll('.opex-input').forEach(input => {
+    input.addEventListener('input', (e)=>{
+      // allow only digits while typing
+      let v = (e.target.value || "").replace(/[^\d]/g,'');
+      e.target.value = v;
+      updateOpexTotal();
+    });
+    input.addEventListener('focus', (e)=>{
+      // remove suffix if present on focus
+      e.target.value = String(parseNumberFromString(e.target.value) || "");
+    });
+    input.addEventListener('blur', (e)=>{
+      const n = parseNumberFromString(e.target.value);
+      e.target.value = n>0 ? fmtMGA(n) : "";
+      updateOpexTotal();
+    });
+  });
+
+  // Attach formatting to fields: creances, dettes, achat_max, achat_min, capacite_paiement
+  ['creances_actuelles','dettes_fournisseurs','achat_max','achat_min','capacite_paiement'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', (e)=>{
+      // keep plain digits while typing
+      e.target.value = (e.target.value || "").replace(/[^\d]/g,'');
+    });
+    el.addEventListener('blur', (e)=>{
+      const n = parseNumberFromString(e.target.value);
+      e.target.value = n>0 ? fmtMGA(n) : "";
+      // some of these affect CAMV
+      if(id === 'achat_max' || id === 'achat_min') majCAMVMensuel();
+    });
+    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+  });
+
+  // vente inputs
+  ['vente_jour_v3','vente_jour_v2','vente_jour_v1','vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', (e)=>{ e.target.value = (e.target.value||"").replace(/[^\d]/g,''); });
+    el.addEventListener('blur', ()=>{ majVenteMensuelle(); majVenteMensRV(); });
+    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+  });
+
+  // frequence inputs
+  const freqV = document.getElementById('frequence_vente');
+  if(freqV) freqV.addEventListener('input', majVenteMensuelle);
+
+  const freqA = document.getElementById('frequence_achat');
+  if(freqA) freqA.addEventListener('input', majCAMVMensuel);
+
+  // achat_max / min blur handled above to recalc CAMV mensuel
+
+  // CAMV: recalc when CA changes (we call majCAMVSelonMarge at appropriate places)
+  // Sync caution
+  const lien = document.getElementById('lien_demandeur');
+  if(lien) lien.addEventListener('change', synchroniserCaution);
+  document.getElementById('etat_civil_client')?.addEventListener('input', synchroniserCaution);
+  document.getElementById('nb_client')?.addEventListener('input', synchroniserCaution);
+  document.getElementById('adresse_domicile_client')?.addEventListener('input', synchroniserCaution);
+
+  // Initialize activity select if pre-rendered rows exist
   document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
     const select = tr.querySelector('select[name="nom_activite[]"]');
     const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
@@ -575,48 +690,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
   });
 
-  // Nom activité (1ère ligne) & legend
-  majNomActivitePremiereLigne();
-  majMargeActivitePremiereLigne();
-  majLegendActivite();
-
-  // Écoute générale sur le tbody activités
-  const tbody = document.getElementById('tbody_activite');
-  tbody.addEventListener('change', e=>{
-    if(e.target && e.target.name === 'nom_activite[]'){
-      majNomActivitePremiereLigne();
-      majMargeActivitePremiereLigne();
-      majLegendActivite();
-      majCAMVSelonMarge();
-    }
-  });
-
-  // Synchro caution
-  document.getElementById('lien_demandeur').addEventListener('change', synchroniserCaution);
-  document.getElementById('etat_civil_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('nb_client').addEventListener('input', synchroniserCaution);
-  document.getElementById('adresse_domicile_client').addEventListener('input', synchroniserCaution);
-
-  // Ventes -> listeners complémentaires
-  ['vente_jour_v3','vente_jour_v2','vente_jour_v1','frequence_vente'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.addEventListener('input', ()=>{ majVenteMensuelle(); });
-  });
-  ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.addEventListener('input', ()=>{ majVenteMensRV(); });
-  });
-
-  // CAMV: recalculer selon marge quand CA change
-  ['vente_mensuelle','vente_registre_mensuelle','ca_ligne1'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.addEventListener('input', majCAMVSelonMarge);
-  });
-
-  // CAMV mensuel dépend de fréquence d'achat
-  const freqAchat = document.getElementById('frequence_achat');
-  if(freqAchat) freqAchat.addEventListener('input', majCAMVMensuel);
-
-  // Objet crédit -> total initial
+  // objet crédit -> total initial
   updateTotalDepuisObjet();
+
+  // ensure CAMV initial values updated
+  majCALigne1();
+  majCAMVSelonMarge();
+  majCAMVMensuel();
+  updateOpexTotal();
 });
 </script>
+
 </body>
 </html>
