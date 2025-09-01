@@ -26,13 +26,18 @@
   #total_objet { font-weight: bold; font-size:16px; text-align:left; }
   #total_objet.warning { background: #e74c3c; color: #fff; padding: 2px 5px; border-radius: 5px; }
   #total_objet.normal { background: #2980B9; color: #fff; padding: 2px 5px; border-radius: 5px; }
-  /* OPEX styles (kept as requested) */
+
+  /* OPEX */
   .opex-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
   .opex-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
   .opex-table th, .opex-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
   .opex-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
-  .opex-total { font-weight: bold; background-color: #f0f0f0; }
-  .opex-label { text-align: left; font-weight: bold; color: darkred; margin-bottom: 5px; }
+  .opex-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
+
+  /* MMP styles */
+  #tableMMP tfoot td { font-weight: bold; }
+  #tableMMP tfoot tr.total-row td { background-color: #333; color: #fff; }
+  #tableMMP tfoot tr.mmp-row td { background-color: #f39c12; color: #fff; }
 </style>
 </head>
 <body>
@@ -116,8 +121,8 @@
       <label>Âge : <input type="number" min="0"></label>
       <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
       <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
-      <label>Adresse domicile : <textarea id="adresse_domicile_client"></textarea></label>
-      <label>Adresse activité : <textarea id="adresse_activite_client"></textarea></label>
+      <label>Adresse domicile : <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea></label>
+      <label>Adresse activité : <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea></label>
     </div>
     <div>
       <h3>Caution</h3>
@@ -135,8 +140,19 @@
       <label>Âge : <input type="number" min="0"></label>
       <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
       <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
-      <label>Adresse domicile : <textarea id="adresse_domicile_caution"></textarea></label>
-    </div>
+      <label>Adresse domicile : <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea></label>
+
+     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+  <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
+  <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+  <label for="source_revenus" style="width: 150px;">Source</label>
+  <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
+</div>
+
+
   </div>
 </fieldset>
 
@@ -153,14 +169,84 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody id="tbody_activite">
-      <!-- Vide au chargement -->
-    </tbody>
+    <tbody id="tbody_activite"></tbody>
   </table>
   <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
+
+<!-- Informations financières si salarié -->
+<fieldset style="margin-top:15px;">
+  <legend>INFORMATIONS SALARIALES & FINANCIÈRES</legend>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+
+    <label>Nom de la société
+      <input type="text" name="societe" placeholder="Ex : PAOMA, TELMA, STAR...">
+    </label>
+
+    <label>Poste
+      <input type="text" name="poste" placeholder="Ex : Comptable">
+    </label>
+
+    <label>Salaire net
+      <input type="number" name="salaire_net" placeholder="0" style="text-align:right;" id="salaire_net">
+      
+    </label>
+
+    <label>Caisse
+      <input type="number" name="caisse" placeholder="0" style="text-align:right;" id="caisse">
+ 
+    </label>
+
+    <label>Solde mobile money
+      <input type="number" name="solde_mobile" placeholder="0" style="text-align:right;" id="solde_mobile">
+      
+    </label>
+
+    <label>Solde épargne / banque
+      <input type="number" name="solde_epargne" placeholder="0" style="text-align:right;" id="solde_epargne">
+      
+    </label>
+
+    <label>Échéances banque / IMF
+      <input type="number" name="echeances" placeholder="0" style="text-align:right;" id="echeances">
+    </label>
+
+    <label>Encours de crédit
+      <input type="number" name="encours_credit" placeholder="0" style="text-align:right;" id="encours_credit">
+      <span id="encours_credit_display"></span>
+    </label>
+
+    <label>Banque / IMF
+      <select name="banque_imf">
+        <option value="">-- Sélectionner --</option>
+        <option>BOA</option>
+        <option>SGM</option>
+        <option>BNI</option>
+        <option>BMOI</option>
+        <option>SBM</option>
+        <option>MCB</option>
+        <option>SMMEC</option>
+        <option>BBM</option>
+        <option>ABM</option>
+        <option>SIPEM</option>
+        <option>BF</option>
+        <option>ACEP</option>
+        <option>OTIV</option>
+        <option>CECAM</option>
+        <option>APEM</option>
+        <option>PAMF</option>
+        <option>Autres</option>
+      </select>
+    </label>
+
+  </div>
+</fieldset>
+
 </fieldset>
 
 <fieldset>
+
+
   <legend id="legend_activite">FONCTIONNEMENT DE L'ACTIVITE</legend>
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
     
@@ -256,9 +342,9 @@
     <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
   </div>
 
-   <label style="color: blue; font-weight: bold; text-decoration: underline;">
-        3-OPEX (Operating Expenses ou dépenses d’exploitation)
-      </label>
+  <label style="color: blue; font-weight: bold; text-decoration: underline;">
+    3-OPEX (Operating Expenses ou dépenses d’exploitation)
+  </label>
 
   <div class="opex-wrapper">
     <table class="opex-table">
@@ -272,28 +358,63 @@
         <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
         <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
         <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
-  <td>
-    <input type="text" class="opex-input" style="height:40px;" />
-  </td>
-</tr>
-
+        <tr>
+          <td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
+          <td><input type="text" class="opex-input" style="height:40px;" /></td>
+        </tr>
         <tr class="opex-total">
           <td>Total OPEX</td>
           <td><span id="opex-total">0 MGA</span></td>
         </tr>
       </tbody>
     </table>
-<style>
-  .opex-total td {
-    background-color: #444;   /* gris foncé */
-    color: white;             /* texte en blanc */
-    font-weight: bold;
-    padding: 5px;
-  }
-</style>
   </div>
+</fieldset>
 
+<!-- MMP -->
+<fieldset>
+  <legend id="legend_mmp">MARGE MOYENNE PONDÉRÉE (MMP)</legend>
+
+  <table id="tableMMP">
+    <thead>
+      <tr>
+        <th>Produits les plus vendus mensuels</th>
+        <th>Qté mensuelle vendue</th>
+        <th>Stock</th>
+        <th>Prix d'achat</th>
+        <th>Prix de vente</th>
+        <th>Montant achat</th>
+        <th>Montant vente</th>
+        <th>Montant stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" placeholder="Produit"></td>
+        <td><input type="number" class="qte" value="0"></td>
+        <td><input type="number" class="stock" value="0"></td>
+        <!-- prix en TEXT pour autoriser séparateur de milliers -->
+        <td><input type="text" class="achat" value="0"></td>
+        <td><input type="text" class="vente" value="0"></td>
+        <td class="montantAchat">0,00</td>
+        <td class="montantVente">0,00</td>
+        <td class="montantStock">0,00</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td colspan="5" style="text-align: right;">TOTAL :</td>
+        <td id="totalAchat">0,00</td>
+        <td id="totalVente">0,00</td>
+        <td id="totalStock">0,00</td>
+      </tr>
+      <tr class="mmp-row">
+        <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> %</td>
+      </tr>
+    </tfoot>
+  </table>
+  
+  <button type="button" class="add-btn" onclick="ajouterProduit()">Ajouter produit</button>
 </fieldset>
 
 </form>
@@ -326,20 +447,16 @@ const ACTIVITES_MARGES = {
 /*************************************************
  *  UTILITAIRES DE FORMATAGE
  *************************************************/
-function fmt0(n){
-  // retourne chaîne sans décimales, format fr-FR (séparateur de milliers espace)
-  return (Number(n) || 0).toLocaleString('fr-FR', {maximumFractionDigits:0});
-}
-
-function fmtMGA(n){
-  return fmt0(n) + " MGA";
-}
-
+function fmt0(n){ return (Number(n) || 0).toLocaleString('fr-FR', {maximumFractionDigits:0}); }
+function fmtMGA(n){ return fmt0(n) + " MGA"; }
 function parseNumberFromString(s){
   if(!s) return 0;
-  const digits = String(s).replace(/\s|MGA|[^\d\.-]/g,'');
+  const digits = String(s).replace(/\s|MGA|[^\d\.,-]/g,'').replace(',', '.');
   const num = parseFloat(digits);
   return isNaN(num) ? 0 : num;
+}
+function formatNombre(n){
+  return (Number(n)||0).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 /*************************************************
@@ -354,28 +471,16 @@ function ajouterLigne(){
     <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
   tbody.appendChild(tr);
 }
-
-function supprimerLigne(btn){
-  btn.closest('tr')?.remove();
-  updateTotalDepuisObjet();
-}
-
+function supprimerLigne(btn){ btn.closest('tr')?.remove(); updateTotalDepuisObjet(); }
 function formatMontantObjet(input){
   if(!input) return;
   const n = parseNumberFromString(input.value);
   input.value = n>0 ? fmtMGA(n) : "";
   updateTotalDepuisObjet();
 }
-
-function updateTotalDepuisObjet(input){
-  if(input){
-    // laisser la saisie brute pendant input, mais si on passe ici par appel manuel on peut formater
-    // (formatage final est fait au blur)
-  }
+function updateTotalDepuisObjet(){
   let total = 0;
-  document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{
-    total += parseNumberFromString(i.value);
-  });
+  document.querySelectorAll('input[name="montant_objet[]"]').forEach(i=>{ total += parseNumberFromString(i.value); });
   const totalInput = document.getElementById('total_objet');
   totalInput.value = fmt0(total);
   totalInput.className = total>2575000 ? "warning" : "normal";
@@ -394,7 +499,6 @@ function remplirSelectActivite(select){
     opt.value = nom; opt.textContent = nom; select.appendChild(opt);
   });
 }
-
 function ajouterActivite(){
   const tbody = document.getElementById('tbody_activite');
   const tr = document.createElement('tr');
@@ -417,34 +521,23 @@ function ajouterActivite(){
   const selectActivite = tr.querySelector('select[name="nom_activite[]"]');
   const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
   remplirSelectActivite(selectActivite);
-
   selectActivite.addEventListener('change', function(){
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
-    majNomActivitePremiereLigne();
-    majMargeActivitePremiereLigne();
-    majLegendActivite();
-    majCAMVSelonMarge();
+    majNomActivitePremiereLigne(); majMargeActivitePremiereLigne(); majLegendActivite(); majCAMVSelonMarge();
   });
 }
-
 function supprimerActivite(btn){ 
   btn.closest('tr')?.remove(); 
-  majNomActivitePremiereLigne(); 
-  majMargeActivitePremiereLigne();
-  majLegendActivite();
-  majCAMVSelonMarge();
+  majNomActivitePremiereLigne(); majMargeActivitePremiereLigne(); majLegendActivite(); majCAMVSelonMarge();
 }
-
 function majNomActivitePremiereLigne(){
   const premiereActivite = document.querySelector('#tbody_activite tr select[name="nom_activite[]"]');
   document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? (premiereActivite.value||'') : '';
 }
-
 function majMargeActivitePremiereLigne() {
   const premiereActiviteMarge = document.querySelector('#tbody_activite tr:first-child input[name="marge_activite[]"]');
   document.getElementById('marge_activite_premiere_ligne').value = premiereActiviteMarge ? premiereActiviteMarge.value : '';
 }
-
 function majLegendActivite(){
   const legend = document.getElementById('legend_activite');
   const nom = document.getElementById('nom_activite_premiere_ligne').value;
@@ -475,10 +568,8 @@ function majVenteMensuelle(){
   const moyenne = (v3 + v2 + v1) / 3;
   const resultat = Math.round(moyenne * freq);
   document.getElementById('vente_mensuelle').value = resultat>0 ? fmtMGA(resultat) : "";
-  majCALigne1();
-  majCAMVSelonMarge();
+  majCALigne1(); majCAMVSelonMarge();
 }
-
 function majVenteMensRV(){
   ['vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>formatInputMGA(document.getElementById(id), true));
   const m3 = parseNumberFromString(document.getElementById('vente_registre_m3').value);
@@ -486,10 +577,8 @@ function majVenteMensRV(){
   const m1 = parseNumberFromString(document.getElementById('vente_registre_m1').value);
   const moyenne = Math.round((m3 + m2 + m1) / 3);
   document.getElementById('vente_registre_mensuelle').value = moyenne>0 ? fmtMGA(moyenne) : "";
-  majCALigne1();
-  majCAMVSelonMarge();
+  majCALigne1(); majCAMVSelonMarge();
 }
-
 function majCALigne1(){
   const venteMensRV = parseNumberFromString(document.getElementById('vente_registre_mensuelle').value) || 0;
   const venteMensuelle = parseNumberFromString(document.getElementById('vente_mensuelle').value) || 0;
@@ -508,25 +597,18 @@ function majCAMVMensuel(){
   const moyenne = (max + min) / 2;
   const resultat = Math.round(moyenne * freq);
   document.getElementById('camv_mensuel').value = resultat>0 ? fmtMGA(resultat) : "0 MGA";
-  majCALigne1();
-  majCAMVFinal();
+  majCALigne1(); majCAMVFinal();
 }
-
 function majCAMVSelonMarge(){
   let ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
   let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
   let marge = parseFloat(String(margeStr).replace('%',''))/100;
   if(isNaN(marge)) marge = 0;
   let camv = 0;
-  if(marge <= 0){
-    camv = 0;
-  } else {
-    camv = Math.round(ca / (1 + marge));
-  }
+  if(marge <= 0){ camv = 0; } else { camv = Math.round(ca / (1 + marge)); }
   document.getElementById('camv_selon_marge').value = camv > 0 ? fmtMGA(camv) : "0 MGA";
   majCAMVFinal();
 }
-
 function majCAMVFinal(){
   const camvMensuel = parseNumberFromString(document.getElementById('camv_mensuel').value) || 0;
   const camvMarge   = parseNumberFromString(document.getElementById('camv_selon_marge').value) || 0;
@@ -539,26 +621,17 @@ function majCAMVFinal(){
  *************************************************/
 function updateOpexTotal(){
   let total = 0;
-  document.querySelectorAll('.opex-input').forEach(input => {
-    total += parseNumberFromString(input.value);
-  });
+  document.querySelectorAll('.opex-input').forEach(input => { total += parseNumberFromString(input.value); });
   document.getElementById('opex-total').textContent = fmtMGA(total);
 }
-
 function formatInputMGA(el, keepSuffix=false){
   if(!el) return;
-  // clean non-digit except minus and dot
   let raw = String(el.value || "");
   let digits = raw.replace(/[^\d\.-]/g,'');
   if(digits === "" || digits === "-" || digits === ".") { el.value = ""; return; }
   const num = parseFloat(digits);
   if(isNaN(num)){ el.value = ""; return; }
-  if(keepSuffix){
-    el.value = fmtMGA(num);
-  } else {
-    // during typing we keep plain number (no suffix) to ease editing
-    el.value = String(Math.round(num));
-  }
+  el.value = keepSuffix ? fmtMGA(num) : String(Math.round(num));
 }
 
 /*************************************************
@@ -577,26 +650,20 @@ function sauvegarder(){
   console.log('Activités enregistrées :', donneesActivites);
   alert('Données sauvegardées avec succès !');
 }
-
 function sauvegarderHTML(){
   const total = parseNumberFromString(document.getElementById('total_objet').value);
   if(total>2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
   const nomPrenom = document.querySelector('#nom_prenom_client').value || 'Demandeur';
-  const date = new Date();
-  const pad = n=>('0'+n).slice(-2);
+  const date = new Date(); const pad = n=>('0'+n).slice(-2);
   const dateStr = `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
-
   const cloneBody = document.body.cloneNode(true);
   cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
     if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
     else if(el.tagName === 'SELECT'){
-      el.querySelectorAll('option').forEach(opt=>{
-        if(opt.value === el.value) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected');
-      });
+      el.querySelectorAll('option').forEach(opt=>{ if(opt.value === el.value) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected'); });
     } else el.setAttribute('value', el.value);
   });
   cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = 'none');
-
   const htmlContent = `<!DOCTYPE html>\n<html lang='fr'>\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
   const blob = new Blob([htmlContent], {type:'text/html'});
   const a = document.createElement('a');
@@ -606,23 +673,96 @@ function sauvegarderHTML(){
 }
 
 /*************************************************
+ *  MMP (formatage prix + calculs)
+ *************************************************/
+function bindMMPRow(tr){
+  const qte = tr.querySelector('.qte');
+  const stock = tr.querySelector('.stock');
+  const achat = tr.querySelector('.achat');
+  const vente = tr.querySelector('.vente');
+
+  // quantité & stock : simple recalcul
+  [qte, stock].forEach(el=>{
+    if(!el) return;
+    el.addEventListener('input', calculerMMP);
+  });
+
+  // prix : autoriser , . chiffres ; formatage milliers au blur
+  [achat, vente].forEach(el=>{
+    if(!el) return;
+    el.addEventListener('input', e=>{
+      e.target.value = (e.target.value||"").replace(/[^\d\.,-]/g,''); // garder chiffres , .
+      calculerMMP();
+    });
+    el.addEventListener('focus', e=>{
+      e.target.value = String(parseNumberFromString(e.target.value) || "");
+    });
+    el.addEventListener('blur', e=>{
+      const n = parseNumberFromString(e.target.value);
+      e.target.value = n ? (n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0})) : "";
+      calculerMMP();
+    });
+  });
+}
+
+function ajouterProduit(){
+  const tbody = document.querySelector("#tableMMP tbody");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Produit"></td>
+    <td><input type="number" class="qte" value="0"></td>
+    <td><input type="number" class="stock" value="0"></td>
+    <td><input type="text" class="achat" value="0"></td>
+    <td><input type="text" class="vente" value="0"></td>
+    <td class="montantAchat">0,00</td>
+    <td class="montantVente">0,00</td>
+    <td class="montantStock">0,00</td>
+  `;
+  tbody.appendChild(tr);
+  bindMMPRow(tr);
+  calculerMMP();
+}
+
+function calculerMMP() {
+  let totalAchat = 0, totalVente = 0, totalStock = 0;
+  document.querySelectorAll("#tableMMP tbody tr").forEach(tr => {
+    const qte = parseFloat(tr.querySelector(".qte")?.value) || 0;
+    const stock = parseFloat(tr.querySelector(".stock")?.value) || 0;
+    const prixAchat = parseNumberFromString(tr.querySelector(".achat")?.value) || 0;
+    const prixVente = parseNumberFromString(tr.querySelector(".vente")?.value) || 0;
+
+    const montantAchat = qte * prixAchat;
+    const montantVente = qte * prixVente;
+    const montantStock = stock * prixAchat;
+
+    tr.querySelector(".montantAchat").textContent = formatNombre(montantAchat);
+    tr.querySelector(".montantVente").textContent = formatNombre(montantVente);
+    tr.querySelector(".montantStock").textContent = formatNombre(montantStock);
+
+    totalAchat += montantAchat;
+    totalVente += montantVente;
+    totalStock += montantStock;
+  });
+
+  document.getElementById("totalAchat").textContent = formatNombre(totalAchat);
+  document.getElementById("totalVente").textContent = formatNombre(totalVente);
+  document.getElementById("totalStock").textContent = formatNombre(totalStock);
+
+  const mmp = totalAchat > 0 ? ((totalVente - totalAchat) / totalAchat * 100) : 0;
+  document.getElementById("mmp").textContent = formatNombre(mmp);
+}
+
+/*************************************************
  *  ÉCOUTEURS & INIT
  *************************************************/
 document.addEventListener('DOMContentLoaded', ()=>{
-  // attach listeners for dynamic and static inputs
-
-  // OPEX: input => keep raw digits and update total; blur => format
+  // OPEX
   document.querySelectorAll('.opex-input').forEach(input => {
     input.addEventListener('input', (e)=>{
-      // allow only digits while typing
-      let v = (e.target.value || "").replace(/[^\d]/g,'');
-      e.target.value = v;
+      e.target.value = (e.target.value || "").replace(/[^\d]/g,'');
       updateOpexTotal();
     });
-    input.addEventListener('focus', (e)=>{
-      // remove suffix if present on focus
-      e.target.value = String(parseNumberFromString(e.target.value) || "");
-    });
+    input.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
     input.addEventListener('blur', (e)=>{
       const n = parseNumberFromString(e.target.value);
       e.target.value = n>0 ? fmtMGA(n) : "";
@@ -630,74 +770,82 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
   });
 
-  // Attach formatting to fields: creances, dettes, achat_max, achat_min, capacite_paiement
+  // formatage simple (MGA) sur divers champs
   ['creances_actuelles','dettes_fournisseurs','achat_max','achat_min','capacite_paiement'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el) return;
-    el.addEventListener('input', (e)=>{
-      // keep plain digits while typing
-      e.target.value = (e.target.value || "").replace(/[^\d]/g,'');
-    });
+    el.addEventListener('input', (e)=>{ e.target.value = (e.target.value || "").replace(/[^\d]/g,''); });
+    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
     el.addEventListener('blur', (e)=>{
       const n = parseNumberFromString(e.target.value);
       e.target.value = n>0 ? fmtMGA(n) : "";
-      // some of these affect CAMV
       if(id === 'achat_max' || id === 'achat_min') majCAMVMensuel();
     });
-    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
   });
 
-  // vente inputs
+  // ventes
   ['vente_jour_v3','vente_jour_v2','vente_jour_v1','vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el) return;
     el.addEventListener('input', (e)=>{ e.target.value = (e.target.value||"").replace(/[^\d]/g,''); });
-    el.addEventListener('blur', ()=>{ majVenteMensuelle(); majVenteMensRV(); });
     el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+    el.addEventListener('blur', ()=>{ majVenteMensuelle(); majVenteMensRV(); });
   });
+  document.getElementById('frequence_vente')?.addEventListener('input', majVenteMensuelle);
+  document.getElementById('frequence_achat')?.addEventListener('input', majCAMVMensuel);
 
-  // frequence inputs
-  const freqV = document.getElementById('frequence_vente');
-  if(freqV) freqV.addEventListener('input', majVenteMensuelle);
-
-  const freqA = document.getElementById('frequence_achat');
-  if(freqA) freqA.addEventListener('input', majCAMVMensuel);
-
-  // achat_max / min blur handled above to recalc CAMV mensuel
-
-  // CAMV: recalc when CA changes (we call majCAMVSelonMarge at appropriate places)
   // Sync caution
   const lien = document.getElementById('lien_demandeur');
-  if(lien) lien.addEventListener('change', synchroniserCaution);
+  lien && lien.addEventListener('change', synchroniserCaution);
   document.getElementById('etat_civil_client')?.addEventListener('input', synchroniserCaution);
   document.getElementById('nb_client')?.addEventListener('input', synchroniserCaution);
   document.getElementById('adresse_domicile_client')?.addEventListener('input', synchroniserCaution);
 
-  // Initialize activity select if pre-rendered rows exist
-  document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
-    const select = tr.querySelector('select[name="nom_activite[]"]');
-    const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
-    if(select && inputMarge){
-      remplirSelectActivite(select);
-      if(select.value){ inputMarge.value = ACTIVITES_MARGES[select.value] || '0%'; }
-      select.addEventListener('change', function(){
-        inputMarge.value = ACTIVITES_MARGES[this.value] || '0%';
-        majNomActivitePremiereLigne();
-        majMargeActivitePremiereLigne();
-        majLegendActivite();
-        majCAMVSelonMarge();
-      });
+  // MMP : binder la première ligne
+  document.querySelectorAll('#tableMMP tbody tr').forEach(bindMMPRow);
+
+  // Inits
+  updateOpexTotal();
+  updateTotalDepuisObjet();
+  majCALigne1(); majCAMVSelonMarge(); majCAMVMensuel();
+  calculerMMP();
+});
+</script>
+<script>
+  const revenusInput = document.getElementById("revenus_mensuels_caution");
+
+  revenusInput.addEventListener("input", function () {
+    let value = this.value.replace(/[^\d]/g, ""); // garder seulement les chiffres
+    if (value) {
+      this.value = parseInt(value).toLocaleString("fr-FR") + " MGA";
+    } else {
+      this.value = "";
     }
   });
+</script>
 
-  // objet crédit -> total initial
-  updateTotalDepuisObjet();
+<script>
+function formatMGA(val) {
+  if (!val) return '';
+  const num = parseFloat(val.replace(/\s/g, ''));
+  return isNaN(num) ? '' : num.toLocaleString('fr-FR') + ' MGA';
+}
 
-  // ensure CAMV initial values updated
-  majCALigne1();
-  majCAMVSelonMarge();
-  majCAMVMensuel();
-  updateOpexTotal();
+const champs = ['salaire_net', 'caisse', 'solde_mobile', 'solde_epargne', 'echeances', 'encours_credit'];
+
+champs.forEach(id => {
+  const input = document.getElementById(id);
+  const display = document.getElementById(id + '_display');
+
+  if (input && display) {
+    // Affichage initial
+    display.textContent = formatMGA(input.value);
+
+    // Mise à jour en temps réel
+    input.addEventListener('input', () => {
+      display.textContent = formatMGA(input.value);
+    });
+  }
 });
 </script>
 
