@@ -187,34 +187,21 @@
       <input type="text" name="poste" placeholder="Ex : Comptable">
     </label>
 
-    <label>Salaire net
-      <input type="number" name="salaire_net" placeholder="0" style="text-align:right;" id="salaire_net">
-      
-    </label>
-
-    <label>Caisse
-      <input type="number" name="caisse" placeholder="0" style="text-align:right;" id="caisse">
- 
-    </label>
-
     <label>Solde mobile money
-      <input type="number" name="solde_mobile" placeholder="0" style="text-align:right;" id="solde_mobile">
-      
-    </label>
+  <input type="text" name="solde_mobile" placeholder="0 MGA" style="text-align:left;" id="solde_mobile" onblur="formatFinancialField(this)">
+</label>
 
-    <label>Solde épargne / banque
-      <input type="number" name="solde_epargne" placeholder="0" style="text-align:right;" id="solde_epargne">
-      
-    </label>
+<label>Solde épargne / banque
+  <input type="text" name="solde_epargne" placeholder="0 MGA" style="text-align:left;" id="solde_epargne" onblur="formatFinancialField(this)">
+</label>
 
-    <label>Échéances banque / IMF
-      <input type="number" name="echeances" placeholder="0" style="text-align:right;" id="echeances">
-    </label>
+<label>Échéances banque / IMF
+  <input type="text" name="echeances" placeholder="0 MGA" style="text-align:left;" id="echeances" onblur="formatFinancialField(this)">
+</label>
 
-    <label>Encours de crédit
-      <input type="number" name="encours_credit" placeholder="0" style="text-align:right;" id="encours_credit">
-      
-    </label>
+<label>Encours de crédit
+  <input type="text" name="encours_credit" placeholder="0 MGA" style="text-align:left;" id="encours_credit" onblur="formatFinancialField(this)">
+</label>
 
     <label>Banque / IMF
       <select name="banque_imf">
@@ -416,6 +403,45 @@
   
   <button type="button" class="add-btn" onclick="ajouterProduit()">Ajouter produit</button>
 </fieldset>
+<fieldset>
+  <legend id="legend_actifs_immo">ACTIFS IMMOBILISES/GARANTIES</legend>
+
+  <table id="table_garanties" border="1" style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 11px;">
+    <thead>
+      <tr style="font-size: 10px;">
+        <th>Désignations</th>
+        <th>Emplacement</th>
+        <th>Description</th>
+        <th>Marque</th>
+        <th>Immat°…</th>
+        <th>Garantie (Oui/Non)</th>
+        <th>Valeur d'achat</th>
+        <th>Valeur estimée</th>
+        <th>Décote (%)</th>
+        <th>Actif (Oui/Non)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total garanties :</td>
+        <td id="total_garanties" colspan="3" style="background-color: #555; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total actifs :</td>
+        <td id="total_actifs" colspan="3" style="background-color: #ff8c00; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
+</fieldset>
+
+
+
 
 </form>
 
@@ -823,31 +849,207 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
   });
 </script>
-
 <script>
-function formatMGA(val) {
-  if (!val) return '';
-  const num = parseFloat(val.replace(/\s/g, ''));
-  return isNaN(num) ? '' : num.toLocaleString('fr-FR') + ' MGA';
+function formatFinancialField(input) {
+  if (!input) return;
+  
+  // Nettoyer la valeur en ne gardant que les chiffres
+  let value = input.value.replace(/\D/g, '');
+  
+  // Convertir en nombre
+  const numValue = parseInt(value || 0);
+  
+  // Formater avec séparateurs de milliers et ajouter "MGA"
+  input.value = numValue.toLocaleString('fr-FR') + ' MGA';
+  
+  // Mettre à jour l'affichage formaté
+  const displayElement = document.getElementById(input.id + '_display');
+  if (displayElement) {
+    displayElement.textContent = input.value;
+  }
 }
 
-const champs = ['salaire_net', 'caisse', 'solde_mobile', 'solde_epargne', 'echeances', 'encours_credit'];
-
-champs.forEach(id => {
-  const input = document.getElementById(id);
-  const display = document.getElementById(id + '_display');
-
-  if (input && display) {
-    // Affichage initial
-    display.textContent = formatMGA(input.value);
-
-    // Mise à jour en temps réel
-    input.addEventListener('input', () => {
-      display.textContent = formatMGA(input.value);
-    });
-  }
+// Ajouter ces écouteurs d'événements à la fin du DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  // ... code existant ...
+  
+  // Ajouter des écouteurs pour le formatage en temps réel
+  const financialFields = ['solde_mobile', 'solde_epargne', 'echeances', 'encours_credit'];
+  financialFields.forEach(id => {
+    const field = document.getElementById(id);
+    if (field) {
+      field.addEventListener('input', function() {
+        const displayElement = document.getElementById(this.id + '_display');
+        if (displayElement) {
+          let value = this.value.replace(/\D/g, '');
+          const numValue = parseInt(value || 0);
+          displayElement.textContent = numValue.toLocaleString('fr-FR') + ' MGA';
+        }
+      });
+      
+      field.addEventListener('focus', function() {
+        this.value = this.value.replace(/\D/g, '');
+      });
+    }
+  });
 });
 </script>
+  <script>
+    const tableBody = document.querySelector('#table_garanties tbody');
+    const btnAjouter = document.getElementById('ajouter_garantie');
+    const totalGarantiesEl = document.getElementById('total_garanties');
+    const totalActifsEl = document.getElementById('total_actifs');
+
+    // Fonction pour formater les nombres avec séparateurs de milliers
+    function formatNumber(value) {
+        if (isNaN(value) || value === null) return '0';
+        return Number(value).toLocaleString('fr-FR');
+    }
+
+    // Fonction pour parser les nombres formatés
+    function parseFormattedNumber(formattedValue) {
+        if (!formattedValue) return 0;
+        return parseFloat(formattedValue.toString().replace(/\s/g, '')) || 0;
+    }
+
+    function formatMGA(value) {
+        if (!value) return '0 MGA';
+        return formatNumber(value) + ' MGA';
+    }
+
+    // Fonction pour formater un champ de saisie avec séparateurs de milliers
+    function formatInput(input) {
+        const cursorPosition = input.selectionStart;
+        const originalValue = input.value;
+        const numericValue = parseFormattedNumber(originalValue);
+
+        if (!isNaN(numericValue)) {
+            input.value = formatNumber(numericValue);
+
+            // Restaurer la position du curseur
+            const diff = input.value.length - originalValue.length;
+            const newPosition = Math.max(0, cursorPosition + diff);
+            input.setSelectionRange(newPosition, newPosition);
+        }
+    }
+
+    function recalculerTotaux() {
+        let totalGaranties = 0;
+        let totalActifs = 0;
+
+        tableBody.querySelectorAll('tr').forEach(tr => {
+            const valAchatInput = tr.querySelector('.valeur-achat');
+            const valEstimeeInput = tr.querySelector('.valeur-estimee');
+
+            const valAchat = parseFormattedNumber(valAchatInput.value);
+            const valEstimee = parseFormattedNumber(valEstimeeInput.value);
+            const emplacement = tr.querySelector('.emplacement-select').value;
+            const garantie = tr.querySelector('.garantie-select').value;
+            const actif = tr.querySelector('.actif-select').value;
+
+            // Calcul décote %
+            const decote = valAchat ? (valEstimee / valAchat * 100) : 0;
+            tr.querySelector('.decote').value = decote.toFixed(2);
+
+            // Formule Excel: SOMME.SI.ENS(valeur estimée; Garantie; "Oui")
+            if (garantie === 'Oui') {
+                totalGaranties += valEstimee;
+            }
+
+            // Formule Excel: SOMME.SI.ENS(valeur d'achat; Actif; "Oui"; Emplacement; "D")
+            if (actif === 'Oui' && emplacement === 'D') {
+                totalActifs += valAchat;
+            }
+        });
+
+        totalGarantiesEl.textContent = formatMGA(totalGaranties);
+        totalActifsEl.textContent = formatMGA(totalActifs);
+    }
+
+    function ajouterGarantie() {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <select class="designation-select">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="Véhicule">Véhicule</option>
+                    <option value="Immobilier">Immobilier</option>
+                    <option value="Mobilier">Mobilier</option>
+                    <option value="Terrain nu">Terrain nu</option>
+                    <option value="Terrain bâti">Terrain bâti</option>
+                </select>
+            </td>
+            <td>
+                <select class="emplacement-select">
+                    <option value="D">D</option>
+                    <option value="CS">CS</option>
+                </select>
+            </td>
+            <td><input type="text" placeholder="Description"></td>
+            <td><input type="text" placeholder="Marque"></td>
+            <td><input type="text" placeholder="Immat°…"></td>
+            <td>
+                <select class="garantie-select">
+                    <option value="Oui">Oui</option>
+                    <option value="Non">Non</option>
+                </select>
+            </td>
+            <td><input type="text" class="valeur-achat currency-input" placeholder="Valeur d'achat" value="0"></td>
+            <td><input type="text" class="valeur-estimee currency-input" placeholder="Valeur estimée" value="0"></td>
+            <td><input type="number" class="decote" placeholder="Décote %" style="text-align:right;" readonly></td>
+            <td>
+                <select class="actif-select">
+                    <option value="Oui">Oui</option>
+                    <option value="Non">Non</option>
+                </select>
+            </td>
+            <td>
+                <button type="button" class="btn-supprimer">X</button>
+            </td>
+        `;
+
+        const valAchatInput = tr.querySelector('.valeur-achat');
+        const valEstimeeInput = tr.querySelector('.valeur-estimee');
+
+        // Initialiser format
+        valAchatInput.value = formatNumber(parseFormattedNumber(valAchatInput.value));
+        valEstimeeInput.value = formatNumber(parseFormattedNumber(valEstimeeInput.value));
+
+        // Événements sur saisie
+        [valAchatInput, valEstimeeInput].forEach(input => {
+            input.addEventListener('input', function () {
+                formatInput(this);
+                recalculerTotaux();
+            });
+            input.addEventListener('blur', function () {
+                formatInput(this);
+                recalculerTotaux();
+            });
+        });
+
+        // Supprimer ligne
+        tr.querySelector('.btn-supprimer').addEventListener('click', () => {
+            tr.remove();
+            recalculerTotaux();
+        });
+
+        // Recalcul quand les selects changent
+        tr.querySelectorAll('select').forEach(el => {
+            el.addEventListener('change', recalculerTotaux);
+        });
+
+        tableBody.appendChild(tr);
+
+        recalculerTotaux();
+    }
+
+    // Initialiser avec une ligne vide
+    ajouterGarantie();
+    btnAjouter.addEventListener('click', ajouterGarantie);
+</script>
+
+
+
 
 </body>
 </html>
