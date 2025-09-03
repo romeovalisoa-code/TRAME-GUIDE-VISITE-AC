@@ -38,6 +38,59 @@
   #tableMMP tfoot td { font-weight: bold; }
   #tableMMP tfoot tr.total-row td { background-color: #333; color: #fff; }
   #tableMMP tfoot tr.mmp-row td { background-color: #f39c12; color: #fff; }
+  
+  /* Nouveau style pour les sections d'activité */
+  .activite-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    display: none;
+  }
+  .activite-section.active {
+    display: block;
+  }
+  .activite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+  }
+  .activite-title {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 18px;
+  }
+  
+  /* Styles pour les onglets d'activité */
+  .activite-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+  }
+  .activite-tab {
+    padding: 10px 20px;
+    background: #ecf0f1;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    margin-right: 5px;
+    font-weight: bold;
+  }
+  .activite-tab.active {
+    background: #3498db;
+    color: white;
+  }
+  .activite-content {
+    display: none;
+  }
+  .activite-content.active {
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -172,7 +225,8 @@
     <tbody id="tbody_activite"></tbody>
   </table>
   <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
-
+<!-- Conteneur pour les sections d'activité -->
+  <div id="sections_activite"></div>
 <!-- Informations financières si salarié -->
 <fieldset style="margin-top:15px;">
   <legend>INFORMATIONS SALARIALES & FINANCIÈRES</legend>
@@ -193,6 +247,10 @@
 
 <label>Solde épargne / banque
   <input type="text" name="solde_epargne" placeholder="0 MGA" style="text-align:left;" id="solde_epargne" onblur="formatFinancialField(this)">
+</label>
+
+<label>Caisse
+  <input type="text" name="Caisse" placeholder="0 MGA" style="text-align:left;" id="Caisse" onblur="formatFinancialField(this)">
 </label>
 
 <label>Échéances banque / IMF
@@ -232,129 +290,262 @@
 </fieldset>
 
 <fieldset>
-
-
   <legend id="legend_activite">FONCTIONNEMENT DE L'ACTIVITE</legend>
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-    
-    <!-- Colonne de gauche -->
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <label>Nom de l'activité (1ère ligne) :
-        <input type="text" id="nom_activite_premiere_ligne" readonly>
-      </label>
-
-      <label>Marge de l'activité (1ère ligne) :
-        <input type="text" id="marge_activite_premiere_ligne" readonly>
-      </label>
-
-      <label style="color: blue; font-weight: bold; text-decoration: underline;">
-        1-Chiffre d'affaires mensuel :
-      </label>
-
-      <label>Fréquence de vente (par mois) :
-        <input type="number" id="frequence_vente" min="0" placeholder="0">
-      </label>
-
-      <label>Vente selon derniers jours :</label>
-      <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <input type="text" id="vente_jour_v3" placeholder="V-3">
-        <input type="text" id="vente_jour_v2" placeholder="V-2">
-        <input type="text" id="vente_jour_v1" placeholder="V-1">
-        <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
-               style="background:#fff9c4;font-weight:bold;color:darkblue;">
-      </div>
-
-      <label>Vente selon registre :</label>
-      <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <input type="text" id="vente_registre_m3" placeholder="M-3">
-        <input type="text" id="vente_registre_m2" placeholder="M-2">
-        <input type="text" id="vente_registre_m1" placeholder="M-1">
-        <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
-               style="background:#fff9c4;font-weight:bold;color:darkgreen;">
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-        <label for="ca_ligne1" style="width: 150px;">CA (ligne 1) :</label>
-        <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
-               style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-        <label for="creances_actuelles" style="width: 150px;">Créances actuelles</label>
-        <input type="text" id="creances_actuelles" name="creances_actuelles">
-      </div>
-
-      <label style="color: blue; font-weight: bold; text-decoration: underline;">
-        2-CAMV mensuel :
-      </label>
-    </div>
+  
+  <!-- Onglets pour basculer entre les activités -->
+  <div class="activite-tabs" id="activite-tabs">
+    <div class="activite-tab active" data-activite="1">Activité 1</div>
+    <div class="activite-tab" data-activite="2">Activité 2</div>
+  </div>
+  
+  <!-- Contenu de l'activité 1 -->
+  <div id="activite1-content" class="activite-content active">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
       
-    <!-- Colonne de droite -->
-    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-      <label style="font-weight:bold; color: darkred;">Croisements</label>
-      <textarea id="croisements" placeholder="Saisissez ici vos croisements"
-        style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-      <label style="font-weight:bold; color: darkred;">Notes</label>
-      <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
-        style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+      <!-- Colonne de gauche -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <label>Nom de l'activité (1ère ligne) :
+          <input type="text" id="nom_activite_premiere_ligne" readonly>
+        </label>
+
+        <label>Marge de l'activité (1ère ligne) :
+          <input type="text" id="marge_activite_premiere_ligne" readonly>
+        </label>
+
+        <label style="color: blue; font-weight: bold; text-decoration: underline;">
+          1-Chiffre d'affaires mensuel :
+        </label>
+
+        <label>Fréquence de vente (par mois) :
+          <input type="number" id="frequence_vente" min="0" placeholder="0">
+        </label>
+
+        <label>Vente selon derniers jours :</label>
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+          <input type="text" id="vente_jour_v3" placeholder="V-3">
+          <input type="text" id="vente_jour_v2" placeholder="V-2">
+          <input type="text" id="vente_jour_v1" placeholder="V-1">
+          <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
+                 style="background:#fff9c4;font-weight:bold;color:darkblue;">
+        </div>
+
+        <label>Vente selon registre :</label>
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+          <input type="text" id="vente_registre_m3" placeholder="M-3">
+          <input type="text" id="vente_registre_m2" placeholder="M-2">
+          <input type="text" id="vente_registre_m1" placeholder="M-1">
+          <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
+                 style="background:#fff9c4;font-weight:bold;color:darkgreen;">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="ca_ligne1" style="width: 150px;">CA (ligne 1) :</label>
+          <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
+                 style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="creances_actuelles" style="width: 150px;">Créances actuelles</label>
+          <input type="text" id="creances_actuelles" name="creances_actuelles">
+        </div>
+
+        <label style="color: blue; font-weight: bold; text-decoration: underline;">
+          2-CAMV mensuel :
+        </label>
+      </div>
+        
+      <!-- Colonne de droite -->
+      <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+        <label style="font-weight:bold; color: darkred;">Croisements</label>
+        <textarea id="croisements" placeholder="Saisissez ici vos croisements"
+          style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+        <label style="font-weight:bold; color: darkred;">Notes</label>
+        <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
+          style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+      </div>
+
+      <label>Fréquence d'achat (par mois) :
+        <input type="number" id="frequence_achat" min="0" placeholder="0">
+      </label>
     </div>
 
-    <label>Fréquence d'achat (par mois) :
-      <input type="number" id="frequence_achat" min="0" placeholder="0">
+    <label>Achat max/min/CAMV Mensuel:</label>
+    <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
+      <input type="text" id="achat_max" placeholder="max">
+      <input type="text" id="achat_min" placeholder="min">
+      <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
+             style="background:#fff9c4;font-weight:bold;color:darkblue;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
+      <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
+             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_final" style="width: 150px; font-weight: bold;">CAMV final</label>
+      <input type="text" id="camv_final" name="camv_final" readonly
+             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="dettes_fournisseurs" style="width: 160px;">Dettes fournisseurs</label>
+      <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
+    </div>
+
+    <label style="color: blue; font-weight: bold; text-decoration: underline;">
+      3-OPEX (Operating Expenses ou dépenses d’exploitation)
     </label>
+
+    <div class="opex-wrapper">
+      <table class="opex-table">
+        <thead>
+          <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
+          <tr>
+            <td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
+            <td><input type="text" class="opex-input" style="height:40px;" /></td>
+          </tr>
+          <tr class="opex-total">
+            <td>Total OPEX</td>
+            <td><span id="opex-total">0 MGA</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+  
+  <!-- Contenu de l'activité 2 -->
+  <div id="activite2-content" class="activite-content">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      
+      <!-- Colonne de gauche -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <label>Nom de l'activité (2ème ligne) :
+          <input type="text" id="nom_activite_deuxieme_ligne" readonly>
+        </label>
 
-  <label>Achat max/min/CAMV Mensuel:</label>
-  <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
-    <input type="text" id="achat_max" placeholder="max">
-    <input type="text" id="achat_min" placeholder="min">
-    <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
-           style="background:#fff9c4;font-weight:bold;color:darkblue;">
-  </div>
+        <label>Marge de l'activité (2ème ligne) :
+          <input type="text" id="marge_activite_deuxieme_ligne" readonly>
+        </label>
 
-  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-    <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
-    <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
-           style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-  </div>
+        <label style="color: blue; font-weight: bold; text-decoration: underline;">
+          1-Chiffre d'affaires mensuel :
+        </label>
 
-  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-    <label for="camv_final" style="width: 150px; font-weight: bold;">CAMV final</label>
-    <input type="text" id="camv_final" name="camv_final" readonly
-           style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-  </div>
+        <label>Fréquence de vente (par mois) :
+          <input type="number" id="frequence_vente2" min="0" placeholder="0">
+        </label>
 
-  <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-    <label for="dettes_fournisseurs" style="width: 160px;">Dettes fournisseurs</label>
-    <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
-  </div>
+        <label>Vente selon derniers jours :</label>
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+          <input type="text" id="vente_jour_v3_2" placeholder="V-3">
+          <input type="text" id="vente_jour_v2_2" placeholder="V-2">
+          <input type="text" id="vente_jour_v1_2" placeholder="V-1">
+          <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly 
+                 style="background:#fff9c4;font-weight:bold;color:darkblue;">
+        </div>
 
-  <label style="color: blue; font-weight: bold; text-decoration: underline;">
-    3-OPEX (Operating Expenses ou dépenses d’exploitation)
-  </label>
+        <label>Vente selon registre :</label>
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+          <input type="text" id="vente_registre_m3_2" placeholder="M-3">
+          <input type="text" id="vente_registre_m2_2" placeholder="M-2">
+          <input type="text" id="vente_registre_m1_2" placeholder="M-1">
+          <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly 
+                 style="background:#fff9c4;font-weight:bold;color:darkgreen;">
+        </div>
 
-  <div class="opex-wrapper">
-    <table class="opex-table">
-      <thead>
-        <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
-        <tr>
-          <td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
-          <td><input type="text" class="opex-input" style="height:40px;" /></td>
-        </tr>
-        <tr class="opex-total">
-          <td>Total OPEX</td>
-          <td><span id="opex-total">0 MGA</span></td>
-        </tr>
-      </tbody>
-    </table>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="ca_ligne2" style="width: 150px;">CA (ligne 2) :</label>
+          <input type="text" id="ca_ligne2" name="ca_ligne2" readonly
+                 style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="creances_actuelles2" style="width: 150px;">Créances actuelles</label>
+          <input type="text" id="creances_actuelles2" name="creances_actuelles2">
+        </div>
+
+        <label style="color: blue; font-weight: bold; text-decoration: underline;">
+          2-CAMV mensuel :
+        </label>
+      </div>
+        
+      <!-- Colonne de droite -->
+      <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+        <label style="font-weight:bold; color: darkred;">Croisements</label>
+        <textarea id="croisements2" placeholder="Saisissez ici vos croisements"
+          style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+        <label style="font-weight:bold; color: darkred;">Notes</label>
+        <textarea id="notes2" placeholder="Insérez ici vos notes et remarques"
+          style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+      </div>
+
+      <label>Fréquence d'achat (par mois) :
+        <input type="number" id="frequence_achat2" min="0" placeholder="0">
+      </label>
+    </div>
+
+    <label>Achat max/min/CAMV Mensuel:</label>
+    <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
+      <input type="text" id="achat_max2" placeholder="max">
+      <input type="text" id="achat_min2" placeholder="min">
+      <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly 
+             style="background:#fff9c4;font-weight:bold;color:darkblue;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
+      <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly
+             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_final2" style="width: 150px; font-weight: bold;">CAMV final</label>
+      <input type="text" id="camv_final2" name="camv_final2" readonly
+             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="dettes_fournisseurs2" style="width: 160px;">Dettes fournisseurs</label>
+      <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
+    </div>
+
+    <label style="color: blue; font-weight: bold; text-decoration: underline;">
+      3-OPEX (Operating Expenses ou dépenses d’exploitation)
+    </label>
+
+    <div class="opex-wrapper">
+      <table class="opex-table">
+        <thead>
+          <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
+          <tr>
+            <td><input type="text" class="opex-label2" placeholder="Autres" style="height:40px;" /></td>
+            <td><input type="text" class="opex-input2" style="height:40px;" /></td>
+          </tr>
+          <tr class="opex-total">
+            <td>Total OPEX</td>
+            <td><span id="opex-total2">0 MGA</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </fieldset>
 
@@ -440,8 +631,8 @@
   <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
 </fieldset>
 
-
-
+<button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
+<button type="button" class="submit-btn" onclick="sauvegarderHTML()">Exporter HTML</button>
 
 </form>
 
@@ -454,20 +645,20 @@ const ACTIVITES_MARGES = {
   "Murisserie de banane": "8%", "Confection": "25%", "Collecteurs produits riz": "7%", "Collecteurs produits locaux": "20%",
   "Poissonnerie": "15%", "Commerce Provende animale": "18%", "Vente cosmétiques": "20%", "Quincailleries": "18%",
   "Pharmacie": "12%", "Vente de pneus": "14%", "Taxiphone = vente de carte": "5%", "Vente d'articles divers": "15%",
-  "Vente de fourniture scolaire": "18%", "Multiservices": "-100%", "Pièces pour véhicules, accessoires": "23%",
+  "Vente de fourniture scolaire": "18%", "Multiservices": "0%", "Pièces pour véhicules, accessoires": "23%",
   "Pièces pour moto, accessoires": "15%", "Pièces pour bicyclette, accessoires": "15%", "Fruits et légumes": "15%",
   "Boucherie : viande bovine, porcine et volaille de chair, charcuterie": "18%", "Production yaourt": "35%",
   "Vente Vêtement: produits neufs": "23%", "Vente chaussures: produits neufs": "30%", "Vêtement chaussures: produits usés": "25%",
   "Vêtement textiles: produits usés": "18%", "Grossiste PPN": "5%", "Bijouterie": "23%", "Lapidaire": "35%",
   "Vente produit en plastique": "13%", "Vente produit laitier": "10%", "Vente d'œuf": "10%", "Kafé sy mofo": "60%",
-  "Grillade/Snack": "50%", "Location maison": "-100%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
+  "Grillade/Snack": "50%", "Location maison": "0%", "Gargote": "50%", "Restaurant": "60%", "Poulets de chair": "20%",
   "Poules pondeuses": "21%", "Vente de riz blanc en gros": "15%", "Vente de riz blanc au détail": "30%",
   "Vente de poissons secs en gros": "23%", "Vente de poissons secs au détail": "28%", "Vente de produits locaux en gros": "18%",
-  "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "-100%", "Coiffure et esthétique": "-100%",
-  "Vulca – Service de Réparation de Pneus": "-100%", "Cybercafé": "-100%", "Dépôt de médicament": "-100%",
-  "Cliniques de soins de base": "-100%", "Ecole": "-100%", "Location voiture": "-100%", "Tranport des personnes": "-100%",
-  "Transport des marchandises": "-100%", "Taxi-ville": "-100%", "Taxi-moto": "-100%", "Autres services": "-100%",
-  "Cyclo-pousse": "-100%", "Pousse-pousse": "-100%", "Tuc-tuc": "-100%"
+  "Vente de produits locaux au détail": "40%", "Cordonnier et réparateur de chaussures": "0%", "Coiffure et esthétique": "0%",
+  "Vulca – Service de Réparation de Pneus": "0%", "Cybercafé": "0%", "Dépôt de médicament": "0%",
+  "Cliniques de soins de base": "0%", "Ecole": "0%", "Location voiture": "0%", "Tranport des personnes": "0%",
+  "Transport des marchandises": "0%", "Taxi-ville": "0%", "Taxi-moto": "0%", "Autres services": "0%",
+  "Cyclo-pousse": "0%", "Pousse-pousse": "0%", "Tuc-tuc": "0%"
 };
 
 /*************************************************
@@ -549,20 +740,40 @@ function ajouterActivite(){
   remplirSelectActivite(selectActivite);
   selectActivite.addEventListener('change', function(){
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
-    majNomActivitePremiereLigne(); majMargeActivitePremiereLigne(); majLegendActivite(); majCAMVSelonMarge();
+    majNomActivitePremiereLigne(); 
+    majNomActiviteDeuxiemeLigne();
+    majMargeActivitePremiereLigne(); 
+    majMargeActiviteDeuxiemeLigne();
+    majLegendActivite(); 
+    majCAMVSelonMarge();
+    majCAMVSelonMarge2();
   });
 }
 function supprimerActivite(btn){ 
   btn.closest('tr')?.remove(); 
-  majNomActivitePremiereLigne(); majMargeActivitePremiereLigne(); majLegendActivite(); majCAMVSelonMarge();
+  majNomActivitePremiereLigne(); 
+  majNomActiviteDeuxiemeLigne();
+  majMargeActivitePremiereLigne(); 
+  majMargeActiviteDeuxiemeLigne();
+  majLegendActivite(); 
+  majCAMVSelonMarge();
+  majCAMVSelonMarge2();
 }
 function majNomActivitePremiereLigne(){
-  const premiereActivite = document.querySelector('#tbody_activite tr select[name="nom_activite[]"]');
+  const premiereActivite = document.querySelector('#tbody_activite tr:first-child select[name="nom_activite[]"]');
   document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? (premiereActivite.value||'') : '';
+}
+function majNomActiviteDeuxiemeLigne(){
+  const deuxiemeActivite = document.querySelector('#tbody_activite tr:nth-child(2) select[name="nom_activite[]"]');
+  document.getElementById('nom_activite_deuxieme_ligne').value = deuxiemeActivite ? (deuxiemeActivite.value||'') : '';
 }
 function majMargeActivitePremiereLigne() {
   const premiereActiviteMarge = document.querySelector('#tbody_activite tr:first-child input[name="marge_activite[]"]');
   document.getElementById('marge_activite_premiere_ligne').value = premiereActiviteMarge ? premiereActiviteMarge.value : '';
+}
+function majMargeActiviteDeuxiemeLigne() {
+  const deuxiemeActiviteMarge = document.querySelector('#tbody_activite tr:nth-child(2) input[name="marge_activite[]"]');
+  document.getElementById('marge_activite_deuxieme_ligne').value = deuxiemeActiviteMarge ? deuxiemeActiviteMarge.value : '';
 }
 function majLegendActivite(){
   const legend = document.getElementById('legend_activite');
@@ -613,7 +824,37 @@ function majCALigne1(){
 }
 
 /*************************************************
- *  CAMV (mensuel / selon marge / final)
+ *  VENTES & CA (ligne 2)
+ *************************************************/
+function majVenteMensuelle2(){
+  ['vente_jour_v3_2','vente_jour_v2_2','vente_jour_v1_2'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const v3 = parseNumberFromString(document.getElementById('vente_jour_v3_2').value);
+  const v2 = parseNumberFromString(document.getElementById('vente_jour_v2_2').value);
+  const v1 = parseNumberFromString(document.getElementById('vente_jour_v1_2').value);
+  const freq = parseFloat(document.getElementById('frequence_vente2').value) || 0;
+  const moyenne = (v3 + v2 + v1) / 3;
+  const resultat = Math.round(moyenne * freq);
+  document.getElementById('vente_mensuelle2').value = resultat>0 ? fmtMGA(resultat) : "";
+  majCALigne2(); majCAMVSelonMarge2();
+}
+function majVenteMensRV2(){
+  ['vente_registre_m3_2','vente_registre_m2_2','vente_registre_m1_2'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const m3 = parseNumberFromString(document.getElementById('vente_registre_m3_2').value);
+  const m2 = parseNumberFromString(document.getElementById('vente_registre_m2_2').value);
+  const m1 = parseNumberFromString(document.getElementById('vente_registre_m1_2').value);
+  const moyenne = Math.round((m3 + m2 + m1) / 3);
+  document.getElementById('vente_registre_mensuelle2').value = moyenne>0 ? fmtMGA(moyenne) : "";
+  majCALigne2(); majCAMVSelonMarge2();
+}
+function majCALigne2(){
+  const venteMensRV = parseNumberFromString(document.getElementById('vente_registre_mensuelle2').value) || 0;
+  const venteMensuelle = parseNumberFromString(document.getElementById('vente_mensuelle2').value) || 0;
+  const ca = (venteMensRV === 0) ? venteMensuelle : venteMensRV;
+  document.getElementById('ca_ligne2').value = ca>0 ? fmtMGA(ca) : "";
+}
+
+/*************************************************
+ *  CAMV (mensuel / selon marge / final) - Activité 1
  *************************************************/
 function majCAMVMensuel(){
   ['achat_max','achat_min'].forEach(id=>formatInputMGA(document.getElementById(id), true));
@@ -643,13 +884,53 @@ function majCAMVFinal(){
 }
 
 /*************************************************
- *  OPEX: formatage et total (temps réel + blur)
+ *  CAMV (mensuel / selon marge / final) - Activité 2
+ *************************************************/
+function majCAMVMensuel2(){
+  ['achat_max2','achat_min2'].forEach(id=>formatInputMGA(document.getElementById(id), true));
+  const max = parseNumberFromString(document.getElementById('achat_max2').value);
+  const min = parseNumberFromString(document.getElementById('achat_min2').value);
+  const freq = parseFloat(document.getElementById('frequence_achat2').value) || 0;
+  const moyenne = (max + min) / 2;
+  const resultat = Math.round(moyenne * freq);
+  document.getElementById('camv_mensuel2').value = resultat>0 ? fmtMGA(resultat) : "0 MGA";
+  majCALigne2(); majCAMVFinal2();
+}
+function majCAMVSelonMarge2(){
+  let ca = parseNumberFromString(document.getElementById('ca_ligne2').value) || 0;
+  let margeStr = document.getElementById('marge_activite_deuxieme_ligne').value || "0%";
+  let marge = parseFloat(String(margeStr).replace('%',''))/100;
+  if(isNaN(marge)) marge = 0;
+  let camv = 0;
+  if(marge <= 0){ camv = 0; } else { camv = Math.round(ca / (1 + marge)); }
+  document.getElementById('camv_selon_marge2').value = camv > 0 ? fmtMGA(camv) : "0 MGA";
+  majCAMVFinal2();
+}
+function majCAMVFinal2(){
+  const camvMensuel = parseNumberFromString(document.getElementById('camv_mensuel2').value) || 0;
+  const camvMarge   = parseNumberFromString(document.getElementById('camv_selon_marge2').value) || 0;
+  const camvFinal = Math.max(camvMensuel, camvMarge);
+  document.getElementById('camv_final2').value = camvFinal>0 ? fmtMGA(camvFinal) : "0 MGA";
+}
+
+/*************************************************
+ *  OPEX: formatage et total (temps réel + blur) - Activité 1
  *************************************************/
 function updateOpexTotal(){
   let total = 0;
   document.querySelectorAll('.opex-input').forEach(input => { total += parseNumberFromString(input.value); });
   document.getElementById('opex-total').textContent = fmtMGA(total);
 }
+
+/*************************************************
+ *  OPEX: formatage et total (temps réel + blur) - Activité 2
+ *************************************************/
+function updateOpexTotal2(){
+  let total = 0;
+  document.querySelectorAll('.opex-input2').forEach(input => { total += parseNumberFromString(input.value); });
+  document.getElementById('opex-total2').textContent = fmtMGA(total);
+}
+
 function formatInputMGA(el, keepSuffix=false){
   if(!el) return;
   let raw = String(el.value || "");
@@ -779,10 +1060,31 @@ function calculerMMP() {
 }
 
 /*************************************************
+ *  GESTION DES ONGLETS D'ACTIVITÉ
+ *************************************************/
+function activerOnglet(ongletId) {
+  // Désactiver tous les onglets
+  document.querySelectorAll('.activite-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Désactiver tous les contenus
+  document.querySelectorAll('.activite-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  // Activer l'onglet sélectionné
+  document.querySelector(`.activite-tab[data-activite="${ongletId}"]`).classList.add('active');
+  
+  // Activer le contenu correspondant
+  document.getElementById(`activite${ongletId}-content`).classList.add('active');
+}
+
+/*************************************************
  *  ÉCOUTEURS & INIT
  *************************************************/
 document.addEventListener('DOMContentLoaded', ()=>{
-  // OPEX
+  // OPEX - Activité 1
   document.querySelectorAll('.opex-input').forEach(input => {
     input.addEventListener('input', (e)=>{
       e.target.value = (e.target.value || "").replace(/[^\d]/g,'');
@@ -796,7 +1098,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
   });
 
-  // formatage simple (MGA) sur divers champs
+  // OPEX - Activité 2
+  document.querySelectorAll('.opex-input2').forEach(input => {
+    input.addEventListener('input', (e)=>{
+      e.target.value = (e.target.value || "").replace(/[^\d]/g,'');
+      updateOpexTotal2();
+    });
+    input.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+    input.addEventListener('blur', (e)=>{
+      const n = parseNumberFromString(e.target.value);
+      e.target.value = n>0 ? fmtMGA(n) : "";
+      updateOpexTotal2();
+    });
+  });
+
+  // formatage simple (MGA) sur divers champs - Activité 1
   ['creances_actuelles','dettes_fournisseurs','achat_max','achat_min','capacite_paiement'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el) return;
@@ -809,7 +1125,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
   });
 
-  // ventes
+  // formatage simple (MGA) sur divers champs - Activité 2
+  ['creances_actuelles2','dettes_fournisseurs2','achat_max2','achat_min2'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', (e)=>{ e.target.value = (e.target.value || "").replace(/[^\d]/g,''); });
+    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+    el.addEventListener('blur', (e)=>{
+      const n = parseNumberFromString(e.target.value);
+      e.target.value = n>0 ? fmtMGA(n) : "";
+      if(id === 'achat_max2' || id === 'achat_min2') majCAMVMensuel2();
+    });
+  });
+
+  // ventes - Activité 1
   ['vente_jour_v3','vente_jour_v2','vente_jour_v1','vente_registre_m3','vente_registre_m2','vente_registre_m1'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el) return;
@@ -817,8 +1146,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
     el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
     el.addEventListener('blur', ()=>{ majVenteMensuelle(); majVenteMensRV(); });
   });
+  
+  // ventes - Activité 2
+  ['vente_jour_v3_2','vente_jour_v2_2','vente_jour_v1_2','vente_registre_m3_2','vente_registre_m2_2','vente_registre_m1_2'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', (e)=>{ e.target.value = (e.target.value||"").replace(/[^\d]/g,''); });
+    el.addEventListener('focus', (e)=>{ e.target.value = String(parseNumberFromString(e.target.value) || ""); });
+    el.addEventListener('blur', ()=>{ majVenteMensuelle2(); majVenteMensRV2(); });
+  });
+  
   document.getElementById('frequence_vente')?.addEventListener('input', majVenteMensuelle);
   document.getElementById('frequence_achat')?.addEventListener('input', majCAMVMensuel);
+  
+  document.getElementById('frequence_vente2')?.addEventListener('input', majVenteMensuelle2);
+  document.getElementById('frequence_achat2')?.addEventListener('input', majCAMVMensuel2);
 
   // Sync caution
   const lien = document.getElementById('lien_demandeur');
@@ -830,10 +1172,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // MMP : binder la première ligne
   document.querySelectorAll('#tableMMP tbody tr').forEach(bindMMPRow);
 
+  // Gestion des onglets d'activité
+  document.querySelectorAll('.activite-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      activerOnglet(tab.getAttribute('data-activite'));
+    });
+  });
+
   // Inits
   updateOpexTotal();
+  updateOpexTotal2();
   updateTotalDepuisObjet();
   majCALigne1(); majCAMVSelonMarge(); majCAMVMensuel();
+  majCALigne2(); majCAMVSelonMarge2(); majCAMVMensuel2();
   calculerMMP();
 });
 </script>
@@ -996,7 +1347,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </td>
             <td><input type="text" class="valeur-achat currency-input" placeholder="Valeur d'achat" value="0"></td>
             <td><input type="text" class="valeur-estimee currency-input" placeholder="Valeur estimée" value="0"></td>
-            <td><input type="number" class="decote" placeholder="Décote %" style="text-align:right;" readonly></td>
+            <td><input type="number" class="decote" placeholder="Décote %" style="text-align:right; background-color:#007BFF; color:white; font-weight:bold;" readonly>
+</td>
+
             <td>
                 <select class="actif-select">
                     <option value="Oui">Oui</option>
@@ -1043,13 +1396,10 @@ document.addEventListener('DOMContentLoaded', function() {
         recalculerTotaux();
     }
 
-    // Initialiser avec une ligne vide
+    // Initialiser avec une ligne vue
     ajouterGarantie();
     btnAjouter.addEventListener('click', ajouterGarantie);
 </script>
-
-
-
 
 </body>
 </html>
