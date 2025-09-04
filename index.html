@@ -383,6 +383,12 @@
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">CAMV selon MMP</label>
+      <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly
+             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+    </div>
+
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
       <label for="camv_final" style="width: 150px; font-weight: bold;">CAMV final</label>
       <input type="text" id="camv_final" name="camv_final" readonly
@@ -587,7 +593,7 @@
         <td id="totalStock">0,00</td>
       </tr>
       <tr class="mmp-row">
-        <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> %</td>
+        <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> </td>
       </tr>
     </tfoot>
   </table>
@@ -716,7 +722,7 @@ function remplirSelectActivite(select){
     opt.value = nom; opt.textContent = nom; select.appendChild(opt);
   });
 }
-function ajouterActivite(){
+function ajouterActivite() {
   const tbody = document.getElementById('tbody_activite');
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -737,28 +743,50 @@ function ajouterActivite(){
 
   const selectActivite = tr.querySelector('select[name="nom_activite[]"]');
   const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+
   remplirSelectActivite(selectActivite);
-  selectActivite.addEventListener('change', function(){
+
+  selectActivite.addEventListener('change', function () {
+    // mise à jour marge selon l’activité choisie
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
-    majNomActivitePremiereLigne(); 
+
+    // mise à jour des champs annexes
+    majNomActivitePremiereLigne();
     majNomActiviteDeuxiemeLigne();
-    majMargeActivitePremiereLigne(); 
+    majMargeActivitePremiereLigne();
     majMargeActiviteDeuxiemeLigne();
-    majLegendActivite(); 
+    majLegendActivite();
+
+    // 🔑 recalcul du MMP avant CAMV
+    if (typeof majMMP === "function") majMMP();
+
+    // recalculs CAMV
     majCAMVSelonMarge();
     majCAMVSelonMarge2();
+    majCAMVSelonMMP();
   });
 }
-function supprimerActivite(btn){ 
+
+function supprimerActivite(btn) { 
+  // Supprimer la ligne activité
   btn.closest('tr')?.remove(); 
+
+  // Mise à jour des noms, marges, légende
   majNomActivitePremiereLigne(); 
   majNomActiviteDeuxiemeLigne();
   majMargeActivitePremiereLigne(); 
   majMargeActiviteDeuxiemeLigne();
   majLegendActivite(); 
+
+  // 🔑 recalcul du MMP avant CAMV
+  if (typeof majMMP === "function") majMMP();
+
+  // Mise à jour des CAMV
   majCAMVSelonMarge();
   majCAMVSelonMarge2();
+  majCAMVSelonMMP();
 }
+
 function majNomActivitePremiereLigne(){
   const premiereActivite = document.querySelector('#tbody_activite tr:first-child select[name="nom_activite[]"]');
   document.getElementById('nom_activite_premiere_ligne').value = premiereActivite ? (premiereActivite.value||'') : '';
@@ -777,8 +805,7 @@ function majMargeActiviteDeuxiemeLigne() {
 }
 function majLegendActivite(){
   const legend = document.getElementById('legend_activite');
-  const nom = document.getElementById('nom_activite_premiere_ligne').value;
-  legend.textContent = nom ? "FONCTIONNEMENT DE L'ACTIVITE " + nom : "FONCTIONNEMENT DE L'ACTIVITE";
+  
 }
 
 /*************************************************
@@ -866,22 +893,64 @@ function majCAMVMensuel(){
   document.getElementById('camv_mensuel').value = resultat>0 ? fmtMGA(resultat) : "0 MGA";
   majCALigne1(); majCAMVFinal();
 }
+
 function majCAMVSelonMarge(){
   let ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
   let margeStr = document.getElementById('marge_activite_premiere_ligne').value || "0%";
-  let marge = parseFloat(String(margeStr).replace('%',''))/100;
-  if(isNaN(marge)) marge = 0;
+  let marge = parseFloat(String(margeStr).replace('%','')) / 100;
+  if (isNaN(marge)) marge = 0;
+
   let camv = 0;
-  if(marge <= 0){ camv = 0; } else { camv = Math.round(ca / (1 + marge)); }
+  if (marge <= 0) {
+    camv = 0;
+  } else {
+    camv = Math.round(ca / (1 + marge));
+  }
+
   document.getElementById('camv_selon_marge').value = camv > 0 ? fmtMGA(camv) : "0 MGA";
   majCAMVFinal();
 }
-function majCAMVFinal(){
+
+function majCAMVSelonMMP() {
+  // Récupérer le CA ligne 1
+  const ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
+
+  // Récupérer le MMP (peut être input ou span)
+  const mmpElem = document.getElementById('mmp');
+  let mmpStr = "0%";
+  if (mmpElem) {
+    mmpStr = (mmpElem.value !== undefined ? mmpElem.value : mmpElem.textContent || "0%").trim();
+  }
+
+  // Conversion en nombre décimal
+  let mmp = parseFloat(String(mmpStr).replace(/\s|%/g, '')) / 100;
+  if (isNaN(mmp)) mmp = 0;
+
+  // Calcul CAMV selon MMP
+  let camvMMP = 0;
+  if (mmp > 0) {
+    camvMMP = Math.round(ca / (1 + mmp));
+  }
+
+  // Affichage formaté
+  const champ = document.getElementById('camv_selon_mmp');
+  if (champ) champ.value = camvMMP > 0 ? fmtMGA(camvMMP) : "0 MGA";
+
+  // Mise à jour du CAMV final
+  if (typeof majCAMVFinal === "function") majCAMVFinal();
+}
+
+function majCAMVFinal() {
   const camvMensuel = parseNumberFromString(document.getElementById('camv_mensuel').value) || 0;
   const camvMarge   = parseNumberFromString(document.getElementById('camv_selon_marge').value) || 0;
-  const camvFinal = Math.max(camvMensuel, camvMarge);
-  document.getElementById('camv_final').value = camvFinal>0 ? fmtMGA(camvFinal) : "0 MGA";
+  const camvMMP     = parseNumberFromString(document.getElementById('camv_selon_mmp').value) || 0;
+
+  const camvFinal = Math.max(camvMensuel, camvMarge, camvMMP);
+
+  const champ = document.getElementById('camv_final');
+  if (champ) champ.value = camvFinal > 0 ? fmtMGA(camvFinal) : "0 MGA";
 }
+
 
 /*************************************************
  *  CAMV (mensuel / selon marge / final) - Activité 2
@@ -988,7 +1057,7 @@ function bindMMPRow(tr){
   const achat = tr.querySelector('.achat');
   const vente = tr.querySelector('.vente');
 
-  // quantité & stock : simple recalcul
+  // quantité & stock : recalcul direct
   [qte, stock].forEach(el=>{
     if(!el) return;
     el.addEventListener('input', calculerMMP);
@@ -998,7 +1067,7 @@ function bindMMPRow(tr){
   [achat, vente].forEach(el=>{
     if(!el) return;
     el.addEventListener('input', e=>{
-      e.target.value = (e.target.value||"").replace(/[^\d\.,-]/g,''); // garder chiffres , .
+      e.target.value = (e.target.value || "").replace(/[^\d\.,-]/g,''); // garder chiffres , .
       calculerMMP();
     });
     el.addEventListener('focus', e=>{
@@ -1006,7 +1075,9 @@ function bindMMPRow(tr){
     });
     el.addEventListener('blur', e=>{
       const n = parseNumberFromString(e.target.value);
-      e.target.value = n ? (n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0})) : "";
+      e.target.value = n 
+        ? n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0}) 
+        : "";
       calculerMMP();
     });
   });
@@ -1021,9 +1092,9 @@ function ajouterProduit(){
     <td><input type="number" class="stock" value="0"></td>
     <td><input type="text" class="achat" value="0"></td>
     <td><input type="text" class="vente" value="0"></td>
-    <td class="montantAchat">0,00</td>
-    <td class="montantVente">0,00</td>
-    <td class="montantStock">0,00</td>
+    <td class="montantAchat">0</td>
+    <td class="montantVente">0</td>
+    <td class="montantStock">0</td>
   `;
   tbody.appendChild(tr);
   bindMMPRow(tr);
@@ -1056,8 +1127,16 @@ function calculerMMP() {
   document.getElementById("totalStock").textContent = formatNombre(totalStock);
 
   const mmp = totalAchat > 0 ? ((totalVente - totalAchat) / totalAchat * 100) : 0;
-  document.getElementById("mmp").textContent = formatNombre(mmp);
+
+  // si #mmp est un <input>
+  if (document.getElementById("mmp").tagName === "INPUT") {
+    document.getElementById("mmp").value = formatNombre(mmp) + " %";
+  } else {
+    // si c'est un <span> ou <div>
+    document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
+  }
 }
+
 
 /*************************************************
  *  GESTION DES ONGLETS D'ACTIVITÉ
@@ -1183,7 +1262,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   updateOpexTotal();
   updateOpexTotal2();
   updateTotalDepuisObjet();
-  majCALigne1(); majCAMVSelonMarge(); majCAMVMensuel();
+  majCALigne1(); majCAMVSelonMarge(); majCAMVSelonMMP(); majCAMVMensuel();
   majCALigne2(); majCAMVSelonMarge2(); majCAMVMensuel2();
   calculerMMP();
 });
