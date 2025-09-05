@@ -164,147 +164,198 @@
 
 <!-- INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION -->
 <fieldset>
-  <legend>INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION</legend>
-  <div class="grid-2">
-    <div>
-      <h3>Demandeur</h3>
-      <label>ID client : <input type="text" id="id_client"></label>
-      <label>Rang de crédit :
-        <select>
-          <option>1er crédit</option>
-          <option>2ème crédit</option>
-          <option>3ème crédit</option>
-          <option>4ème crédit</option>
-          <option>5ème crédit</option>
-        </select>
-      </label>
-      <label>Nom et prénoms : <input type="text" id="nom_prenom_client"></label>
-      <label>Âge : <input type="number" min="0"></label>
-      <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
-      <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
-      <label>Adresse domicile : <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea></label>
-      <label>Adresse activité : <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea></label>
+  <legend id="legend_infos_generales">
+    INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION
+    <button type="button" onclick="toggleSection('infos_generales_content', this)" 
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
+
+  <!-- Contenu mis dans un conteneur -->
+  <div id="infos_generales_content">
+    <div class="grid-2">
+      <div>
+        <h3>Demandeur</h3>
+        <label>ID client : <input type="text" id="id_client"></label>
+        <label>Rang de crédit :
+          <select>
+            <option>1er crédit</option>
+            <option>2ème crédit</option>
+            <option>3ème crédit</option>
+            <option>4ème crédit</option>
+            <option>5ème crédit</option>
+          </select>
+        </label>
+        <label>Nom et prénoms : <input type="text" id="nom_prenom_client"></label>
+        <label>Âge : <input type="number" min="0"></label>
+        <label>État civil : 
+          <select id="etat_civil_client">
+            <option value="">--Sélectionner--</option>
+            <option>Marié(e)</option>
+            <option>Veuf(ve)</option>
+            <option>Célibataire</option>
+            <option>Concubin(e)</option>
+          </select>
+        </label>
+        <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
+        <label>Adresse domicile : 
+          <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea>
+        </label>
+        <label>Adresse activité : 
+          <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea>
+        </label>
+      </div>
+
+      <div>
+        <h3>Caution</h3>
+        <label>ID caution : <input type="text" id="id_caution"></label>
+        <label>Lien avec le demandeur : 
+          <select id="lien_demandeur">
+            <option value="">--Sélectionner--</option>
+            <option>Epoux(se)</option>
+            <option>Concubin(e)</option>
+            <option>Fratrie</option>
+            <option>Ami/Collègue</option>
+          </select>
+        </label>
+        <label>Nom et prénoms : <input type="text" id="nom_prenom_caution"></label>
+        <label>Âge : <input type="number" min="0"></label>
+        <label>État civil : 
+          <select id="etat_civil_caution">
+            <option value="">--Sélectionner--</option>
+            <option>Marié(e)</option>
+            <option>Veuf(ve)</option>
+            <option>Célibataire</option>
+            <option>Concubin(e)</option>
+          </select>
+        </label>
+        <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
+        <label>Adresse domicile : 
+          <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea>
+        </label>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
+          <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+          <label for="source_revenus" style="width: 150px;">Source</label>
+          <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
+        </div>
+      </div>
     </div>
-    <div>
-      <h3>Caution</h3>
-      <label>ID caution : <input type="text" id="id_caution"></label>
-      <label>Lien avec le demandeur : 
-        <select id="lien_demandeur">
-          <option value="">--Sélectionner--</option>
-          <option>Epoux(se)</option>
-          <option>Concubin(e)</option>
-          <option>Fratrie</option>
-          <option>Ami/Collègue</option>
-        </select>
-      </label>
-      <label>Nom et prénoms : <input type="text" id="nom_prenom_caution"></label>
-      <label>Âge : <input type="number" min="0"></label>
-      <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option></select></label>
-      <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
-      <label>Adresse domicile : <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea></label>
-
-     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-  <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
-  <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
-</div>
-
-<div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-  <label for="source_revenus" style="width: 150px;">Source</label>
-  <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
-</div>
-
-
   </div>
 </fieldset>
+
 
 <!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
 <fieldset>
-  <legend>HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT</legend>
-  <table id="table_activite">
-    <thead>
-      <tr>
-        <th>Nom de l'activité</th>
-        <th>Marge</th>
-        <th>Ancienneté (années)</th>
-        <th>Secteur</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tbody_activite"></tbody>
-  </table>
-  <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
-<!-- Conteneur pour les sections d'activité -->
-  <div id="sections_activite"></div>
-<!-- Informations financières si salarié -->
-<fieldset style="margin-top:15px;">
-  <legend>INFORMATIONS SALARIALES & FINANCIÈRES</legend>
+  <legend id="legend_hist_activite">
+    HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
+    <button type="button" onclick="toggleSection('hist_activite_content', this)" 
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+  <!-- Tout le contenu est mis dans un conteneur -->
+  <div id="hist_activite_content">
+    <table id="table_activite">
+      <thead>
+        <tr>
+          <th>Nom de l'activité</th>
+          <th>Marge</th>
+          <th>Ancienneté (années)</th>
+          <th>Secteur</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tbody_activite"></tbody>
+    </table>
+    <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
 
-    <label>Nom de la société
-      <input type="text" name="societe" placeholder="Ex : PAOMA, TELMA, STAR...">
-    </label>
+    <!-- Conteneur pour les sections d'activité -->
+    <div id="sections_activite"></div>
 
-    <label>Poste
-      <input type="text" name="poste" placeholder="Ex : Comptable">
-    </label>
+    <!-- Informations financières si salarié -->
+    <fieldset style="margin-top:15px;">
+      <legend>INFORMATIONS SALARIALES & FINANCIÈRES</legend>
 
-    <label>Solde mobile money
-  <input type="text" name="solde_mobile" placeholder="0 MGA" style="text-align:left;" id="solde_mobile" onblur="formatFinancialField(this)">
-</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <label>Nom de la société
+          <input type="text" name="societe" placeholder="Ex : PAOMA, TELMA, STAR...">
+        </label>
 
-<label>Solde épargne / banque
-  <input type="text" name="solde_epargne" placeholder="0 MGA" style="text-align:left;" id="solde_epargne" onblur="formatFinancialField(this)">
-</label>
+        <label>Poste
+          <input type="text" name="poste" placeholder="Ex : Comptable">
+        </label>
 
-<label>Caisse
-  <input type="text" name="Caisse" placeholder="0 MGA" style="text-align:left;" id="Caisse" onblur="formatFinancialField(this)">
-</label>
+        <label>Solde mobile money
+          <input type="text" name="solde_mobile" placeholder="0 MGA" style="text-align:left;" id="solde_mobile" onblur="formatFinancialField(this)">
+        </label>
 
-<label>Échéances banque / IMF
-  <input type="text" name="echeances" placeholder="0 MGA" style="text-align:left;" id="echeances" onblur="formatFinancialField(this)">
-</label>
+        <label>Solde épargne / banque
+          <input type="text" name="solde_epargne" placeholder="0 MGA" style="text-align:left;" id="solde_epargne" onblur="formatFinancialField(this)">
+        </label>
 
-<label>Encours de crédit
-  <input type="text" name="encours_credit" placeholder="0 MGA" style="text-align:left;" id="encours_credit" onblur="formatFinancialField(this)">
-</label>
+        <label>Caisse
+          <input type="text" name="Caisse" placeholder="0 MGA" style="text-align:left;" id="Caisse" onblur="formatFinancialField(this)">
+        </label>
 
-    <label>Banque / IMF
-      <select name="banque_imf">
-        <option value="">-- Sélectionner --</option>
-        <option>BOA</option>
-        <option>SGM</option>
-        <option>BNI</option>
-        <option>BMOI</option>
-        <option>SBM</option>
-        <option>MCB</option>
-        <option>SMMEC</option>
-        <option>BBM</option>
-        <option>ABM</option>
-        <option>SIPEM</option>
-        <option>BF</option>
-        <option>ACEP</option>
-        <option>OTIV</option>
-        <option>CECAM</option>
-        <option>APEM</option>
-        <option>PAMF</option>
-        <option>Autres</option>
-      </select>
-    </label>
+        <label>Échéances banque / IMF
+          <input type="text" name="echeances" placeholder="0 MGA" style="text-align:left;" id="echeances" onblur="formatFinancialField(this)">
+        </label>
 
+        <label>Encours de crédit
+          <input type="text" name="encours_credit" placeholder="0 MGA" style="text-align:left;" id="encours_credit" onblur="formatFinancialField(this)">
+        </label>
+
+        <label>Banque / IMF
+          <select name="banque_imf">
+            <option value="">-- Sélectionner --</option>
+            <option>BOA</option>
+            <option>SGM</option>
+            <option>BNI</option>
+            <option>BMOI</option>
+            <option>SBM</option>
+            <option>MCB</option>
+            <option>SMMEC</option>
+            <option>BBM</option>
+            <option>ABM</option>
+            <option>SIPEM</option>
+            <option>BF</option>
+            <option>ACEP</option>
+            <option>OTIV</option>
+            <option>CECAM</option>
+            <option>APEM</option>
+            <option>PAMF</option>
+            <option>Autres</option>
+          </select>
+        </label>
+      </div>
+    </fieldset>
   </div>
 </fieldset>
 
 </fieldset>
 
 <fieldset>
-  <legend id="legend_activite">FONCTIONNEMENT DE L'ACTIVITE</legend>
-  
-  <!-- Onglets pour basculer entre les activités -->
-  <div class="activite-tabs" id="activite-tabs">
-    <div class="activite-tab active" data-activite="1">Activité 1</div>
-    <div class="activite-tab" data-activite="2">Activité 2</div>
-  </div>
+  <legend id="legend_activite">
+    FONCTIONNEMENT DE L'ACTIVITE
+    <button type="button" onclick="toggleActivite()" 
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
+
+  <div id="activite-wrapper">
+    <!-- Onglets pour basculer entre les activités -->
+    <div class="activite-tabs" id="activite-tabs">
+      <div class="activite-tab active" data-activite="1">Activité 1</div>
+      <div class="activite-tab" data-activite="2">Activité 2</div>
+    </div>
   
   <!-- Contenu de l'activité 1 -->
   <div id="activite1-content" class="activite-content active">
@@ -565,90 +616,114 @@
 
 <!-- MMP -->
 <fieldset>
-  <legend id="legend_mmp">MARGE MOYENNE PONDÉRÉE (MMP)</legend>
+  <legend id="legend_mmp">
+    MARGE MOYENNE PONDÉRÉE (MMP)
+    <button type="button" onclick="toggleMMP()" 
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
 
-  <table id="tableMMP">
-    <thead>
-      <tr>
-        <th>Produits les plus vendus mensuels</th>
-        <th>Qté mensuelle vendue</th>
-        <th>Stock</th>
-        <th>Prix d'achat</th>
-        <th>Prix de vente</th>
-        <th>Montant achat</th>
-        <th>Montant vente</th>
-        <th>Montant stock</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input type="text" placeholder="Produit"></td>
-        <td><input type="number" class="qte" value="0"></td>
-        <td><input type="number" class="stock" value="0"></td>
-        <!-- prix en TEXT pour autoriser séparateur de milliers -->
-        <td><input type="text" class="achat" value="0"></td>
-        <td><input type="text" class="vente" value="0"></td>
-        <td class="montantAchat">0,00</td>
-        <td class="montantVente">0,00</td>
-        <td class="montantStock">0,00</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr class="total-row">
-        <td colspan="5" style="text-align: right;">TOTAL :</td>
-        <td id="totalAchat">0,00</td>
-        <td id="totalVente">0,00</td>
-        <td id="totalStock">0,00</td>
-      </tr>
-      <tr class="mmp-row">
-        <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> </td>
-      </tr>
-    </tfoot>
-  </table>
-  
-  <button type="button" class="add-btn" onclick="ajouterProduit()">Ajouter produit</button>
+  <div id="mmp-wrapper">
+    <table id="tableMMP">
+      <thead>
+        <tr>
+          <th>Produits les plus vendus mensuels</th>
+          <th>Qté mensuelle vendue</th>
+          <th>Stock</th>
+          <th>Prix d'achat</th>
+          <th>Prix de vente</th>
+          <th>Montant achat</th>
+          <th>Montant vente</th>
+          <th>Montant stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="text" placeholder="Produit"></td>
+          <td><input type="number" class="qte" value="0"></td>
+          <td><input type="number" class="stock" value="0"></td>
+          <!-- prix en TEXT pour autoriser séparateur de milliers -->
+          <td><input type="text" class="achat" value="0"></td>
+          <td><input type="text" class="vente" value="0"></td>
+          <td class="montantAchat">0,00</td>
+          <td class="montantVente">0,00</td>
+          <td class="montantStock">0,00</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="5" style="text-align: right;">TOTAL :</td>
+          <td id="totalAchat">0,00</td>
+          <td id="totalVente">0,00</td>
+          <td id="totalStock">0,00</td>
+        </tr>
+        <tr class="mmp-row">
+          <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> </td>
+        </tr>
+      </tfoot>
+    </table>
+    
+    <button type="button" class="add-btn" onclick="ajouterProduit()">Ajouter produit</button>
+  </div>
 </fieldset>
+
 <fieldset>
-  <legend id="legend_actifs_immo">ACTIFS IMMOBILISES/GARANTIES</legend>
+  <legend id="legend_actifs_immo">
+    ACTIFS IMMOBILISES/GARANTIES
+    <button type="button" onclick="toggleActifs()" 
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
 
-  <table id="table_garanties" border="1" style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 11px;">
-    <thead>
-      <tr style="font-size: 10px;">
-        <th>Désignations</th>
-        <th>Emplacement</th>
-        <th>Description</th>
-        <th>Marque</th>
-        <th>Immat°…</th>
-        <th>Garantie (Oui/Non)</th>
-        <th>Valeur d'achat</th>
-        <th>Valeur estimée</th>
-        <th>Décote (%)</th>
-        <th>Actif (Oui/Non)</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot>
-      <tr>
-        <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total garanties :</td>
-        <td id="total_garanties" colspan="3" style="background-color: #555; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total actifs :</td>
-        <td id="total_actifs" colspan="3" style="background-color: #ff8c00; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
+  <div id="actifs-wrapper">
+    <table id="table_garanties" border="1" style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 11px;">
+      <thead>
+        <tr style="font-size: 10px;">
+          <th>Désignations</th>
+          <th>Emplacement</th>
+          <th>Description</th>
+          <th>Marque</th>
+          <th>Immat°…</th>
+          <th>Garantie (Oui/Non)</th>
+          <th>Valeur d'achat</th>
+          <th>Valeur estimée</th>
+          <th>Décote (%)</th>
+          <th>Actif (Oui/Non)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total garanties :</td>
+          <td id="total_garanties" colspan="3" style="background-color: #555; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total actifs :</td>
+          <td id="total_actifs" colspan="3" style="background-color: #ff8c00; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
 
-  <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
+    <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
+  </div>
 </fieldset>
+
 
 <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
-  <legend id="depenses_familiales">DEPENSES FAMILIALES</legend>
+  <legend id="depenses_familiales">
+    DEPENSES FAMILIALES
+    <button type="button" onclick="toggleDepenses()" 
+      style="margin-left:15px; padding:3px 8px; font-size:12px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
   
-  <div class="df-wrapper">
+  <div class="df-wrapper" id="df-wrapper">
     <table class="df-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
       <thead>
         <tr>
@@ -672,9 +747,9 @@
           <td><input type="text" class="df-label" placeholder="Autres charges" style="width:100%; height:25px; padding:2px;"></td>
           <td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td>
         </tr>
-        <tr class="df-total" style="font-weight:bold; background-color:#f0f0f0;">
-          <td>Total dépenses familiales</td>
-          <td><span id="df-total">0 MGA</span></td>
+        <tr class="df-total" style="font-weight:bold; background-color:#333; color:#fff;">
+          <td style="text-align:left; padding:5px;">Total dépenses familiales</td>
+          <td style="text-align:left; padding:5px;"><span id="df-total">0 MGA</span></td>
         </tr>
       </tbody>
     </table>
@@ -1556,7 +1631,73 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 </script>
 
+<script>
+function toggleDepenses() {
+  const wrapper = document.getElementById("df-wrapper");
+  const btn = document.querySelector("#depenses_familiales button");
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+</script>
+<script>
+function toggleActifs() {
+  const wrapper = document.getElementById("actifs-wrapper");
+  const btn = document.querySelector("#legend_actifs_immo button");
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+</script>
+<script>
+function toggleMMP() {
+  const wrapper = document.getElementById("mmp-wrapper");
+  const btn = document.querySelector("#legend_mmp button");
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+</script>
+<script>
+function toggleActivite() {
+  const wrapper = document.getElementById("activite-wrapper");
+  const btn = document.querySelector("#legend_activite button");
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+</script>
+
+<script>
+function toggleSection(sectionId, btn) {
+  const section = document.getElementById(sectionId);
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    section.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+</script>
 
 
 </body>
 </html>
+
