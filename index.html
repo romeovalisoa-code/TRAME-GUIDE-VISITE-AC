@@ -757,9 +757,6 @@ function ajouterActivite() {
     majMargeActiviteDeuxiemeLigne();
     majLegendActivite();
 
-    // 🔑 recalcul du MMP avant CAMV
-    if (typeof majMMP === "function") majMMP();
-
     // recalculs CAMV
     majCAMVSelonMarge();
     majCAMVSelonMarge2();
@@ -778,13 +775,11 @@ function supprimerActivite(btn) {
   majMargeActiviteDeuxiemeLigne();
   majLegendActivite(); 
 
-  // 🔑 recalcul du MMP avant CAMV
-  if (typeof majMMP === "function") majMMP();
-
   // Mise à jour des CAMV
   majCAMVSelonMarge();
   majCAMVSelonMarge2();
   majCAMVSelonMMP();
+  
 }
 
 function majNomActivitePremiereLigne(){
@@ -937,20 +932,17 @@ function majCAMVSelonMMP() {
   if (champ) champ.value = camvMMP > 0 ? fmtMGA(camvMMP) : "0 MGA";
 
   // Mise à jour du CAMV final
-  if (typeof majCAMVFinal === "function") majCAMVFinal();
+  majCAMVFinal();
 }
 
 function majCAMVFinal() {
   const camvMensuel = parseNumberFromString(document.getElementById('camv_mensuel').value) || 0;
   const camvMarge   = parseNumberFromString(document.getElementById('camv_selon_marge').value) || 0;
   const camvMMP     = parseNumberFromString(document.getElementById('camv_selon_mmp').value) || 0;
-
   const camvFinal = Math.max(camvMensuel, camvMarge, camvMMP);
-
   const champ = document.getElementById('camv_final');
   if (champ) champ.value = camvFinal > 0 ? fmtMGA(camvFinal) : "0 MGA";
 }
-
 
 /*************************************************
  *  CAMV (mensuel / selon marge / final) - Activité 2
@@ -1060,7 +1052,9 @@ function bindMMPRow(tr){
   // quantité & stock : recalcul direct
   [qte, stock].forEach(el=>{
     if(!el) return;
-    el.addEventListener('input', calculerMMP);
+    el.addEventListener('input', function() {
+      calculerMMP();
+    });
   });
 
   // prix : autoriser , . chiffres ; formatage milliers au blur
@@ -1135,6 +1129,9 @@ function calculerMMP() {
     // si c'est un <span> ou <div>
     document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
   }
+  
+  // Mise à jour du CAMV selon le MMP
+  majCAMVSelonMMP();
 }
 
 
