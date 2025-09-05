@@ -33,6 +33,14 @@
   .opex-table th, .opex-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
   .opex-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
   .opex-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
+  
+/* DF */
+  .df-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .df-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
+  .df-table th, .df-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  .df-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
+  .df-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
+
 
   /* MMP styles */
   #tableMMP tfoot td { font-weight: bold; }
@@ -635,6 +643,42 @@
   </table>
 
   <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
+</fieldset>
+
+<fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
+  <legend id="depenses_familiales">DEPENSES FAMILIALES</legend>
+  
+  <div class="df-wrapper">
+    <table class="df-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+      <thead>
+        <tr>
+          <th style="text-align: left; padding: 5px;">Dépenses familiales</th>
+          <th style="text-align: right; padding: 5px;">Montant (MGA)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Alimentation</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Eau et électricité</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Loyer</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Connexion</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Communication</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Scolarité</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Frais de déplacement</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Santé (traitement)</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Loisirs</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Carburant</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr><td>Imprévus</td><td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td></tr>
+        <tr>
+          <td><input type="text" class="df-label" placeholder="Autres charges" style="width:100%; height:25px; padding:2px;"></td>
+          <td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td>
+        </tr>
+        <tr class="df-total" style="font-weight:bold; background-color:#f0f0f0;">
+          <td>Total dépenses familiales</td>
+          <td><span id="df-total">0 MGA</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </fieldset>
 
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
@@ -1476,6 +1520,43 @@ document.addEventListener('DOMContentLoaded', function() {
     ajouterGarantie();
     btnAjouter.addEventListener('click', ajouterGarantie);
 </script>
+<script>
+  // Fonction pour formater avec séparateur de milliers
+  function formatNumber(value) {
+    if (!value) return '';
+    // retirer tout ce qui n'est pas chiffre ou point/virgule
+    value = value.toString().replace(/\s|MGA/g, '').replace(',', '.');
+    let num = parseFloat(value);
+    if (isNaN(num)) return '';
+    // retour avec séparateur de milliers sans MGA
+    return num.toLocaleString('fr-FR', {maximumFractionDigits: 2});
+  }
+
+  // Mettre à jour le total
+  function updateTotalDF() {
+    const inputs = document.querySelectorAll('.df-input');
+    let total = 0;
+    inputs.forEach(input => {
+      let val = parseFloat(input.value.replace(/\s|MGA/g, '').replace(',', '.'));
+      if (!isNaN(val)) total += val;
+    });
+    document.getElementById('df-total').textContent = total.toLocaleString('fr-FR') + ' MGA';
+  }
+
+  // Formater chaque champ à la saisie
+  document.querySelectorAll('.df-input').forEach(input => {
+    input.addEventListener('input', (e) => {
+      // garder le curseur en fin de texte
+      let start = input.selectionStart;
+      let end = input.selectionEnd;
+      input.value = formatNumber(input.value);
+      input.setSelectionRange(start, end);
+      updateTotalDF();
+    });
+  });
+</script>
+
+
 
 </body>
 </html>
