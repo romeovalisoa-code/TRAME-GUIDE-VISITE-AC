@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</title>
+<!-- Ajout de Font Awesome pour les icônes -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; }
   h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; }
@@ -40,7 +42,6 @@
   .df-table th, .df-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
   .df-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
   .df-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
-
 
   /* MMP styles */
   #tableMMP tfoot td { font-weight: bold; }
@@ -99,6 +100,22 @@
   .activite-content.active {
     display: block;
   }
+  
+  /* Styles pour les icônes */
+  .icon-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .icon-label i {
+    width: 20px;
+    text-align: center;
+    color: #2980b9;
+  }
+  legend i {
+    margin-right: 8px;
+    color: #2c3e50;
+  }
 </style>
 </head>
 <body>
@@ -112,8 +129,10 @@
 
 <!-- INFORMATIONS SUR LA DEMANDE DE CREDIT -->
 <fieldset>
-  <legend>INFORMATIONS SUR LA DEMANDE DE CREDIT</legend>
-  <label>Agence :
+  <legend><i class="fas fa-info-circle"></i> INFORMATIONS SUR LA DEMANDE DE CREDIT</legend>
+  
+  <label>
+    Agence :
     <select required>
       <option value="">-- Sélectionner --</option>
       <option>ANTANANARIVO RP - FLAGSHIP</option>
@@ -130,18 +149,38 @@
     </select>
   </label>
 
-  <label>AC traitant : <input type="text" required></label>
+  <label>
+    AC traitant : <input type="text" required>
+  </label>
 
   <div class="inline-2">
-    <label>Date de visite : <input type="date" id="date_visite" required></label>
-    <label>Heure de visite : <input type="time" id="heure_visite" required></label>
+    <label>
+      Date de visite : <input type="date" id="date_visite" required>
+    </label>
+    <label>
+      Heure de visite : <input type="time" id="heure_visite" required>
+    </label>
   </div>
 
-  <label>Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly></label>
-  <label>Durée (mois) : <input type="number" min="0" required></label>
-  <label>Capacité de paiement (MGA) : <input type="text" id="capacite_paiement" required></label>
-  <label>Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly></label>
-  <label>Date de remboursement demandée : <input type="date" required></label>
+  <label>
+    Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly>
+  </label>
+  
+  <label>
+    Durée (mois) : <input type="number" min="0" required>
+  </label>
+  
+  <label>
+    Capacité de paiement (MGA) : <input type="text" id="capacite_paiement" required>
+  </label>
+  
+  <label>
+    Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly>
+  </label>
+  
+  <label>
+    Date de remboursement demandée : <input type="date" required>
+  </label>
 
   <h3>Objet du crédit</h3>
   <table id="table_objet">
@@ -156,16 +195,18 @@
       </tr>
     </tbody>
   </table>
-  <button type="button" class="add-btn" onclick="ajouterLigne()">+ Ajouter ligne</button>
+  <button type="button" class="add-btn" onclick="ajouterLigne()">Ajouter ligne</button>
   <br><br>
-  <label>Total Objet Crédit (MGA) : <input type="text" id="total_objet" readonly class="normal"></label>
+  <label>
+    Total Objet Crédit (MGA) : <input type="text" id="total_objet" readonly class="normal">
+  </label>
   <p id="warning_total" class="warning"></p>
 </fieldset>
 
 <!-- INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION -->
 <fieldset>
   <legend id="legend_infos_generales">
-    INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION
+    <i class="fas fa-users"></i> INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION
     <button type="button" onclick="toggleSection('infos_generales_content', this)" 
       style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
       Masquer
@@ -177,8 +218,12 @@
     <div class="grid-2">
       <div>
         <h3>Demandeur</h3>
-        <label>ID client : <input type="text" id="id_client"></label>
-        <label>Rang de crédit :
+        <label>
+          ID client : <input type="text" id="id_client">
+        </label>
+        
+        <label>
+          Rang de crédit :
           <select>
             <option>1er crédit</option>
             <option>2ème crédit</option>
@@ -187,9 +232,17 @@
             <option>5ème crédit</option>
           </select>
         </label>
-        <label>Nom et prénoms : <input type="text" id="nom_prenom_client"></label>
-        <label>Âge : <input type="number" min="0"></label>
-        <label>État civil : 
+        
+        <label>
+          Nom et prénoms : <input type="text" id="nom_prenom_client">
+        </label>
+        
+        <label>
+          Âge : <input type="number" min="0">
+        </label>
+        
+        <label>
+          État civil : 
           <select id="etat_civil_client">
             <option value="">--Sélectionner--</option>
             <option>Marié(e)</option>
@@ -198,19 +251,30 @@
             <option>Concubin(e)</option>
           </select>
         </label>
-        <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
-        <label>Adresse domicile : 
+        
+        <label>
+          Nb pers à charge : <input type="number" id="nb_client" min="0">
+        </label>
+        
+        <label>
+          Adresse domicile : 
           <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea>
         </label>
-        <label>Adresse activité : 
+        
+        <label>
+          Adresse activité : 
           <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea>
         </label>
       </div>
 
       <div>
         <h3>Caution</h3>
-        <label>ID caution : <input type="text" id="id_caution"></label>
-        <label>Lien avec le demandeur : 
+        <label>
+          ID caution : <input type="text" id="id_caution">
+        </label>
+        
+        <label>
+          Lien avec le demandeur : 
           <select id="lien_demandeur">
             <option value="">--Sélectionner--</option>
             <option>Epoux(se)</option>
@@ -219,9 +283,17 @@
             <option>Ami/Collègue</option>
           </select>
         </label>
-        <label>Nom et prénoms : <input type="text" id="nom_prenom_caution"></label>
-        <label>Âge : <input type="number" min="0"></label>
-        <label>État civil : 
+        
+        <label>
+          Nom et prénoms : <input type="text" id="nom_prenom_caution">
+        </label>
+        
+        <label>
+          Âge : <input type="number" min="0">
+        </label>
+        
+        <label>
+          État civil : 
           <select id="etat_civil_caution">
             <option value="">--Sélectionner--</option>
             <option>Marié(e)</option>
@@ -230,18 +302,27 @@
             <option>Concubin(e)</option>
           </select>
         </label>
-        <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
-        <label>Adresse domicile : 
+        
+        <label>
+          Nb pers à charge : <input type="number" id="nb_caution" min="0">
+        </label>
+        
+        <label>
+          Adresse domicile : 
           <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea>
         </label>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
+          <label for="revenus_mensuels_caution" style="width: 150px;">
+            Revenus mensuels
+          </label>
           <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-          <label for="source_revenus" style="width: 150px;">Source</label>
+          <label for="source_revenus" style="width: 150px;">
+            Source
+          </label>
           <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
         </div>
       </div>
@@ -253,7 +334,7 @@
 <!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
 <fieldset>
   <legend id="legend_hist_activite">
-    HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
+    <i class="fas fa-history"></i> HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
     <button type="button" onclick="toggleSection('hist_activite_content', this)" 
       style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
       Masquer
@@ -274,45 +355,53 @@
       </thead>
       <tbody id="tbody_activite"></tbody>
     </table>
-    <button type="button" class="add-btn" onclick="ajouterActivite()">+ Ajouter activité</button>
+    <button type="button" class="add-btn" onclick="ajouterActivite()">Ajouter activité</button>
 
     <!-- Conteneur pour les sections d'activité -->
     <div id="sections_activite"></div>
 
     <!-- Informations financières si salarié -->
     <fieldset style="margin-top:15px;">
-      <legend>INFORMATIONS SALARIALES & FINANCIÈRES</legend>
+      <legend><i class="fas fa-money-check"></i> INFORMATIONS SALARIALES & FINANCIÈRES</legend>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <label>Nom de la société
+        <label>
+          Nom de la société
           <input type="text" name="societe" placeholder="Ex : PAOMA, TELMA, STAR...">
         </label>
 
-        <label>Poste
+        <label>
+          Poste
           <input type="text" name="poste" placeholder="Ex : Comptable">
         </label>
 
-        <label>Solde mobile money
+        <label>
+          Solde mobile money
           <input type="text" name="solde_mobile" placeholder="0 MGA" style="text-align:left;" id="solde_mobile" onblur="formatFinancialField(this)">
         </label>
 
-        <label>Solde épargne / banque
+        <label>
+          Solde épargne / banque
           <input type="text" name="solde_epargne" placeholder="0 MGA" style="text-align:left;" id="solde_epargne" onblur="formatFinancialField(this)">
         </label>
 
-        <label>Caisse
+        <label>
+          Caisse
           <input type="text" name="Caisse" placeholder="0 MGA" style="text-align:left;" id="Caisse" onblur="formatFinancialField(this)">
         </label>
 
-        <label>Échéances banque / IMF
+        <label>
+          Échéances banque / IMF
           <input type="text" name="echeances" placeholder="0 MGA" style="text-align:left;" id="echeances" onblur="formatFinancialField(this)">
         </label>
 
-        <label>Encours de crédit
+        <label>
+          Encours de crédit
           <input type="text" name="encours_credit" placeholder="0 MGA" style="text-align:left;" id="encours_credit" onblur="formatFinancialField(this)">
         </label>
 
-        <label>Banque / IMF
+        <label>
+          Banque / IMF
           <select name="banque_imf">
             <option value="">-- Sélectionner --</option>
             <option>BOA</option>
@@ -343,7 +432,7 @@
 
 <fieldset>
   <legend id="legend_activite">
-    FONCTIONNEMENT DE L'ACTIVITE
+    <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
     <button type="button" onclick="toggleActivite()" 
       style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
       Masquer
@@ -363,11 +452,13 @@
       
       <!-- Colonne de gauche -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label>Nom de l'activité (1ère ligne) :
+        <label>
+          Nom de l'activité (1ère ligne) :
           <input type="text" id="nom_activite_premiere_ligne" readonly>
         </label>
 
-        <label>Marge de l'activité (1ère ligne) :
+        <label>
+          Marge de l'activité (1ère ligne) :
           <input type="text" id="marge_activite_premiere_ligne" readonly>
         </label>
 
@@ -375,11 +466,14 @@
           1-Chiffre d'affaires mensuel :
         </label>
 
-        <label>Fréquence de vente (par mois) :
+        <label>
+          Fréquence de vente (par mois) :
           <input type="number" id="frequence_vente" min="0" placeholder="0">
         </label>
 
-        <label>Vente selon derniers jours :</label>
+        <label>
+          Vente selon derniers jours :
+        </label>
         <div style="display: flex; gap: 10px; margin-top: 5px;">
           <input type="text" id="vente_jour_v3" placeholder="V-3">
           <input type="text" id="vente_jour_v2" placeholder="V-2">
@@ -388,7 +482,9 @@
                  style="background:#fff9c4;font-weight:bold;color:darkblue;">
         </div>
 
-        <label>Vente selon registre :</label>
+        <label>
+          Vente selon registre :
+        </label>
         <div style="display: flex; gap: 10px; margin-top: 5px;">
           <input type="text" id="vente_registre_m3" placeholder="M-3">
           <input type="text" id="vente_registre_m2" placeholder="M-2">
@@ -398,13 +494,17 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="ca_ligne1" style="width: 150px;">CA (ligne 1) :</label>
+          <label for="ca_ligne1" style="width: 150px;">
+            CA (ligne 1) :
+          </label>
           <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
                  style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="creances_actuelles" style="width: 150px;">Créances actuelles</label>
+          <label for="creances_actuelles" style="width: 150px;">
+            Créances actuelles
+          </label>
           <input type="text" id="creances_actuelles" name="creances_actuelles">
         </div>
 
@@ -415,20 +515,27 @@
         
       <!-- Colonne de droite -->
       <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-        <label style="font-weight:bold; color: darkred;">Croisements</label>
+        <label style="font-weight:bold; color: darkred;">
+          Croisements
+        </label>
         <textarea id="croisements" placeholder="Saisissez ici vos croisements"
           style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-        <label style="font-weight:bold; color: darkred;">Notes</label>
+        <label style="font-weight:bold; color: darkred;">
+          Notes
+        </label>
         <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
           style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
       </div>
 
-      <label>Fréquence d'achat (par mois) :
+      <label>
+        Fréquence d'achat (par mois) :
         <input type="number" id="frequence_achat" min="0" placeholder="0">
       </label>
     </div>
 
-    <label>Achat max/min/CAMV Mensuel:</label>
+    <label>
+      Achat max/min/CAMV Mensuel:
+    </label>
     <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
       <input type="text" id="achat_max" placeholder="max">
       <input type="text" id="achat_min" placeholder="min">
@@ -437,30 +544,38 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
+      <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
+        CAMV selon marge
+      </label>
       <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
-<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">CAMV selon MMP</label>
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
+        CAMV selon MMP
+      </label>
       <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_final" style="width: 150px; font-weight: bold;">CAMV final</label>
+      <label for="camv_final" style="width: 150px; font-weight: bold;">
+        CAMV final
+      </label>
       <input type="text" id="camv_final" name="camv_final" readonly
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="dettes_fournisseurs" style="width: 160px;">Dettes fournisseurs</label>
+      <label for="dettes_fournisseurs" style="width: 160px;">
+        Dettes fournisseurs
+      </label>
       <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
     </div>
 
     <label style="color: blue; font-weight: bold; text-decoration: underline;">
-      3-OPEX (Operating Expenses ou dépenses d’exploitation)
+      3-OPEX (Operating Expenses ou dépenses d'exploitation)
     </label>
 
     <div class="opex-wrapper">
@@ -494,11 +609,13 @@
       
       <!-- Colonne de gauche -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label>Nom de l'activité (2ème ligne) :
+        <label>
+          Nom de l'activité (2ème ligne) :
           <input type="text" id="nom_activite_deuxieme_ligne" readonly>
         </label>
 
-        <label>Marge de l'activité (2ème ligne) :
+        <label>
+          Marge de l'activité (2ème ligne) :
           <input type="text" id="marge_activite_deuxieme_ligne" readonly>
         </label>
 
@@ -506,11 +623,14 @@
           1-Chiffre d'affaires mensuel :
         </label>
 
-        <label>Fréquence de vente (par mois) :
+        <label>
+          Fréquence de vente (par mois) :
           <input type="number" id="frequence_vente2" min="0" placeholder="0">
         </label>
 
-        <label>Vente selon derniers jours :</label>
+        <label>
+          Vente selon derniers jours :
+        </label>
         <div style="display: flex; gap: 10px; margin-top: 5px;">
           <input type="text" id="vente_jour_v3_2" placeholder="V-3">
           <input type="text" id="vente_jour_v2_2" placeholder="V-2">
@@ -519,7 +639,9 @@
                  style="background:#fff9c4;font-weight:bold;color:darkblue;">
         </div>
 
-        <label>Vente selon registre :</label>
+        <label>
+          Vente selon registre :
+        </label>
         <div style="display: flex; gap: 10px; margin-top: 5px;">
           <input type="text" id="vente_registre_m3_2" placeholder="M-3">
           <input type="text" id="vente_registre_m2_2" placeholder="M-2">
@@ -529,13 +651,17 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="ca_ligne2" style="width: 150px;">CA (ligne 2) :</label>
+          <label for="ca_ligne2" style="width: 150px;">
+            CA (ligne 2) :
+          </label>
           <input type="text" id="ca_ligne2" name="ca_ligne2" readonly
                  style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="creances_actuelles2" style="width: 150px;">Créances actuelles</label>
+          <label for="creances_actuelles2" style="width: 150px;">
+            Créances actuelles
+          </label>
           <input type="text" id="creances_actuelles2" name="creances_actuelles2">
         </div>
 
@@ -546,20 +672,27 @@
         
       <!-- Colonne de droite -->
       <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-        <label style="font-weight:bold; color: darkred;">Croisements</label>
+        <label style="font-weight:bold; color: darkred;">
+          Croisements
+        </label>
         <textarea id="croisements2" placeholder="Saisissez ici vos croisements"
           style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-        <label style="font-weight:bold; color: darkred;">Notes</label>
+        <label style="font-weight:bold; color: darkred;">
+          Notes
+        </label>
         <textarea id="notes2" placeholder="Insérez ici vos notes et remarques"
           style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
       </div>
 
-      <label>Fréquence d'achat (par mois) :
+      <label>
+        Fréquence d'achat (par mois) :
         <input type="number" id="frequence_achat2" min="0" placeholder="0">
       </label>
     </div>
 
-    <label>Achat max/min/CAMV Mensuel:</label>
+    <label>
+      Achat max/min/CAMV Mensuel:
+    </label>
     <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
       <input type="text" id="achat_max2" placeholder="max">
       <input type="text" id="achat_min2" placeholder="min">
@@ -568,24 +701,30 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">CAMV selon marge</label>
+      <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
+        CAMV selon marge
+      </label>
       <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_final2" style="width: 150px; font-weight: bold;">CAMV final</label>
+      <label for="camv_final2" style="width: 150px; font-weight: bold;">
+        CAMV final
+      </label>
       <input type="text" id="camv_final2" name="camv_final2" readonly
              style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="dettes_fournisseurs2" style="width: 160px;">Dettes fournisseurs</label>
+      <label for="dettes_fournisseurs2" style="width: 160px;">
+        Dettes fournisseurs
+      </label>
       <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
     </div>
 
     <label style="color: blue; font-weight: bold; text-decoration: underline;">
-      3-OPEX (Operating Expenses ou dépenses d’exploitation)
+      3-OPEX (Operating Expenses ou dépenses d'exploitation)
     </label>
 
     <div class="opex-wrapper">
@@ -617,7 +756,7 @@
 <!-- MMP -->
 <fieldset>
   <legend id="legend_mmp">
-    MARGE MOYENNE PONDÉRÉE (MMP)
+    <i class="fas fa-chart-pie"></i> MARGE MOYENNE PONDÉRÉE (MMP)
     <button type="button" onclick="toggleMMP()" 
       style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
       Masquer
@@ -670,7 +809,7 @@
 
 <fieldset>
   <legend id="legend_actifs_immo">
-    ACTIFS IMMOBILISES/GARANTIES
+    <i class="fas fa-landmark"></i> ACTIFS IMMOBILISES/GARANTIES
     <button type="button" onclick="toggleActifs()" 
       style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
       Masquer
@@ -716,7 +855,7 @@
 
 <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
   <legend id="depenses_familiales">
-    DEPENSES FAMILIALES
+    <i class="fas fa-home"></i> DEPENSES FAMILIALES
     <button type="button" onclick="toggleDepenses()" 
       style="margin-left:15px; padding:3px 8px; font-size:12px; cursor:pointer;">
       Masquer
@@ -756,11 +895,121 @@
   </div>
 </fieldset>
 
+
+
+
+
+<fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
+  <legend id="croisement_specifique">
+    <i class="fas fa-search"></i> CROISEMENT SPECIFIQUE
+    <button type="button" onclick="toggleCroisement()" 
+      style="margin-left:15px; padding:3px 8px; font-size:12px; cursor:pointer;">
+      Masquer
+    </button>
+  </legend>
+
+  <table border="1" style="width:100%; border-collapse: collapse; font-size: 13px; text-align:left;">
+    <thead style="background:#f0f0f0; text-align:center;">
+      <tr>
+        <th colspan="2">TRANSPORT NATIONAL</th>
+        <th colspan="2">TRANSPORT DE MARCHANDISES</th>
+        <th colspan="2">BUS ET TAXI-BROUSSE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Trajet</td>
+        <td><input type="text" name="trajet_nat"></td>
+        <td>Trajet</td>
+        <td><input type="text" name="trajet_march"></td>
+        <td>Trajet et N° ligne</td>
+        <td><input type="text" name="trajet_bus"></td>
+      </tr>
+      <tr>
+        <td>Kilométrage du trajet A/R</td>
+        <td><input type="number" name="km_nat"></td>
+        <td>Kilométrage du trajet A/R</td>
+        <td><input type="number" name="km_march"></td>
+        <td>Versement par jour</td>
+        <td><input type="number" name="versement_bus"></td>
+      </tr>
+      <tr>
+        <td>Frais par voyage A/R</td>
+        <td><input type="number" name="frais_nat"></td>
+        <td>Frais de transport/kg</td>
+        <td><input type="number" name="frais_march"></td>
+        <td>Nombre de jours travaillés</td>
+        <td><input type="number" name="jours_bus"></td>
+      </tr>
+      <tr>
+        <td>Nombre moyen de voyages mensuels</td>
+        <td><input type="number" name="voyages_nat"></td>
+        <td>Nombre moyen de voyages mensuels</td>
+        <td><input type="number" name="voyages_march"></td>
+        <td rowspan="2" style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen Bus</td>
+        <td rowspan="2"><input type="text" name="ca_bus" readonly class="result"></td>
+      </tr>
+      <tr>
+        <td>Nombre de places payantes</td>
+        <td><input type="number" name="places_nat"></td>
+        <td>Charge transportée par voyage (kg) A/R</td>
+        <td><input type="number" name="charge_march"></td>
+      </tr>
+      <tr>
+        <td>Consommation aux 100 km</td>
+        <td><input type="number" name="conso_nat"></td>
+        <td>Consommation aux 100 km</td>
+        <td><input type="number" name="conso_march"></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>Prix actuel du litre de carburant</td>
+        <td><input type="number" name="prix_nat"></td>
+        <td>Prix actuel du litre de carburant</td>
+        <td><input type="number" name="prix_march"></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen Nat</td>
+        <td><input type="text" name="ca_nat" readonly class="result"></td>
+        <td style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen M/ses</td>
+        <td><input type="text" name="ca_march" readonly class="result"></td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td style="background:#f5f5f5; color:black; font-weight:bold;">Carburant Nat</td>
+        <td><input type="text" name="carburant_nat" readonly class="result"></td>
+        <td style="background:#f5f5f5; color:black; font-weight:bold;">Carburant M/ses</td>
+        <td><input type="text" name="carburant_march" readonly class="result"></td>
+        <td colspan="2"></td>
+      </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+<style>
+/* Style des champs résultats */
+input.result {
+  background:#e3f2fd;
+  font-weight:bold;
+  text-align:right;
+  border:none;
+  width: 100%;
+  padding: 3px;
+}
+</style>
+
+
+
+
+
+
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
 <button type="button" class="submit-btn" onclick="sauvegarderHTML()">Exporter HTML</button>
 
 </form>
 
+<!-- Le reste du code JavaScript reste inchangé -->
 <script>
 /*************************************************
  *  DONNÉES & CONSTANTES
@@ -866,7 +1115,7 @@ function ajouterActivite() {
   remplirSelectActivite(selectActivite);
 
   selectActivite.addEventListener('change', function () {
-    // mise à jour marge selon l’activité choisie
+    // mise à jour marge selon l'activité choisie
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
 
     // mise à jour des champs annexes
@@ -1696,8 +1945,69 @@ function toggleSection(sectionId, btn) {
   }
 }
 </script>
+<script>
+function toggleCroisement(){
+  const fs = document.querySelector("#croisement_specifique").parentNode;
+  const table = fs.querySelector("table");
+  const btn = fs.querySelector("button");
 
+  if(table.style.display === "none"){
+    table.style.display = "table";
+    btn.textContent = "Masquer";
+  } else {
+    table.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function formatMGA(value){
+  return value.toLocaleString("fr-FR", {minimumFractionDigits: 0}) + " MGA";
+}
+
+function calc(){
+  // Transport National
+  let places_nat = +document.querySelector('[name="places_nat"]').value || 0;
+  let frais_nat = +document.querySelector('[name="frais_nat"]').value || 0;
+  let voyages_nat = +document.querySelector('[name="voyages_nat"]').value || 0;
+  let conso_nat = +document.querySelector('[name="conso_nat"]').value || 0;
+  let km_nat = +document.querySelector('[name="km_nat"]').value || 0;
+  let prix_nat = +document.querySelector('[name="prix_nat"]').value || 0;
+
+  let ca_nat = places_nat * frais_nat * voyages_nat;
+  let carburant_nat = (conso_nat * km_nat / 100 * voyages_nat * prix_nat);
+
+  document.querySelector('[name="ca_nat"]').value = formatMGA(ca_nat);
+  document.querySelector('[name="carburant_nat"]').value = formatMGA(carburant_nat);
+
+  // Transport Marchandises
+  let frais_march = +document.querySelector('[name="frais_march"]').value || 0;
+  let charge_march = +document.querySelector('[name="charge_march"]').value || 0;
+  let voyages_march = +document.querySelector('[name="voyages_march"]').value || 0;
+  let km_march = +document.querySelector('[name="km_march"]').value || 0;
+  let conso_march = +document.querySelector('[name="conso_march"]').value || 0;
+  let prix_march = +document.querySelector('[name="prix_march"]').value || 0;
+
+  let ca_march = frais_march * charge_march * voyages_march;
+  let carburant_march = (conso_march * km_march / 100 * voyages_march * prix_march);
+
+  document.querySelector('[name="ca_march"]').value = formatMGA(ca_march);
+  document.querySelector('[name="carburant_march"]').value = formatMGA(carburant_march);
+
+  // Bus / Taxi-brousse
+  let versement_bus = +document.querySelector('[name="versement_bus"]').value || 0;
+  let jours_bus = +document.querySelector('[name="jours_bus"]').value || 0;
+
+  let ca_bus = versement_bus * jours_bus;
+  document.querySelector('[name="ca_bus"]').value = formatMGA(ca_bus);
+}
+
+// recalcul à chaque saisie
+document.querySelectorAll("input").forEach(inp=>{
+  if(inp.type === "number"){
+    inp.addEventListener("input", calc);
+  }
+});
+</script>
 
 </body>
 </html>
-
