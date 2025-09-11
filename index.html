@@ -249,6 +249,7 @@
             <option>Veuf(ve)</option>
             <option>Célibataire</option>
             <option>Concubin(e)</option>
+            <option>Divorcé(e)</option>
           </select>
         </label>
         
@@ -281,6 +282,7 @@
             <option>Concubin(e)</option>
             <option>Fratrie</option>
             <option>Ami/Collègue</option>
+            <option>Parent</option>
           </select>
         </label>
         
@@ -300,6 +302,7 @@
             <option>Veuf(ve)</option>
             <option>Célibataire</option>
             <option>Concubin(e)</option>
+            <option>Divorcé(e)</option>
           </select>
         </label>
         
@@ -927,11 +930,11 @@
       </tr>
       <tr>
         <td>Kilométrage du trajet A/R</td>
-        <td><input type="number" name="km_nat"></td>
+        <td><input type="text" name="km_nat" class="thousands-separator"></td>
         <td>Kilométrage du trajet A/R</td>
-        <td><input type="number" name="km_march"></td>
+        <td><input type="text" name="km_march" class="thousands-separator"></td>
         <td>Versement par jour</td>
-        <td><input type="number" name="versement_bus"></td>
+        <td><input type="text" name="versement_bus" class="thousands-separator"></td>
       </tr>
       <tr>
         <td>Frais par voyage A/R</td>
@@ -939,47 +942,47 @@
         <td>Frais de transport/kg</td>
         <td><input type="number" name="frais_march"></td>
         <td>Nombre de jours travaillés</td>
-        <td><input type="number" name="jours_bus"></td>
+        <td><input type="text" name="jours_bus" class="thousands-separator"></td>
       </tr>
       <tr>
         <td>Nombre moyen de voyages mensuels</td>
-        <td><input type="number" name="voyages_nat"></td>
+        <td><input type="text" name="voyages_nat" class="thousands-separator"></td>
         <td>Nombre moyen de voyages mensuels</td>
-        <td><input type="number" name="voyages_march"></td>
-        <td rowspan="2" style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen Bus</td>
+        <td><input type="text" name="voyages_march" class="thousands-separator"></td>
+        <td rowspan="2" style="background:#696969; color:white; font-weight:bold;">CA moyen Bus</td>
         <td rowspan="2"><input type="text" name="ca_bus" readonly class="result"></td>
       </tr>
       <tr>
         <td>Nombre de places payantes</td>
-        <td><input type="number" name="places_nat"></td>
+        <td><input type="text" name="places_nat" class="thousands-separator"></td>
         <td>Charge transportée par voyage (kg) A/R</td>
-        <td><input type="number" name="charge_march"></td>
+        <td><input type="text" name="charge_march" class="thousands-separator"></td>
       </tr>
       <tr>
         <td>Consommation aux 100 km</td>
-        <td><input type="number" name="conso_nat"></td>
+        <td><input type="text" name="conso_nat" class="thousands-separator"></td>
         <td>Consommation aux 100 km</td>
-        <td><input type="number" name="conso_march"></td>
+        <td><input type="text" name="conso_march" class="thousands-separator"></td>
         <td colspan="2"></td>
       </tr>
       <tr>
         <td>Prix actuel du litre de carburant</td>
-        <td><input type="number" name="prix_nat"></td>
+        <td><input type="text" name="prix_nat" class="thousands-separator"></td>
         <td>Prix actuel du litre de carburant</td>
-        <td><input type="number" name="prix_march"></td>
+        <td><input type="text" name="prix_march" class="thousands-separator"></td>
         <td colspan="2"></td>
       </tr>
       <tr>
-        <td style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen Nat</td>
+        <td style="background:#696969; color:white; font-weight:bold;">CA moyen Nat</td>
         <td><input type="text" name="ca_nat" readonly class="result"></td>
-        <td style="background:#f5f5f5; color:black; font-weight:bold;">CA moyen M/ses</td>
+        <td style="background:#696969; color:white; font-weight:bold;">CA moyen M/ses</td>
         <td><input type="text" name="ca_march" readonly class="result"></td>
         <td colspan="2"></td>
       </tr>
       <tr>
-        <td style="background:#f5f5f5; color:black; font-weight:bold;">Carburant Nat</td>
+        <td style="background:#696969; color:white; font-weight:bold;">Carburant Nat</td>
         <td><input type="text" name="carburant_nat" readonly class="result"></td>
-        <td style="background:#f5f5f5; color:black; font-weight:bold;">Carburant M/ses</td>
+        <td style="background:#696969; color:white; font-weight:bold;">Carburant M/ses</td>
         <td><input type="text" name="carburant_march" readonly class="result"></td>
         <td colspan="2"></td>
       </tr>
@@ -1006,6 +1009,9 @@ input.result {
 
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
 <button type="button" class="submit-btn" onclick="sauvegarderHTML()">Exporter HTML</button>
+<button type="button" class="submit-btn" onclick="copierEtSauvegarder()">
+  <i class="fas fa-copy"></i> Copier et Sauvegarder
+</button>
 
 </form>
 
@@ -1048,6 +1054,37 @@ function parseNumberFromString(s){
 }
 function formatNombre(n){
   return (Number(n)||0).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Fonction pour formater avec séparateur de milliers
+function formatThousands(input) {
+  if (!input) return;
+  
+  // Sauvegarder la position du curseur
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  
+  // Nettoyer la valeur
+  let value = input.value.replace(/[^\d]/g, '');
+  
+  // Formater avec séparateur de milliers
+  if (value) {
+    value = parseInt(value, 10).toLocaleString('fr-FR');
+  }
+  
+  // Mettre à jour la valeur
+  input.value = value;
+  
+  // Restaurer la position du curseur
+  const newLength = input.value.length;
+  const diff = newLength - input.value.replace(/[^\d]/g, '').length;
+  
+  input.setSelectionRange(start + diff, end + diff);
+}
+
+// Fonction pour enlever les séparateurs de milliers avant le calcul
+function removeThousandsSeparator(value) {
+  return value.replace(/\s/g, '');
 }
 
 /*************************************************
@@ -1494,7 +1531,7 @@ function calculerMMP() {
   if (document.getElementById("mmp").tagName === "INPUT") {
     document.getElementById("mmp").value = formatNombre(mmp) + " %";
   } else {
-    // si c'est un <span> ou <div>
+    // si c'est un <span> or <div>
     document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
   }
   
@@ -1620,6 +1657,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelectorAll('.activite-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       activerOnglet(tab.getAttribute('data-activite'));
+    });
+  });
+
+  // Ajout des séparateurs de milliers pour les champs spécifiés
+  document.querySelectorAll('.thousands-separator').forEach(input => {
+    input.addEventListener('input', function() {
+      formatThousands(this);
+    });
+    
+    input.addEventListener('focus', function() {
+      this.value = removeThousandsSeparator(this.value);
+    });
+    
+    input.addEventListener('blur', function() {
+      formatThousands(this);
     });
   });
 
@@ -1769,7 +1821,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="">-- Sélectionner --</option>
                     <option value="Véhicule">Véhicule</option>
                     <option value="Immobilier">Immobilier</option>
-                    <option value="Mobilier">Mobilier</option>
+            <option value="Mobilier">Mobilier</option>
                     <option value="Terrain nu">Terrain nu</option>
                     <option value="Terrain bâti">Terrain bâti</option>
                 </select>
@@ -1966,12 +2018,12 @@ function formatMGA(value){
 
 function calc(){
   // Transport National
-  let places_nat = +document.querySelector('[name="places_nat"]').value || 0;
+  let places_nat = +removeThousandsSeparator(document.querySelector('[name="places_nat"]').value) || 0;
   let frais_nat = +document.querySelector('[name="frais_nat"]').value || 0;
-  let voyages_nat = +document.querySelector('[name="voyages_nat"]').value || 0;
-  let conso_nat = +document.querySelector('[name="conso_nat"]').value || 0;
-  let km_nat = +document.querySelector('[name="km_nat"]').value || 0;
-  let prix_nat = +document.querySelector('[name="prix_nat"]').value || 0;
+  let voyages_nat = +removeThousandsSeparator(document.querySelector('[name="voyages_nat"]').value) || 0;
+  let conso_nat = +removeThousandsSeparator(document.querySelector('[name="conso_nat"]').value) || 0;
+  let km_nat = +removeThousandsSeparator(document.querySelector('[name="km_nat"]').value) || 0;
+  let prix_nat = +removeThousandsSeparator(document.querySelector('[name="prix_nat"]').value) || 0;
 
   let ca_nat = places_nat * frais_nat * voyages_nat;
   let carburant_nat = (conso_nat * km_nat / 100 * voyages_nat * prix_nat);
@@ -1981,11 +2033,11 @@ function calc(){
 
   // Transport Marchandises
   let frais_march = +document.querySelector('[name="frais_march"]').value || 0;
-  let charge_march = +document.querySelector('[name="charge_march"]').value || 0;
-  let voyages_march = +document.querySelector('[name="voyages_march"]').value || 0;
-  let km_march = +document.querySelector('[name="km_march"]').value || 0;
-  let conso_march = +document.querySelector('[name="conso_march"]').value || 0;
-  let prix_march = +document.querySelector('[name="prix_march"]').value || 0;
+  let charge_march = +removeThousandsSeparator(document.querySelector('[name="charge_march"]').value) || 0;
+  let voyages_march = +removeThousandsSeparator(document.querySelector('[name="voyages_march"]').value) || 0;
+  let km_march = +removeThousandsSeparator(document.querySelector('[name="km_march"]').value) || 0;
+  let conso_march = +removeThousandsSeparator(document.querySelector('[name="conso_march"]').value) || 0;
+  let prix_march = +removeThousandsSeparator(document.querySelector('[name="prix_march"]').value) || 0;
 
   let ca_march = frais_march * charge_march * voyages_march;
   let carburant_march = (conso_march * km_march / 100 * voyages_march * prix_march);
@@ -1994,8 +2046,8 @@ function calc(){
   document.querySelector('[name="carburant_march"]').value = formatMGA(carburant_march);
 
   // Bus / Taxi-brousse
-  let versement_bus = +document.querySelector('[name="versement_bus"]').value || 0;
-  let jours_bus = +document.querySelector('[name="jours_bus"]').value || 0;
+  let versement_bus = +removeThousandsSeparator(document.querySelector('[name="versement_bus"]').value) || 0;
+  let jours_bus = +removeThousandsSeparator(document.querySelector('[name="jours_bus"]').value) || 0;
 
   let ca_bus = versement_bus * jours_bus;
   document.querySelector('[name="ca_bus"]').value = formatMGA(ca_bus);
@@ -2003,10 +2055,86 @@ function calc(){
 
 // recalcul à chaque saisie
 document.querySelectorAll("input").forEach(inp=>{
-  if(inp.type === "number"){
+  if(inp.type === "number" || inp.classList.contains('thousands-separator')){
     inp.addEventListener("input", calc);
   }
 });
+
+/* ---------- NOUVELLE FONCTION UNIQUE DEMANDÉE ---------- */
+function copierEtSauvegarder(){
+  /* ---- 1. Vérification montant ---- */
+  const total = parseNumberFromString(document.getElementById('total_objet').value);
+  if(total > 2575000){
+    alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !");
+    return;
+  }
+
+  /* ---- 2. Génération nom fichier ---- */
+  const nomPrenom = (document.getElementById('nom_prenom_client').value || 'Demandeur').replace(/[^a-zA-Z0-9]/g,'_');
+  const now = new Date();
+  const pad = n => ('0'+n).slice(-2);
+  const dateStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+  const fileName = `${nomPrenom}_${dateStr}.html`;
+
+  /* ---- 3. Clone + verrou ---- */
+  const cloneBody = document.body.cloneNode(true);
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el => {
+    /* verrou */
+    el.setAttribute('readonly','readonly');
+    if(el.tagName === 'SELECT') el.setAttribute('disabled','disabled');
+    /* conserve valeur */
+    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
+    else el.setAttribute('value', el.value);
+  });
+  /* on cache les boutons du clone */
+  cloneBody.querySelectorAll('button').forEach(b => b.style.display = 'none');
+
+/* ---- 4. Script de déverrouillage dans le clone ---- */
+const unlockScript = document.createElement('script');
+unlockScript.textContent = `
+  document.addEventListener('DOMContentLoaded', () => {
+    const pwd = prompt('Fichier verrouillé. Entrez le mot de passe pour déverrouiller :');
+    if(pwd === '2110'){
+      document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
+      document.querySelectorAll('select').forEach(s => {
+        s.removeAttribute('disabled');
+        s.removeAttribute('readonly');
+      });
+      alert('Fichier déverrouillé !');
+    } else {
+      alert('Mot de passe incorrect. Le fichier reste en lecture seule.');
+    }
+  });
+`;
+cloneBody.appendChild(unlockScript);
+
+  /* ---- 5. Export ---- */
+  const htmlContent = `<!DOCTYPE html>\n<html lang="fr">\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  a.click();
+
+  /* ---- 6. Reset complet de la matrice ---- */
+  document.querySelectorAll('form input, form textarea, form select').forEach(el => {
+    if(el.type === 'date' || el.type === 'time') el.value = '';
+    else if(el.type === 'number') el.value = '';
+    else if(el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  /* tables dynamiques : on supprime les lignes sauf la première */
+  ['tbody_objet','tbody_activite','tableMMP tbody','table_garanties tbody'].forEach(id => {
+    const tb = document.getElementById(id) || document.querySelector('#'+id);
+    if(tb) [...tb.rows].slice(1).forEach(r => r.remove());
+  });
+  /* recalculs à zéro */
+  updateTotalDepuisObjet();
+  updateOpexTotal(); updateOpexTotal2();
+  calculerMMP();
+  recalculerTotaux();
+  updateTotalDF();
+}
 </script>
 
 </body>
