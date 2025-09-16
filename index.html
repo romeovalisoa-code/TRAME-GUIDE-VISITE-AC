@@ -116,6 +116,36 @@
     margin-right: 8px;
     color: #2c3e50;
   }
+
+  /* Style des champs résultats */
+  input.result {
+    background:#e3f2fd;
+    font-weight:bold;
+    text-align:right;
+    border:none;
+    width: 100%;
+    padding: 3px;
+  }
+  fieldset {
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 10px;
+  }
+
+  .toggle-btn {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 14px;
+    margin-left: 10px;
+    color: #007BFF;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  
 </style>
 </head>
 <body>
@@ -213,7 +243,6 @@
     </button>
   </legend>
 
-  <!-- Contenu mis dans un conteneur -->
   <div id="infos_generales_content">
     <div class="grid-2">
       <div>
@@ -333,7 +362,6 @@
   </div>
 </fieldset>
 
-
 <!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
 <fieldset>
   <legend id="legend_hist_activite">
@@ -344,7 +372,6 @@
     </button>
   </legend>
 
-  <!-- Tout le contenu est mis dans un conteneur -->
   <div id="hist_activite_content">
     <table id="table_activite">
       <thead>
@@ -360,10 +387,8 @@
     </table>
     <button type="button" class="add-btn" onclick="ajouterActivite()">Ajouter activité</button>
 
-    <!-- Conteneur pour les sections d'activité -->
     <div id="sections_activite"></div>
 
-    <!-- Informations financières si salarié -->
     <fieldset style="margin-top:15px;">
       <legend><i class="fas fa-money-check"></i> INFORMATIONS SALARIALES & FINANCIÈRES</legend>
 
@@ -431,8 +456,7 @@
   </div>
 </fieldset>
 
-</fieldset>
-
+<!-- FONCTIONNEMENT DE L'ACTIVITE -->
 <fieldset>
   <legend id="legend_activite">
     <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
@@ -443,315 +467,311 @@
   </legend>
 
   <div id="activite-wrapper">
-    <!-- Onglets pour basculer entre les activités -->
     <div class="activite-tabs" id="activite-tabs">
       <div class="activite-tab active" data-activite="1">Activité 1</div>
       <div class="activite-tab" data-activite="2">Activité 2</div>
     </div>
   
-  <!-- Contenu de l'activité 1 -->
-  <div id="activite1-content" class="activite-content active">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-      
-      <!-- Colonne de gauche -->
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label>
-          Nom de l'activité (1ère ligne) :
-          <input type="text" id="nom_activite_premiere_ligne" readonly>
-        </label>
-
-        <label>
-          Marge de l'activité (1ère ligne) :
-          <input type="text" id="marge_activite_premiere_ligne" readonly>
-        </label>
-
-        <label style="color: blue; font-weight: bold; text-decoration: underline;">
-          1-Chiffre d'affaires mensuel :
-        </label>
-
-        <label>
-          Fréquence de vente (par mois) :
-          <input type="number" id="frequence_vente" min="0" placeholder="0">
-        </label>
-
-        <label>
-          Vente selon derniers jours :
-        </label>
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
-          <input type="text" id="vente_jour_v3" placeholder="V-3">
-          <input type="text" id="vente_jour_v2" placeholder="V-2">
-          <input type="text" id="vente_jour_v1" placeholder="V-1">
-          <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
-                 style="background:#fff9c4;font-weight:bold;color:darkblue;">
-        </div>
-
-        <label>
-          Vente selon registre :
-        </label>
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
-          <input type="text" id="vente_registre_m3" placeholder="M-3">
-          <input type="text" id="vente_registre_m2" placeholder="M-2">
-          <input type="text" id="vente_registre_m1" placeholder="M-1">
-          <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
-                 style="background:#fff9c4;font-weight:bold;color:darkgreen;">
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="ca_ligne1" style="width: 150px;">
-            CA (ligne 1) :
-          </label>
-          <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
-                 style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="creances_actuelles" style="width: 150px;">
-            Créances actuelles
-          </label>
-          <input type="text" id="creances_actuelles" name="creances_actuelles">
-        </div>
-
-        <label style="color: blue; font-weight: bold; text-decoration: underline;">
-          2-CAMV mensuel :
-        </label>
-      </div>
+    <!-- Contenu de l'activité 1 -->
+    <div id="activite1-content" class="activite-content active">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
         
-      <!-- Colonne de droite -->
-      <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-        <label style="font-weight:bold; color: darkred;">
-          Croisements
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <label>
+            Nom de l'activité (1ère ligne) :
+            <input type="text" id="nom_activite_premiere_ligne" readonly>
+          </label>
+
+          <label>
+            Marge de l'activité (1ère ligne) :
+            <input type="text" id="marge_activite_premiere_ligne" readonly>
+          </label>
+
+          <label style="color: blue; font-weight: bold; text-decoration: underline;">
+            1-Chiffre d'affaires mensuel :
+          </label>
+
+          <label>
+            Fréquence de vente (par mois) :
+            <input type="number" id="frequence_vente" min="0" placeholder="0">
+          </label>
+
+          <label>
+            Vente selon derniers jours :
+          </label>
+          <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <input type="text" id="vente_jour_v3" placeholder="V-3">
+            <input type="text" id="vente_jour_v2" placeholder="V-2">
+            <input type="text" id="vente_jour_v1" placeholder="V-1">
+            <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly 
+                   style="background:#fff9c4;font-weight:bold;color:darkblue;">
+          </div>
+
+          <label>
+            Vente selon registre :
+          </label>
+          <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <input type="text" id="vente_registre_m3" placeholder="M-3">
+            <input type="text" id="vente_registre_m2" placeholder="M-2">
+            <input type="text" id="vente_registre_m1" placeholder="M-1">
+            <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly 
+                   style="background:#fff9c4;font-weight:bold;color:darkgreen;">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="ca_ligne1" style="width: 150px;">
+              CA (ligne 1) :
+            </label>
+            <input type="text" id="ca_ligne1" name="ca_ligne1" readonly
+                   style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="creances_actuelles" style="width: 150px;">
+              Créances actuelles
+            </label>
+            <input type="text" id="creances_actuelles" name="creances_actuelles">
+          </div>
+
+          <label style="color: blue; font-weight: bold; text-decoration: underline;">
+            2-CAMV mensuel :
+          </label>
+        </div>
+          
+        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+          <label style="font-weight:bold; color: darkred;">
+            Croisements
+          </label>
+          <textarea id="croisements" placeholder="Saisissez ici vos croisements"
+            style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+          <label style="font-weight:bold; color: darkred;">
+            Notes
+          </label>
+          <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
+            style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+        </div>
+
+        <label>
+          Fréquence d'achat (par mois) :
+          <input type="number" id="frequence_achat" min="0" placeholder="0">
         </label>
-        <textarea id="croisements" placeholder="Saisissez ici vos croisements"
-          style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-        <label style="font-weight:bold; color: darkred;">
-          Notes
-        </label>
-        <textarea id="notes" placeholder="Insérez ici vos notes et remarques"
-          style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
       </div>
 
       <label>
-        Fréquence d'achat (par mois) :
-        <input type="number" id="frequence_achat" min="0" placeholder="0">
+        Achat max/min/CAMV Mensuel:
       </label>
-    </div>
-
-    <label>
-      Achat max/min/CAMV Mensuel:
-    </label>
-    <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
-      <input type="text" id="achat_max" placeholder="max">
-      <input type="text" id="achat_min" placeholder="min">
-      <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
-             style="background:#fff9c4;font-weight:bold;color:darkblue;">
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
-        CAMV selon marge
-      </label>
-      <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
-             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
-        CAMV selon MMP
-      </label>
-      <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly
-             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_final" style="width: 150px; font-weight: bold;">
-        CAMV final
-      </label>
-      <input type="text" id="camv_final" name="camv_final" readonly
-             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="dettes_fournisseurs" style="width: 160px;">
-        Dettes fournisseurs
-      </label>
-      <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
-    </div>
-
-    <label style="color: blue; font-weight: bold; text-decoration: underline;">
-      3-OPEX (Operating Expenses ou dépenses d'exploitation)
-    </label>
-
-    <div class="opex-wrapper">
-      <table class="opex-table">
-        <thead>
-          <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
-          <tr>
-            <td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
-            <td><input type="text" class="opex-input" style="height:40px;" /></td>
-          </tr>
-          <tr class="opex-total">
-            <td>Total OPEX</td>
-            <td><span id="opex-total">0 MGA</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  
-  <!-- Contenu de l'activité 2 -->
-  <div id="activite2-content" class="activite-content">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-      
-      <!-- Colonne de gauche -->
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label>
-          Nom de l'activité (2ème ligne) :
-          <input type="text" id="nom_activite_deuxieme_ligne" readonly>
-        </label>
-
-        <label>
-          Marge de l'activité (2ème ligne) :
-          <input type="text" id="marge_activite_deuxieme_ligne" readonly>
-        </label>
-
-        <label style="color: blue; font-weight: bold; text-decoration: underline;">
-          1-Chiffre d'affaires mensuel :
-        </label>
-
-        <label>
-          Fréquence de vente (par mois) :
-          <input type="number" id="frequence_vente2" min="0" placeholder="0">
-        </label>
-
-        <label>
-          Vente selon derniers jours :
-        </label>
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
-          <input type="text" id="vente_jour_v3_2" placeholder="V-3">
-          <input type="text" id="vente_jour_v2_2" placeholder="V-2">
-          <input type="text" id="vente_jour_v1_2" placeholder="V-1">
-          <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly 
-                 style="background:#fff9c4;font-weight:bold;color:darkblue;">
-        </div>
-
-        <label>
-          Vente selon registre :
-        </label>
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
-          <input type="text" id="vente_registre_m3_2" placeholder="M-3">
-          <input type="text" id="vente_registre_m2_2" placeholder="M-2">
-          <input type="text" id="vente_registre_m1_2" placeholder="M-1">
-          <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly 
-                 style="background:#fff9c4;font-weight:bold;color:darkgreen;">
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="ca_ligne2" style="width: 150px;">
-            CA (ligne 2) :
-          </label>
-          <input type="text" id="ca_ligne2" name="ca_ligne2" readonly
-                 style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-          <label for="creances_actuelles2" style="width: 150px;">
-            Créances actuelles
-          </label>
-          <input type="text" id="creances_actuelles2" name="creances_actuelles2">
-        </div>
-
-        <label style="color: blue; font-weight: bold; text-decoration: underline;">
-          2-CAMV mensuel :
-        </label>
+      <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
+        <input type="text" id="achat_max" placeholder="max">
+        <input type="text" id="achat_min" placeholder="min">
+        <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly 
+               style="background:#fff9c4;font-weight:bold;color:darkblue;">
       </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
+          CAMV selon marge
+        </label>
+        <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly
+               style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
+          CAMV selon MMP
+        </label>
+        <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly
+               style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_final" style="width: 150px; font-weight: bold;">
+          CAMV final
+        </label>
+        <input type="text" id="camv_final" name="camv_final" readonly
+               style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="dettes_fournisseurs" style="width: 160px;">
+          Dettes fournisseurs
+        </label>
+        <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
+      </div>
+
+      <label style="color: blue; font-weight: bold; text-decoration: underline;">
+        3-OPEX (Operating Expenses ou dépenses d'exploitation)
+      </label>
+
+      <div class="opex-wrapper">
+        <table class="opex-table">
+          <thead>
+            <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr>
+              <td><input type="text" class="opex-label" placeholder="Autres" style="height:40px;" /></td>
+              <td><input type="text" class="opex-input" style="height:40px;" /></td>
+            </tr>
+            <tr class="opex-total">
+              <td>Total OPEX</td>
+              <td><span id="opex-total">0 MGA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Contenu de l'activité 2 -->
+    <div id="activite2-content" class="activite-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
         
-      <!-- Colonne de droite -->
-      <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-        <label style="font-weight:bold; color: darkred;">
-          Croisements
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <label>
+            Nom de l'activité (2ème ligne) :
+            <input type="text" id="nom_activite_deuxieme_ligne" readonly>
+          </label>
+
+          <label>
+            Marge de l'activité (2ème ligne) :
+            <input type="text" id="marge_activite_deuxieme_ligne" readonly>
+          </label>
+
+          <label style="color: blue; font-weight: bold; text-decoration: underline;">
+            1-Chiffre d'affaires mensuel :
+          </label>
+
+          <label>
+            Fréquence de vente (par mois) :
+            <input type="number" id="frequence_vente2" min="0" placeholder="0">
+          </label>
+
+          <label>
+            Vente selon derniers jours :
+          </label>
+          <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <input type="text" id="vente_jour_v3_2" placeholder="V-3">
+            <input type="text" id="vente_jour_v2_2" placeholder="V-2">
+            <input type="text" id="vente_jour_v1_2" placeholder="V-1">
+            <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly 
+                   style="background:#fff9c4;font-weight:bold;color:darkblue;">
+          </div>
+
+          <label>
+            Vente selon registre :
+          </label>
+          <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <input type="text" id="vente_registre_m3_2" placeholder="M-3">
+            <input type="text" id="vente_registre_m2_2" placeholder="M-2">
+            <input type="text" id="vente_registre_m1_2" placeholder="M-1">
+            <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly 
+                   style="background:#fff9c4;font-weight:bold;color:darkgreen;">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="ca_ligne2" style="width: 150px;">
+              CA (ligne 2) :
+            </label>
+            <input type="text" id="ca_ligne2" name="ca_ligne2" readonly
+                   style="flex: 1; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="creances_actuelles2" style="width: 150px;">
+              Créances actuelles
+            </label>
+            <input type="text" id="creances_actuelles2" name="creances_actuelles2">
+          </div>
+
+          <label style="color: blue; font-weight: bold; text-decoration: underline;">
+            2-CAMV mensuel :
+          </label>
+        </div>
+          
+        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+          <label style="font-weight:bold; color: darkred;">
+            Croisements
+          </label>
+          <textarea id="croisements2" placeholder="Saisissez ici vos croisements"
+            style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+          <label style="font-weight:bold; color: darkred;">
+            Notes
+          </label>
+          <textarea id="notes2" placeholder="Insérez ici vos notes et remarques"
+            style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
+        </div>
+
+        <label>
+          Fréquence d'achat (par mois) :
+          <input type="number" id="frequence_achat2" min="0" placeholder="0">
         </label>
-        <textarea id="croisements2" placeholder="Saisissez ici vos croisements"
-          style="padding: 12px 8px; height: 300px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
-        <label style="font-weight:bold; color: darkred;">
-          Notes
-        </label>
-        <textarea id="notes2" placeholder="Insérez ici vos notes et remarques"
-          style="padding: 12px 8px; height: 190px; width: 100%; background-color: #E0FFFF; border: none; border-radius: 5px; font-weight: normal; box-sizing: border-box; resize: none;"></textarea>
       </div>
 
       <label>
-        Fréquence d'achat (par mois) :
-        <input type="number" id="frequence_achat2" min="0" placeholder="0">
+        Achat max/min/CAMV Mensuel:
       </label>
-    </div>
+      <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
+        <input type="text" id="achat_max2" placeholder="max">
+        <input type="text" id="achat_min2" placeholder="min">
+        <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly 
+               style="background:#fff9c4;font-weight:bold;color:darkblue;">
+      </div>
 
-    <label>
-      Achat max/min/CAMV Mensuel:
-    </label>
-    <div style="display: flex; gap: 10px; margin-top: 5px; width: 45%;">
-      <input type="text" id="achat_max2" placeholder="max">
-      <input type="text" id="achat_min2" placeholder="min">
-      <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly 
-             style="background:#fff9c4;font-weight:bold;color:darkblue;">
-    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
+          CAMV selon marge
+        </label>
+        <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly
+               style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
 
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
-        CAMV selon marge
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_final2" style="width: 150px; font-weight: bold;">
+          CAMV final
+        </label>
+        <input type="text" id="camv_final2" name="camv_final2" readonly
+               style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="dettes_fournisseurs2" style="width: 160px;">
+          Dettes fournisseurs
+        </label>
+        <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
+      </div>
+
+      <label style="color: blue; font-weight: bold; text-decoration: underline;">
+        3-OPEX (Operating Expenses ou dépenses d'exploitation)
       </label>
-      <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly
-             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-    </div>
 
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="camv_final2" style="width: 150px; font-weight: bold;">
-        CAMV final
-      </label>
-      <input type="text" id="camv_final2" name="camv_final2" readonly
-             style="width: 30%; padding: 8px; background-color: #1E90FF; color: white; font-weight: bold; border: none; border-radius: 5px;">
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-      <label for="dettes_fournisseurs2" style="width: 160px;">
-        Dettes fournisseurs
-      </label>
-      <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
-    </div>
-
-    <label style="color: blue; font-weight: bold; text-decoration: underline;">
-      3-OPEX (Operating Expenses ou dépenses d'exploitation)
-    </label>
-
-    <div class="opex-wrapper">
-      <table class="opex-table">
-        <thead>
-          <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
-          <tr>
-            <td><input type="text" class="opex-label2" placeholder="Autres" style="height:40px;" /></td>
-            <td><input type="text" class="opex-input2" style="height:40px;" /></td>
-          </tr>
-          <tr class="opex-total">
-            <td>Total OPEX</td>
-            <td><span id="opex-total2">0 MGA</span></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="opex-wrapper">
+        <table class="opex-table">
+          <thead>
+            <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr>
+              <td><input type="text" class="opex-label2" placeholder="Autres" style="height:40px;" /></td>
+              <td><input type="text" class="opex-input2" style="height:40px;" /></td>
+            </tr>
+            <tr class="opex-total">
+              <td>Total OPEX</td>
+              <td><span id="opex-total2">0 MGA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </fieldset>
@@ -785,7 +805,6 @@
           <td><input type="text" placeholder="Produit"></td>
           <td><input type="number" class="qte" value="0"></td>
           <td><input type="number" class="stock" value="0"></td>
-          <!-- prix en TEXT pour autoriser séparateur de milliers -->
           <td><input type="text" class="achat" value="0"></td>
           <td><input type="text" class="vente" value="0"></td>
           <td class="montantAchat">0,00</td>
@@ -801,7 +820,7 @@
           <td id="totalStock">0,00</td>
         </tr>
         <tr class="mmp-row">
-          <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> </td>
+          <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> %</td>
         </tr>
       </tfoot>
     </table>
@@ -810,6 +829,7 @@
   </div>
 </fieldset>
 
+<!-- ACTIFS IMMOBILISÉS/GARANTIES -->
 <fieldset>
   <legend id="legend_actifs_immo">
     <i class="fas fa-landmark"></i> ACTIFS IMMOBILISES/GARANTIES
@@ -855,7 +875,7 @@
   </div>
 </fieldset>
 
-
+<!-- DEPENSES FAMILIALES -->
 <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
   <legend id="depenses_familiales">
     <i class="fas fa-home"></i> DEPENSES FAMILIALES
@@ -898,10 +918,7 @@
   </div>
 </fieldset>
 
-
-
-
-
+<!-- CROISEMENT SPECIFIQUE -->
 <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
   <legend id="croisement_specifique">
     <i class="fas fa-search"></i> CROISEMENT SPECIFIQUE
@@ -990,23 +1007,101 @@
   </table>
 </fieldset>
 
-<style>
-/* Style des champs résultats */
-input.result {
-  background:#e3f2fd;
-  font-weight:bold;
-  text-align:right;
-  border:none;
-  width: 100%;
-  padding: 3px;
-}
-</style>
+<!-- COÛT DE PRODUCTION -->
+ <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
+   <legend id="cout_prod">
+      <i class="fas fa-industry"></i> COÛT DE PRODUCTION
+      <small>(À utiliser uniquement si l'activité est une activité de production)</small>
+      <button type="button" class="toggle-btn" onclick="toggleSection()">
+        <i class="fas fa-eye-slash"></i> Masquer
+      </button>
+    </legend>
+
+    <div id="content_cout_prod">
+      <table id="table_cout" border="1" style="border-collapse:collapse; width:100%; text-align:center;">
+    <thead style="background:#f0f0f0;">
+      <tr>
+        <th style="width:180px;">Matières premières</th>
+        <th colspan="2">Produit 1</th>
+        <th colspan="2">Produit 2</th>
+        <th colspan="2">Produit 3</th>
+        <th colspan="2">Produit 4</th>
+        <th colspan="2">Produit 5</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>PU</th><th>Qté</th>
+        <th>PU</th><th>Qté</th>
+        <th>PU</th><th>Qté</th>
+        <th>PU</th><th>Qté</th>
+        <th>PU</th><th>Qté</th>
+      </tr>
+    </thead>
+    <tbody id="tbody_matieres">
+      <tr>
+        <td><input type="text" value="Tissus (m)"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Fil"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Étiquette (pièces)"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      </tr>
+    </tbody>
+    <tfoot style="font-weight:bold; background:#e6f2ff;">
+      <tr>
+        <td>Coût total</td>
+        <td colspan="2" id="cout1">0</td>
+        <td colspan="2" id="cout2">0</td>
+        <td colspan="2" id="cout3">0</td>
+        <td colspan="2" id="cout4">0</td>
+        <td colspan="2" id="cout5">0</td>
+      </tr>
+      <tr>
+  <td>Quantités produites</td>
+  <td colspan="2"><input type="number" id="qte1" oninput="calculer()" style="text-align:center;"></td>
+  <td colspan="2"><input type="number" id="qte2" oninput="calculer()" style="text-align:center;"></td>
+  <td colspan="2"><input type="number" id="qte3" oninput="calculer()" style="text-align:center;"></td>
+  <td colspan="2"><input type="number" id="qte4" oninput="calculer()" style="text-align:center;"></td>
+  <td colspan="2"><input type="number" id="qte5" oninput="calculer()" style="text-align:center;"></td>
+</tr>
+
+      <tr style="background:#ccffcc; color:red;">
+        <td>Coût unitaire/produit</td>
+        <td colspan="2" id="unit1">0</td>
+        <td colspan="2" id="unit2">0</td>
+        <td colspan="2" id="unit3">0</td>
+        <td colspan="2" id="unit4">0</td>
+        <td colspan="2" id="unit5">0</td>
+      </tr>
+    </tfoot>
+  </table>
+      <button onclick="ajouterMat()" style="margin-top:10px; padding:5px 15px; font-size:16px;">Ajouter matière 1ère</button>
+    </div>
+  </fieldset>
 
 
+  
 
+  
+</fieldset>
 
-
-
+<!-- BOUTONS D'ACTION -->
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
 <button type="button" class="submit-btn" onclick="sauvegarderHTML()">Exporter HTML</button>
 <button type="button" class="submit-btn" onclick="copierEtSauvegarder()">
@@ -1015,7 +1110,6 @@ input.result {
 
 </form>
 
-<!-- Le reste du code JavaScript reste inchangé -->
 <script>
 /*************************************************
  *  DONNÉES & CONSTANTES
@@ -1060,29 +1154,23 @@ function formatNombre(n){
 function formatThousands(input) {
   if (!input) return;
   
-  // Sauvegarder la position du curseur
   const start = input.selectionStart;
   const end = input.selectionEnd;
   
-  // Nettoyer la valeur
   let value = input.value.replace(/[^\d]/g, '');
   
-  // Formater avec séparateur de milliers
   if (value) {
     value = parseInt(value, 10).toLocaleString('fr-FR');
   }
   
-  // Mettre à jour la valeur
   input.value = value;
   
-  // Restaurer la position du curseur
   const newLength = input.value.length;
   const diff = newLength - input.value.replace(/[^\d]/g, '').length;
   
   input.setSelectionRange(start + diff, end + diff);
 }
 
-// Fonction pour enlever les séparateurs de milliers avant le calcul
 function removeThousandsSeparator(value) {
   return value.replace(/\s/g, '');
 }
@@ -1099,6 +1187,7 @@ function ajouterLigne(){
     <td><button type="button" class="del-btn" onclick="supprimerLigne(this)">Supprimer</button></td>`;
   tbody.appendChild(tr);
 }
+
 function supprimerLigne(btn){ btn.closest('tr')?.remove(); updateTotalDepuisObjet(); }
 function formatMontantObjet(input){
   if(!input) return;
@@ -1127,6 +1216,7 @@ function remplirSelectActivite(select){
     opt.value = nom; opt.textContent = nom; select.appendChild(opt);
   });
 }
+
 function ajouterActivite() {
   const tbody = document.getElementById('tbody_activite');
   const tr = document.createElement('tr');
@@ -1152,17 +1242,12 @@ function ajouterActivite() {
   remplirSelectActivite(selectActivite);
 
   selectActivite.addEventListener('change', function () {
-    // mise à jour marge selon l'activité choisie
     inputMarge.value = ACTIVITES_MARGES[this.value] || "0%";
-
-    // mise à jour des champs annexes
     majNomActivitePremiereLigne();
     majNomActiviteDeuxiemeLigne();
     majMargeActivitePremiereLigne();
     majMargeActiviteDeuxiemeLigne();
     majLegendActivite();
-
-    // recalculs CAMV
     majCAMVSelonMarge();
     majCAMVSelonMarge2();
     majCAMVSelonMMP();
@@ -1170,21 +1255,15 @@ function ajouterActivite() {
 }
 
 function supprimerActivite(btn) { 
-  // Supprimer la ligne activité
   btn.closest('tr')?.remove(); 
-
-  // Mise à jour des noms, marges, légende
   majNomActivitePremiereLigne(); 
   majNomActiviteDeuxiemeLigne();
   majMargeActivitePremiereLigne(); 
   majMargeActiviteDeuxiemeLigne();
   majLegendActivite(); 
-
-  // Mise à jour des CAMV
   majCAMVSelonMarge();
   majCAMVSelonMarge2();
   majCAMVSelonMMP();
-  
 }
 
 function majNomActivitePremiereLigne(){
@@ -1203,10 +1282,7 @@ function majMargeActiviteDeuxiemeLigne() {
   const deuxiemeActiviteMarge = document.querySelector('#tbody_activite tr:nth-child(2) input[name="marge_activite[]"]');
   document.getElementById('marge_activite_deuxieme_ligne').value = deuxiemeActiviteMarge ? deuxiemeActiviteMarge.value : '';
 }
-function majLegendActivite(){
-  const legend = document.getElementById('legend_activite');
-  
-}
+function majLegendActivite(){}
 
 /*************************************************
  *  SYNCHRO DEMANDEUR / CAUTION
@@ -1312,31 +1388,25 @@ function majCAMVSelonMarge(){
 }
 
 function majCAMVSelonMMP() {
-  // Récupérer le CA ligne 1
   const ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
 
-  // Récupérer le MMP (peut être input ou span)
   const mmpElem = document.getElementById('mmp');
   let mmpStr = "0%";
   if (mmpElem) {
     mmpStr = (mmpElem.value !== undefined ? mmpElem.value : mmpElem.textContent || "0%").trim();
   }
 
-  // Conversion en nombre décimal
   let mmp = parseFloat(String(mmpStr).replace(/\s|%/g, '')) / 100;
   if (isNaN(mmp)) mmp = 0;
 
-  // Calcul CAMV selon MMP
   let camvMMP = 0;
   if (mmp > 0) {
     camvMMP = Math.round(ca / (1 + mmp));
   }
 
-  // Affichage formaté
   const champ = document.getElementById('camv_selon_mmp');
   if (champ) champ.value = camvMMP > 0 ? fmtMGA(camvMMP) : "0 MGA";
 
-  // Mise à jour du CAMV final
   majCAMVFinal();
 }
 
@@ -1408,44 +1478,6 @@ function formatInputMGA(el, keepSuffix=false){
 }
 
 /*************************************************
- *  SAUVEGARDE & EXPORT
- *************************************************/
-function sauvegarder(){
-  const donneesActivites = [];
-  document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
-    donneesActivites.push({
-      activite: tr.querySelector('select[name="nom_activite[]"]').value,
-      marge: tr.querySelector('input[name="marge_activite[]"]').value,
-      anciennete: tr.querySelector('input[name="anciennete_activite[]"]').value,
-      secteur: tr.querySelector('select[name="secteur_activite[]"]').value
-    });
-  });
-  console.log('Activités enregistrées :', donneesActivites);
-  alert('Données sauvegardées avec succès !');
-}
-function sauvegarderHTML(){
-  const total = parseNumberFromString(document.getElementById('total_objet').value);
-  if(total>2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
-  const nomPrenom = document.querySelector('#nom_prenom_client').value || 'Demandeur';
-  const date = new Date(); const pad = n=>('0'+n).slice(-2);
-  const dateStr = `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
-  const cloneBody = document.body.cloneNode(true);
-  cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
-    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
-    else if(el.tagName === 'SELECT'){
-      el.querySelectorAll('option').forEach(opt=>{ if(opt.value === el.value) opt.setAttribute('selected','selected'); else opt.removeAttribute('selected'); });
-    } else el.setAttribute('value', el.value);
-  });
-  cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = 'none');
-  const htmlContent = `<!DOCTYPE html>\n<html lang='fr'>\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
-  const blob = new Blob([htmlContent], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
-  a.click();
-}
-
-/*************************************************
  *  MMP (formatage prix + calculs)
  *************************************************/
 function bindMMPRow(tr){
@@ -1454,7 +1486,6 @@ function bindMMPRow(tr){
   const achat = tr.querySelector('.achat');
   const vente = tr.querySelector('.vente');
 
-  // quantité & stock : recalcul direct
   [qte, stock].forEach(el=>{
     if(!el) return;
     el.addEventListener('input', function() {
@@ -1462,11 +1493,10 @@ function bindMMPRow(tr){
     });
   });
 
-  // prix : autoriser , . chiffres ; formatage milliers au blur
   [achat, vente].forEach(el=>{
     if(!el) return;
     el.addEventListener('input', e=>{
-      e.target.value = (e.target.value || "").replace(/[^\d\.,-]/g,''); // garder chiffres , .
+      e.target.value = (e.target.value || "").replace(/[^\d\.,-]/g,'');
       calculerMMP();
     });
     el.addEventListener('focus', e=>{
@@ -1527,38 +1557,526 @@ function calculerMMP() {
 
   const mmp = totalAchat > 0 ? ((totalVente - totalAchat) / totalAchat * 100) : 0;
 
-  // si #mmp est un <input>
   if (document.getElementById("mmp").tagName === "INPUT") {
     document.getElementById("mmp").value = formatNombre(mmp) + " %";
   } else {
-    // si c'est un <span> or <div>
     document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
   }
   
-  // Mise à jour du CAMV selon le MMP
   majCAMVSelonMMP();
 }
-
 
 /*************************************************
  *  GESTION DES ONGLETS D'ACTIVITÉ
  *************************************************/
 function activerOnglet(ongletId) {
-  // Désactiver tous les onglets
   document.querySelectorAll('.activite-tab').forEach(tab => {
     tab.classList.remove('active');
   });
   
-  // Désactiver tous les contenus
   document.querySelectorAll('.activite-content').forEach(content => {
     content.classList.remove('active');
   });
   
-  // Activer l'onglet sélectionné
   document.querySelector(`.activite-tab[data-activite="${ongletId}"]`).classList.add('active');
   
-  // Activer le contenu correspondant
   document.getElementById(`activite${ongletId}-content`).classList.add('active');
+}
+
+/*************************************************
+ *  FONCTIONS DE FORMATAGE FINANCIER
+ *************************************************/
+function formatFinancialField(input) {
+  if (!input) return;
+  
+  let value = input.value.replace(/\D/g, '');
+  
+  const numValue = parseInt(value || 0);
+  
+  input.value = numValue.toLocaleString('fr-FR') + ' MGA';
+  
+  const displayElement = document.getElementById(input.id + '_display');
+  if (displayElement) {
+    displayElement.textContent = input.value;
+  }
+}
+
+/*************************************************
+ *  GESTION DES GARANTIES
+ *************************************************/
+const tableBody = document.querySelector('#table_garanties tbody');
+const btnAjouter = document.getElementById('ajouter_garantie');
+const totalGarantiesEl = document.getElementById('total_garanties');
+const totalActifsEl = document.getElementById('total_actifs');
+
+function formatNumber(value) {
+  if (isNaN(value) || value === null) return '0';
+  return Number(value).toLocaleString('fr-FR');
+}
+
+function parseFormattedNumber(formattedValue) {
+  if (!formattedValue) return 0;
+  return parseFloat(formattedValue.toString().replace(/\s/g, '')) || 0;
+}
+
+function formatMGA(value) {
+  if (!value) return '0 MGA';
+  return formatNumber(value) + ' MGA';
+}
+
+function formatInput(input) {
+  const cursorPosition = input.selectionStart;
+  const originalValue = input.value;
+  const numericValue = parseFormattedNumber(originalValue);
+
+  if (!isNaN(numericValue)) {
+    input.value = formatNumber(numericValue);
+
+    const diff = input.value.length - originalValue.length;
+    const newPosition = Math.max(0, cursorPosition + diff);
+    input.setSelectionRange(newPosition, newPosition);
+  }
+}
+
+function recalculerTotaux() {
+  let totalGaranties = 0;
+  let totalActifs = 0;
+
+  if (tableBody) {
+    tableBody.querySelectorAll('tr').forEach(tr => {
+      const valAchatInput = tr.querySelector('.valeur-achat');
+      const valEstimeeInput = tr.querySelector('.valeur-estimee');
+
+      const valAchat = parseFormattedNumber(valAchatInput.value);
+      const valEstimee = parseFormattedNumber(valEstimeeInput.value);
+      const emplacement = tr.querySelector('.emplacement-select').value;
+      const garantie = tr.querySelector('.garantie-select').value;
+      const actif = tr.querySelector('.actif-select').value;
+
+      const decote = valAchat ? (valEstimee / valAchat * 100) : 0;
+      tr.querySelector('.decote').value = decote.toFixed(2);
+
+      if (garantie === 'Oui') {
+        totalGaranties += valEstimee;
+      }
+
+      if (actif === 'Oui' && emplacement === 'D') {
+        totalActifs += valAchat;
+      }
+    });
+  }
+
+  if (totalGarantiesEl) totalGarantiesEl.textContent = formatMGA(totalGaranties);
+  if (totalActifsEl) totalActifsEl.textContent = formatMGA(totalActifs);
+}
+
+function ajouterGarantie() {
+  if (!tableBody) return;
+  
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>
+      <select class="designation-select">
+        <option value="">-- Sélectionner --</option>
+        <option value="Véhicule">Véhicule</option>
+        <option value="Immobilier">Immobilier</option>
+        <option value="Mobilier">Mobilier</option>
+        <option value="Terrain nu">Terrain nu</option>
+        <option value="Terrain bâti">Terrain bâti</option>
+      </select>
+    </td>
+    <td>
+      <select class="emplacement-select">
+        <option value="D">D</option>
+        <option value="CS">CS</option>
+      </select>
+    </td>
+    <td><input type="text" placeholder="Description"></td>
+    <td><input type="text" placeholder="Marque"></td>
+    <td><input type="text" placeholder="Immat°…"></td>
+    <td>
+      <select class="garantie-select">
+        <option value="Oui">Oui</option>
+        <option value="Non">Non</option>
+      </select>
+    </td>
+    <td><input type="text" class="valeur-achat currency-input" placeholder="Valeur d'achat" value="0"></td>
+    <td><input type="text" class="valeur-estimee currency-input" placeholder="Valeur estimée" value="0"></td>
+    <td><input type="number" class="decote" placeholder="Décote %" style="text-align:right; background-color:#007BFF; color:white; font-weight:bold;" readonly></td>
+    <td>
+      <select class="actif-select">
+        <option value="Oui">Oui</option>
+        <option value="Non">Non</option>
+      </select>
+    </td>
+    <td>
+      <button type="button" class="btn-supprimer">X</button>
+    </td>
+  `;
+
+  const valAchatInput = tr.querySelector('.valeur-achat');
+  const valEstimeeInput = tr.querySelector('.valeur-estimee');
+
+  valAchatInput.value = formatNumber(parseFormattedNumber(valAchatInput.value));
+  valEstimeeInput.value = formatNumber(parseFormattedNumber(valEstimeeInput.value));
+
+  [valAchatInput, valEstimeeInput].forEach(input => {
+    input.addEventListener('input', function () {
+      formatInput(this);
+      recalculerTotaux();
+    });
+    input.addEventListener('blur', function () {
+      formatInput(this);
+      recalculerTotaux();
+    });
+  });
+
+  tr.querySelector('.btn-supprimer').addEventListener('click', () => {
+    tr.remove();
+    recalculerTotaux();
+  });
+
+  tr.querySelectorAll('select').forEach(el => {
+    el.addEventListener('change', recalculerTotaux);
+  });
+
+  tableBody.appendChild(tr);
+  recalculerTotaux();
+}
+
+/*************************************************
+ *  DÉPENSES FAMILIALES
+ *************************************************/
+function formatDF(value) {
+  if (!value) return '';
+  value = value.toString().replace(/\s|MGA/g, '').replace(',', '.');
+  let num = parseFloat(value);
+  if (isNaN(num)) return '';
+  return num.toLocaleString('fr-FR', {maximumFractionDigits: 2});
+}
+
+function updateTotalDF() {
+  const inputs = document.querySelectorAll('.df-input');
+  let total = 0;
+  inputs.forEach(input => {
+    let val = parseFloat(input.value.replace(/\s|MGA/g, '').replace(',', '.'));
+    if (!isNaN(val)) total += val;
+  });
+  const totalEl = document.getElementById('df-total');
+  if (totalEl) {
+    totalEl.textContent = total.toLocaleString('fr-FR') + ' MGA';
+  }
+}
+
+/*************************************************
+ *  CROISEMENT SPÉCIFIQUE
+ *************************************************/
+function formatMGATransport(value) {
+  return value.toLocaleString("fr-FR", {minimumFractionDigits: 0}) + " MGA";
+}
+
+function calc() {
+  // Transport National
+  let places_nat = +removeThousandsSeparator(document.querySelector('[name="places_nat"]')?.value || '0');
+  let frais_nat = +document.querySelector('[name="frais_nat"]')?.value || 0;
+  let voyages_nat = +removeThousandsSeparator(document.querySelector('[name="voyages_nat"]')?.value || '0');
+  let conso_nat = +removeThousandsSeparator(document.querySelector('[name="conso_nat"]')?.value || '0');
+  let km_nat = +removeThousandsSeparator(document.querySelector('[name="km_nat"]')?.value || '0');
+  let prix_nat = +removeThousandsSeparator(document.querySelector('[name="prix_nat"]')?.value || '0');
+
+  let ca_nat = places_nat * frais_nat * voyages_nat;
+  let carburant_nat = (conso_nat * km_nat / 100 * voyages_nat * prix_nat);
+
+  const ca_nat_el = document.querySelector('[name="ca_nat"]');
+  const carburant_nat_el = document.querySelector('[name="carburant_nat"]');
+  if (ca_nat_el) ca_nat_el.value = formatMGATransport(ca_nat);
+  if (carburant_nat_el) carburant_nat_el.value = formatMGATransport(carburant_nat);
+
+  // Transport Marchandises
+  let frais_march = +document.querySelector('[name="frais_march"]')?.value || 0;
+  let charge_march = +removeThousandsSeparator(document.querySelector('[name="charge_march"]')?.value || '0');
+  let voyages_march = +removeThousandsSeparator(document.querySelector('[name="voyages_march"]')?.value || '0');
+  let km_march = +removeThousandsSeparator(document.querySelector('[name="km_march"]')?.value || '0');
+  let conso_march = +removeThousandsSeparator(document.querySelector('[name="conso_march"]')?.value || '0');
+  let prix_march = +removeThousandsSeparator(document.querySelector('[name="prix_march"]')?.value || '0');
+
+  let ca_march = frais_march * charge_march * voyages_march;
+  let carburant_march = (conso_march * km_march / 100 * voyages_march * prix_march);
+
+  const ca_march_el = document.querySelector('[name="ca_march"]');
+  const carburant_march_el = document.querySelector('[name="carburant_march"]');
+  if (ca_march_el) ca_march_el.value = formatMGATransport(ca_march);
+  if (carburant_march_el) carburant_march_el.value = formatMGATransport(carburant_march);
+
+  // Bus / Taxi-brousse
+  let versement_bus = +removeThousandsSeparator(document.querySelector('[name="versement_bus"]')?.value || '0');
+  let jours_bus = +removeThousandsSeparator(document.querySelector('[name="jours_bus"]')?.value || '0');
+
+  let ca_bus = versement_bus * jours_bus;
+  const ca_bus_el = document.querySelector('[name="ca_bus"]');
+  if (ca_bus_el) ca_bus_el.value = formatMGATransport(ca_bus);
+}
+
+/*************************************************
+ *  COÛT DE PRODUCTION
+ *************************************************/
+function formatNumberProd(num) {
+  let parts = num.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return parts.join(".");
+}
+
+function calculer() {
+  const tbody = document.getElementById('tbody_matieres');
+  if (!tbody) return;
+  
+  const rows = tbody.querySelectorAll('tr');
+  const totals = [0, 0, 0, 0, 0];
+
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input[type="number"]');
+    for (let p = 0; p < 5; p++) {
+      const pu = parseFloat(inputs[p * 2]?.value) || 0;
+      const qte = parseFloat(inputs[p * 2 + 1]?.value) || 0;
+      totals[p] += pu * qte;
+    }
+  });
+
+  for (let i = 0; i < 5; i++) {
+    const qte = parseFloat(document.getElementById('qte' + (i + 1))?.value) || 0;
+    const coutEl = document.getElementById('cout' + (i + 1));
+    const unitEl = document.getElementById('unit' + (i + 1));
+    if (coutEl) coutEl.textContent = formatNumberProd(Math.round(totals[i]));
+    if (unitEl) unitEl.textContent = qte > 0 ? formatNumberProd(Math.round(totals[i] / qte)) : '0';
+  }
+}
+
+function ajouterMat() {
+  const tbody = document.getElementById('tbody_matieres');
+  if (!tbody) return;
+  
+  const newRow = document.createElement('tr');
+  let html = '<td><input type="text" placeholder="Nom matière"></td>';
+  for (let i = 0; i < 5; i++) {
+    html += `<td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>`;
+  }
+  newRow.innerHTML = html;
+  tbody.appendChild(newRow);
+}
+
+/*************************************************
+ *  FONCTIONS DE BASCULEMENT SECTIONS
+ *************************************************/
+function toggleSection(sectionId, btn) {
+  const section = document.getElementById(sectionId);
+  if (!section || !btn) return;
+  
+  if (section.style.display === "none") {
+    section.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    section.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function toggleDepenses() {
+  const wrapper = document.getElementById("df-wrapper");
+  const btn = document.querySelector("#depenses_familiales button");
+  if (!wrapper || !btn) return;
+  
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function toggleActifs() {
+  const wrapper = document.getElementById("actifs-wrapper");
+  const btn = document.querySelector("#legend_actifs_immo button");
+  if (!wrapper || !btn) return;
+  
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function toggleMMP() {
+  const wrapper = document.getElementById("mmp-wrapper");
+  const btn = document.querySelector("#legend_mmp button");
+  if (!wrapper || !btn) return;
+  
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function toggleActivite() {
+  const wrapper = document.getElementById("activite-wrapper");
+  const btn = document.querySelector("#legend_activite button");
+  if (!wrapper || !btn) return;
+  
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function toggleCroisement() {
+  const fs = document.querySelector("#croisement_specifique").parentNode;
+  if (!fs) return;
+  
+  const table = fs.querySelector("table");
+  const btn = fs.querySelector("button");
+
+  if (!table || !btn) return;
+
+  if (table.style.display === "none") {
+    table.style.display = "table";
+    btn.textContent = "Masquer";
+  } else {
+    table.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+/*************************************************
+ *  SAUVEGARDE & EXPORT
+ *************************************************/
+function sauvegarder(){
+  const donneesActivites = [];
+  document.querySelectorAll('#tbody_activite tr').forEach(tr=>{
+    const selectActivite = tr.querySelector('select[name="nom_activite[]"]');
+    const inputMarge = tr.querySelector('input[name="marge_activite[]"]');
+    const inputAnciennete = tr.querySelector('input[name="anciennete_activite[]"]');
+    const selectSecteur = tr.querySelector('select[name="secteur_activite[]"]');
+    
+    if (selectActivite && inputMarge && inputAnciennete && selectSecteur) {
+      donneesActivites.push({
+        activite: selectActivite.value,
+        marge: inputMarge.value,
+        anciennete: inputAnciennete.value,
+        secteur: selectSecteur.value
+      });
+    }
+  });
+  console.log('Activités enregistrées :', donneesActivites);
+  alert('Données sauvegardées avec succès !');
+}
+
+function sauvegarderHTML(){
+  const total = parseNumberFromString(document.getElementById('total_objet')?.value || '0');
+  if(total>2575000){ 
+    alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); 
+    return; 
+  }
+  
+  const nomPrenom = document.querySelector('#nom_prenom_client')?.value || 'Demandeur';
+  const date = new Date(); 
+  const pad = n=>('0'+n).slice(-2);
+  const dateStr = `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}`;
+  
+  const cloneBody = document.body.cloneNode(true);
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el=>{
+    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
+    else if(el.tagName === 'SELECT'){
+      el.querySelectorAll('option').forEach(opt=>{ 
+        if(opt.value === el.value) opt.setAttribute('selected','selected'); 
+        else opt.removeAttribute('selected'); 
+      });
+    } else el.setAttribute('value', el.value);
+  });
+  cloneBody.querySelectorAll('button').forEach(btn=> btn.style.display = 'none');
+  
+  const htmlContent = `<!DOCTYPE html>\n<html lang='fr'>\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `TRAME_${nomPrenom}_${dateStr}.html`;
+  a.click();
+}
+
+function copierEtSauvegarder(){
+  const total = parseNumberFromString(document.getElementById('total_objet')?.value || '0');
+  if(total > 2575000){
+    alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !");
+    return;
+  }
+
+  const nomPrenom = (document.getElementById('nom_prenom_client')?.value || 'Demandeur').replace(/[^a-zA-Z0-9]/g,'_');
+  const now = new Date();
+  const pad = n => ('0'+n).slice(-2);
+  const dateStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+  const fileName = `${nomPrenom}_${dateStr}.html`;
+
+  const cloneBody = document.body.cloneNode(true);
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el => {
+    el.setAttribute('readonly','readonly');
+    if(el.tagName === 'SELECT') el.setAttribute('disabled','disabled');
+    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
+    else el.setAttribute('value', el.value);
+  });
+  cloneBody.querySelectorAll('button').forEach(b => b.style.display = 'none');
+
+  const unlockScript = document.createElement('script');
+  unlockScript.textContent = `
+    document.addEventListener('DOMContentLoaded', () => {
+      const pwd = prompt('Fichier verrouillé. Entrez le mot de passe pour déverrouiller :');
+      if(pwd === '2110'){
+        document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
+        document.querySelectorAll('select').forEach(s => {
+          s.removeAttribute('disabled');
+          s.removeAttribute('readonly');
+        });
+        alert('Fichier déverrouillé !');
+      } else {
+        alert('Mot de passe incorrect. Le fichier reste en lecture seule.');
+      }
+    });
+  `;
+  cloneBody.appendChild(unlockScript);
+
+  const htmlContent = `<!DOCTYPE html>\n<html lang="fr">\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  a.click();
+
+  document.querySelectorAll('form input, form textarea, form select').forEach(el => {
+    if(el.type === 'date' || el.type === 'time') el.value = '';
+    else if(el.type === 'number') el.value = '';
+    else if(el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  
+  ['tbody_objet','tbody_activite','tableMMP tbody','table_garanties tbody'].forEach(id => {
+    const tb = document.getElementById(id) || document.querySelector('#'+id);
+    if(tb && tb.rows) {
+      [...tb.rows].slice(1).forEach(r => r.remove());
+    }
+  });
+  
+  updateTotalDepuisObjet();
+  updateOpexTotal(); 
+  updateOpexTotal2();
+  calculerMMP();
+  if (typeof recalculerTotaux === 'function') recalculerTotaux();
+  updateTotalDF();
 }
 
 /*************************************************
@@ -1637,18 +2155,30 @@ document.addEventListener('DOMContentLoaded', ()=>{
     el.addEventListener('blur', ()=>{ majVenteMensuelle2(); majVenteMensRV2(); });
   });
   
-  document.getElementById('frequence_vente')?.addEventListener('input', majVenteMensuelle);
-  document.getElementById('frequence_achat')?.addEventListener('input', majCAMVMensuel);
+  const freqVente = document.getElementById('frequence_vente');
+  if (freqVente) freqVente.addEventListener('input', majVenteMensuelle);
   
-  document.getElementById('frequence_vente2')?.addEventListener('input', majVenteMensuelle2);
-  document.getElementById('frequence_achat2')?.addEventListener('input', majCAMVMensuel2);
+  const freqAchat = document.getElementById('frequence_achat');
+  if (freqAchat) freqAchat.addEventListener('input', majCAMVMensuel);
+  
+  const freqVente2 = document.getElementById('frequence_vente2');
+  if (freqVente2) freqVente2.addEventListener('input', majVenteMensuelle2);
+  
+  const freqAchat2 = document.getElementById('frequence_achat2');
+  if (freqAchat2) freqAchat2.addEventListener('input', majCAMVMensuel2);
 
   // Sync caution
   const lien = document.getElementById('lien_demandeur');
-  lien && lien.addEventListener('change', synchroniserCaution);
-  document.getElementById('etat_civil_client')?.addEventListener('input', synchroniserCaution);
-  document.getElementById('nb_client')?.addEventListener('input', synchroniserCaution);
-  document.getElementById('adresse_domicile_client')?.addEventListener('input', synchroniserCaution);
+  if (lien) lien.addEventListener('change', synchroniserCaution);
+  
+  const etatCivilClient = document.getElementById('etat_civil_client');
+  if (etatCivilClient) etatCivilClient.addEventListener('input', synchroniserCaution);
+  
+  const nbClient = document.getElementById('nb_client');
+  if (nbClient) nbClient.addEventListener('input', synchroniserCaution);
+  
+  const adresseClient = document.getElementById('adresse_domicile_client');
+  if (adresseClient) adresseClient.addEventListener('input', synchroniserCaution);
 
   // MMP : binder la première ligne
   document.querySelectorAll('#tableMMP tbody tr').forEach(bindMMPRow);
@@ -1675,53 +2205,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
   });
 
-  // Inits
-  updateOpexTotal();
-  updateOpexTotal2();
-  updateTotalDepuisObjet();
-  majCALigne1(); majCAMVSelonMarge(); majCAMVSelonMMP(); majCAMVMensuel();
-  majCALigne2(); majCAMVSelonMarge2(); majCAMVMensuel2();
-  calculerMMP();
-});
-</script>
-<script>
+  // Revenus caution
   const revenusInput = document.getElementById("revenus_mensuels_caution");
-
-  revenusInput.addEventListener("input", function () {
-    let value = this.value.replace(/[^\d]/g, ""); // garder seulement les chiffres
-    if (value) {
-      this.value = parseInt(value).toLocaleString("fr-FR") + " MGA";
-    } else {
-      this.value = "";
-    }
-  });
-</script>
-<script>
-function formatFinancialField(input) {
-  if (!input) return;
-  
-  // Nettoyer la valeur en ne gardant que les chiffres
-  let value = input.value.replace(/\D/g, '');
-  
-  // Convertir en nombre
-  const numValue = parseInt(value || 0);
-  
-  // Formater avec séparateurs de milliers et ajouter "MGA"
-  input.value = numValue.toLocaleString('fr-FR') + ' MGA';
-  
-  // Mettre à jour l'affichage formaté
-  const displayElement = document.getElementById(input.id + '_display');
-  if (displayElement) {
-    displayElement.textContent = input.value;
+  if (revenusInput) {
+    revenusInput.addEventListener("input", function () {
+      let value = this.value.replace(/[^\d]/g, "");
+      if (value) {
+        this.value = parseInt(value).toLocaleString("fr-FR") + " MGA";
+      } else {
+        this.value = "";
+      }
+    });
   }
-}
 
-// Ajouter ces écouteurs d'événements à la fin du DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-  // ... code existant ...
-  
-  // Ajouter des écouteurs pour le formatage en temps réel
-  const financialFields = ['solde_mobile', 'solde_epargne', 'echeances', 'encours_credit'];
+  // Champs financiers
+  const financialFields = ['solde_mobile', 'solde_epargne', 'Caisse', 'echeances', 'encours_credit'];
   financialFields.forEach(id => {
     const field = document.getElementById(id);
     if (field) {
@@ -1739,403 +2237,60 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
-});
-</script>
-  <script>
-    const tableBody = document.querySelector('#table_garanties tbody');
-    const btnAjouter = document.getElementById('ajouter_garantie');
-    const totalGarantiesEl = document.getElementById('total_garanties');
-    const totalActifsEl = document.getElementById('total_actifs');
 
-    // Fonction pour formater les nombres avec séparateurs de milliers
-    function formatNumber(value) {
-        if (isNaN(value) || value === null) return '0';
-        return Number(value).toLocaleString('fr-FR');
-    }
-
-    // Fonction pour parser les nombres formatés
-    function parseFormattedNumber(formattedValue) {
-        if (!formattedValue) return 0;
-        return parseFloat(formattedValue.toString().replace(/\s/g, '')) || 0;
-    }
-
-    function formatMGA(value) {
-        if (!value) return '0 MGA';
-        return formatNumber(value) + ' MGA';
-    }
-
-    // Fonction pour formater un champ de saisie avec séparateurs de milliers
-    function formatInput(input) {
-        const cursorPosition = input.selectionStart;
-        const originalValue = input.value;
-        const numericValue = parseFormattedNumber(originalValue);
-
-        if (!isNaN(numericValue)) {
-            input.value = formatNumber(numericValue);
-
-            // Restaurer la position du curseur
-            const diff = input.value.length - originalValue.length;
-            const newPosition = Math.max(0, cursorPosition + diff);
-            input.setSelectionRange(newPosition, newPosition);
-        }
-    }
-
-    function recalculerTotaux() {
-        let totalGaranties = 0;
-        let totalActifs = 0;
-
-        tableBody.querySelectorAll('tr').forEach(tr => {
-            const valAchatInput = tr.querySelector('.valeur-achat');
-            const valEstimeeInput = tr.querySelector('.valeur-estimee');
-
-            const valAchat = parseFormattedNumber(valAchatInput.value);
-            const valEstimee = parseFormattedNumber(valEstimeeInput.value);
-            const emplacement = tr.querySelector('.emplacement-select').value;
-            const garantie = tr.querySelector('.garantie-select').value;
-            const actif = tr.querySelector('.actif-select').value;
-
-            // Calcul décote %
-            const decote = valAchat ? (valEstimee / valAchat * 100) : 0;
-            tr.querySelector('.decote').value = decote.toFixed(2);
-
-            // Formule Excel: SOMME.SI.ENS(valeur estimée; Garantie; "Oui")
-            if (garantie === 'Oui') {
-                totalGaranties += valEstimee;
-            }
-
-            // Formule Excel: SOMME.SI.ENS(valeur d'achat; Actif; "Oui"; Emplacement; "D")
-            if (actif === 'Oui' && emplacement === 'D') {
-                totalActifs += valAchat;
-            }
-        });
-
-        totalGarantiesEl.textContent = formatMGA(totalGaranties);
-        totalActifsEl.textContent = formatMGA(totalActifs);
-    }
-
-    function ajouterGarantie() {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>
-                <select class="designation-select">
-                    <option value="">-- Sélectionner --</option>
-                    <option value="Véhicule">Véhicule</option>
-                    <option value="Immobilier">Immobilier</option>
-            <option value="Mobilier">Mobilier</option>
-                    <option value="Terrain nu">Terrain nu</option>
-                    <option value="Terrain bâti">Terrain bâti</option>
-                </select>
-            </td>
-            <td>
-                <select class="emplacement-select">
-                    <option value="D">D</option>
-                    <option value="CS">CS</option>
-                </select>
-            </td>
-            <td><input type="text" placeholder="Description"></td>
-            <td><input type="text" placeholder="Marque"></td>
-            <td><input type="text" placeholder="Immat°…"></td>
-            <td>
-                <select class="garantie-select">
-                    <option value="Oui">Oui</option>
-                    <option value="Non">Non</option>
-                </select>
-            </td>
-            <td><input type="text" class="valeur-achat currency-input" placeholder="Valeur d'achat" value="0"></td>
-            <td><input type="text" class="valeur-estimee currency-input" placeholder="Valeur estimée" value="0"></td>
-            <td><input type="number" class="decote" placeholder="Décote %" style="text-align:right; background-color:#007BFF; color:white; font-weight:bold;" readonly>
-</td>
-
-            <td>
-                <select class="actif-select">
-                    <option value="Oui">Oui</option>
-                    <option value="Non">Non</option>
-                </select>
-            </td>
-            <td>
-                <button type="button" class="btn-supprimer">X</button>
-            </td>
-        `;
-
-        const valAchatInput = tr.querySelector('.valeur-achat');
-        const valEstimeeInput = tr.querySelector('.valeur-estimee');
-
-        // Initialiser format
-        valAchatInput.value = formatNumber(parseFormattedNumber(valAchatInput.value));
-        valEstimeeInput.value = formatNumber(parseFormattedNumber(valEstimeeInput.value));
-
-        // Événements sur saisie
-        [valAchatInput, valEstimeeInput].forEach(input => {
-            input.addEventListener('input', function () {
-                formatInput(this);
-                recalculerTotaux();
-            });
-            input.addEventListener('blur', function () {
-                formatInput(this);
-                recalculerTotaux();
-            });
-        });
-
-        // Supprimer ligne
-        tr.querySelector('.btn-supprimer').addEventListener('click', () => {
-            tr.remove();
-            recalculerTotaux();
-        });
-
-        // Recalcul quand les selects changent
-        tr.querySelectorAll('select').forEach(el => {
-            el.addEventListener('change', recalculerTotaux);
-        });
-
-        tableBody.appendChild(tr);
-
-        recalculerTotaux();
-    }
-
-    // Initialiser avec une ligne vue
-    ajouterGarantie();
-    btnAjouter.addEventListener('click', ajouterGarantie);
-</script>
-<script>
-  // Fonction pour formater avec séparateur de milliers
-  function formatNumber(value) {
-    if (!value) return '';
-    // retirer tout ce qui n'est pas chiffre ou point/virgule
-    value = value.toString().replace(/\s|MGA/g, '').replace(',', '.');
-    let num = parseFloat(value);
-    if (isNaN(num)) return '';
-    // retour avec séparateur de milliers sans MGA
-    return num.toLocaleString('fr-FR', {maximumFractionDigits: 2});
-  }
-
-  // Mettre à jour le total
-  function updateTotalDF() {
-    const inputs = document.querySelectorAll('.df-input');
-    let total = 0;
-    inputs.forEach(input => {
-      let val = parseFloat(input.value.replace(/\s|MGA/g, '').replace(',', '.'));
-      if (!isNaN(val)) total += val;
-    });
-    document.getElementById('df-total').textContent = total.toLocaleString('fr-FR') + ' MGA';
-  }
-
-  // Formater chaque champ à la saisie
+  // Dépenses familiales
   document.querySelectorAll('.df-input').forEach(input => {
     input.addEventListener('input', (e) => {
-      // garder le curseur en fin de texte
       let start = input.selectionStart;
       let end = input.selectionEnd;
-      input.value = formatNumber(input.value);
+      input.value = formatDF(input.value);
       input.setSelectionRange(start, end);
       updateTotalDF();
     });
   });
-</script>
 
-<script>
-function toggleDepenses() {
-  const wrapper = document.getElementById("df-wrapper");
-  const btn = document.querySelector("#depenses_familiales button");
-  if (wrapper.style.display === "none") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-</script>
-<script>
-function toggleActifs() {
-  const wrapper = document.getElementById("actifs-wrapper");
-  const btn = document.querySelector("#legend_actifs_immo button");
-  if (wrapper.style.display === "none") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-</script>
-<script>
-function toggleMMP() {
-  const wrapper = document.getElementById("mmp-wrapper");
-  const btn = document.querySelector("#legend_mmp button");
-  if (wrapper.style.display === "none") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-</script>
-<script>
-function toggleActivite() {
-  const wrapper = document.getElementById("activite-wrapper");
-  const btn = document.querySelector("#legend_activite button");
-  if (wrapper.style.display === "none") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-</script>
-
-<script>
-function toggleSection(sectionId, btn) {
-  const section = document.getElementById(sectionId);
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    section.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-</script>
-<script>
-function toggleCroisement(){
-  const fs = document.querySelector("#croisement_specifique").parentNode;
-  const table = fs.querySelector("table");
-  const btn = fs.querySelector("button");
-
-  if(table.style.display === "none"){
-    table.style.display = "table";
-    btn.textContent = "Masquer";
-  } else {
-    table.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-
-function formatMGA(value){
-  return value.toLocaleString("fr-FR", {minimumFractionDigits: 0}) + " MGA";
-}
-
-function calc(){
-  // Transport National
-  let places_nat = +removeThousandsSeparator(document.querySelector('[name="places_nat"]').value) || 0;
-  let frais_nat = +document.querySelector('[name="frais_nat"]').value || 0;
-  let voyages_nat = +removeThousandsSeparator(document.querySelector('[name="voyages_nat"]').value) || 0;
-  let conso_nat = +removeThousandsSeparator(document.querySelector('[name="conso_nat"]').value) || 0;
-  let km_nat = +removeThousandsSeparator(document.querySelector('[name="km_nat"]').value) || 0;
-  let prix_nat = +removeThousandsSeparator(document.querySelector('[name="prix_nat"]').value) || 0;
-
-  let ca_nat = places_nat * frais_nat * voyages_nat;
-  let carburant_nat = (conso_nat * km_nat / 100 * voyages_nat * prix_nat);
-
-  document.querySelector('[name="ca_nat"]').value = formatMGA(ca_nat);
-  document.querySelector('[name="carburant_nat"]').value = formatMGA(carburant_nat);
-
-  // Transport Marchandises
-  let frais_march = +document.querySelector('[name="frais_march"]').value || 0;
-  let charge_march = +removeThousandsSeparator(document.querySelector('[name="charge_march"]').value) || 0;
-  let voyages_march = +removeThousandsSeparator(document.querySelector('[name="voyages_march"]').value) || 0;
-  let km_march = +removeThousandsSeparator(document.querySelector('[name="km_march"]').value) || 0;
-  let conso_march = +removeThousandsSeparator(document.querySelector('[name="conso_march"]').value) || 0;
-  let prix_march = +removeThousandsSeparator(document.querySelector('[name="prix_march"]').value) || 0;
-
-  let ca_march = frais_march * charge_march * voyages_march;
-  let carburant_march = (conso_march * km_march / 100 * voyages_march * prix_march);
-
-  document.querySelector('[name="ca_march"]').value = formatMGA(ca_march);
-  document.querySelector('[name="carburant_march"]').value = formatMGA(carburant_march);
-
-  // Bus / Taxi-brousse
-  let versement_bus = +removeThousandsSeparator(document.querySelector('[name="versement_bus"]').value) || 0;
-  let jours_bus = +removeThousandsSeparator(document.querySelector('[name="jours_bus"]').value) || 0;
-
-  let ca_bus = versement_bus * jours_bus;
-  document.querySelector('[name="ca_bus"]').value = formatMGA(ca_bus);
-}
-
-// recalcul à chaque saisie
-document.querySelectorAll("input").forEach(inp=>{
-  if(inp.type === "number" || inp.classList.contains('thousands-separator')){
-    inp.addEventListener("input", calc);
-  }
-});
-
-/* ---------- NOUVELLE FONCTION UNIQUE DEMANDÉE ---------- */
-function copierEtSauvegarder(){
-  /* ---- 1. Vérification montant ---- */
-  const total = parseNumberFromString(document.getElementById('total_objet').value);
-  if(total > 2575000){
-    alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !");
-    return;
-  }
-
-  /* ---- 2. Génération nom fichier ---- */
-  const nomPrenom = (document.getElementById('nom_prenom_client').value || 'Demandeur').replace(/[^a-zA-Z0-9]/g,'_');
-  const now = new Date();
-  const pad = n => ('0'+n).slice(-2);
-  const dateStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
-  const fileName = `${nomPrenom}_${dateStr}.html`;
-
-  /* ---- 3. Clone + verrou ---- */
-  const cloneBody = document.body.cloneNode(true);
-  cloneBody.querySelectorAll('input, textarea, select').forEach(el => {
-    /* verrou */
-    el.setAttribute('readonly','readonly');
-    if(el.tagName === 'SELECT') el.setAttribute('disabled','disabled');
-    /* conserve valeur */
-    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
-    else el.setAttribute('value', el.value);
-  });
-  /* on cache les boutons du clone */
-  cloneBody.querySelectorAll('button').forEach(b => b.style.display = 'none');
-
-/* ---- 4. Script de déverrouillage dans le clone ---- */
-const unlockScript = document.createElement('script');
-unlockScript.textContent = `
-  document.addEventListener('DOMContentLoaded', () => {
-    const pwd = prompt('Fichier verrouillé. Entrez le mot de passe pour déverrouiller :');
-    if(pwd === '2110'){
-      document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
-      document.querySelectorAll('select').forEach(s => {
-        s.removeAttribute('disabled');
-        s.removeAttribute('readonly');
-      });
-      alert('Fichier déverrouillé !');
-    } else {
-      alert('Mot de passe incorrect. Le fichier reste en lecture seule.');
+  // Calculs transport
+  document.querySelectorAll("input").forEach(inp=>{
+    if(inp.type === "number" || inp.classList.contains('thousands-separator')){
+      inp.addEventListener("input", calc);
     }
   });
-`;
-cloneBody.appendChild(unlockScript);
 
-  /* ---- 5. Export ---- */
-  const htmlContent = `<!DOCTYPE html>\n<html lang="fr">\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
-  const blob = new Blob([htmlContent], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = fileName;
-  a.click();
+  // Garanties - Initialisation
+  if (btnAjouter) {
+    ajouterGarantie();
+    btnAjouter.addEventListener('click', ajouterGarantie);
+  }
 
-  /* ---- 6. Reset complet de la matrice ---- */
-  document.querySelectorAll('form input, form textarea, form select').forEach(el => {
-    if(el.type === 'date' || el.type === 'time') el.value = '';
-    else if(el.type === 'number') el.value = '';
-    else if(el.tagName === 'SELECT') el.selectedIndex = 0;
-    else el.value = '';
-  });
-  /* tables dynamiques : on supprime les lignes sauf la première */
-  ['tbody_objet','tbody_activite','tableMMP tbody','table_garanties tbody'].forEach(id => {
-    const tb = document.getElementById(id) || document.querySelector('#'+id);
-    if(tb) [...tb.rows].slice(1).forEach(r => r.remove());
-  });
-  /* recalculs à zéro */
+  // Inits
+  updateOpexTotal();
+  updateOpexTotal2();
   updateTotalDepuisObjet();
-  updateOpexTotal(); updateOpexTotal2();
+  majCALigne1(); 
+  majCAMVSelonMarge(); 
+  majCAMVSelonMMP(); 
+  majCAMVMensuel();
+  majCALigne2(); 
+  majCAMVSelonMarge2(); 
+  majCAMVMensuel2();
   calculerMMP();
-  recalculerTotaux();
   updateTotalDF();
-}
+});
 </script>
+<script>
+    function toggleSection() {
+      const content = document.getElementById("content_cout_prod");
+      const btn = document.querySelector("#cout_prod .toggle-btn");
+      const icon = btn.querySelector("i");
 
+      if (content.style.display === "none") {
+        content.style.display = "block";
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
+      } else {
+        content.style.display = "none";
+        btn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
+      }
+    }
+  </script>
 </body>
 </html>
