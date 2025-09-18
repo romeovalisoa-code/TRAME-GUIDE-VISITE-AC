@@ -198,6 +198,27 @@ input.sep{
   font-size: 14px;          /* optionnel : taille un peu plus grande */
   margin-bottom: 6px;       /* espacement en dessous */
 }
+#hist_activite_content {
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height 0.28s ease, opacity 0.22s ease;
+    opacity: 1;
+  }
+  #hist_activite_content.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+ 
+  #activite-wrapper {
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+  }
+  #activite-wrapper.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
 
 </style>
 </head>
@@ -422,12 +443,12 @@ input.sep{
     HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
     <!-- bouton avec icône + span pour le texte (on peut cibler .toggle-text sans toucher l'icône) -->
     <button type="button" id="btn_toggle_activite" aria-expanded="true"
-            style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;">
-      <i class="fas fa-eye" aria-hidden="true"></i>
-      <span class="toggle-text" style="margin-left:6px;">Masquer</span>
-    </button>
+        style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;"
+        onclick="toggleActiviteHistory()">
+  <i class="fas fa-eye" aria-hidden="true"></i>
+  <span class="toggle-text" style="margin-left:6px;">Masquer</span>
+</button>
   </legend>
-
 
   <div id="hist_activite_content">
     <table id="table_activite">
@@ -520,12 +541,15 @@ input.sep{
 
 <!-- FONCTIONNEMENT DE L'ACTIVITE -->
         <fieldset>
-            <legend id="legend_activite">
-                <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
-                <button type="button" class="toggle-btn" onclick="toggleActivite()">
-                    <i class="fas fa-eye-slash"></i> Masquer
-                </button>
-            </legend>
+  <legend id="legend_activite">
+    <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
+    <button type="button" id="btn_toggle_fonctionnement" aria-expanded="true"
+      style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;"
+      onclick="toggleFonctionnement()">
+      <i class="fas fa-eye" aria-hidden="true"></i>
+      <span class="toggle-text" style="margin-left:6px;">Masquer</span>
+    </button>
+  </legend>
 
             <div id="activite-wrapper">
                 <div class="activite-tabs" id="activite-tabs">
@@ -1059,78 +1083,77 @@ input.sep{
 
     <div id="content_cout_prod">
       <table id="table_cout" border="1" style="border-collapse:collapse; width:100%; text-align:center;">
-    <thead style="background:#f0f0f0;">
-      <tr>
-        <th style="width:180px;">Matières premières</th>
-        <th colspan="2">Produit 1</th>
-        <th colspan="2">Produit 2</th>
-        <th colspan="2">Produit 3</th>
-        <th colspan="2">Produit 4</th>
-        <th colspan="2">Produit 5</th>
-      </tr>
-      <tr>
-        <th></th>
-        <th>PU</th><th>Qté</th>
-        <th>PU</th><th>Qté</th>
-        <th>PU</th><th>Qté</th>
-        <th>PU</th><th>Qté</th>
-        <th>PU</th><th>Qté</th>
-      </tr>
-    </thead>
-    <tbody id="tbody_matieres">
-      <tr>
-        <td><input type="text" value="Tissus (m)"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      </tr>
-      <tr>
-        <td><input type="text" value="Fil"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      </tr>
-      <tr>
-        <td><input type="text" value="Étiquette (pièces)"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-        <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      </tr>
-    </tbody>
-    <tfoot style="font-weight:bold; background:#e6f2ff;">
-      <tr>
-        <td>Coût total</td>
-        <td colspan="2" id="cout1">0</td>
-        <td colspan="2" id="cout2">0</td>
-        <td colspan="2" id="cout3">0</td>
-        <td colspan="2" id="cout4">0</td>
-        <td colspan="2" id="cout5">0</td>
-      </tr>
-      <tr>
-  <td>Quantités produites</td>
-  <td colspan="2"><input type="number" id="qte1" oninput="calculer()" style="text-align:center;"></td>
-  <td colspan="2"><input type="number" id="qte2" oninput="calculer()" style="text-align:center;"></td>
-  <td colspan="2"><input type="number" id="qte3" oninput="calculer()" style="text-align:center;"></td>
-  <td colspan="2"><input type="number" id="qte4" oninput="calculer()" style="text-align:center;"></td>
-  <td colspan="2"><input type="number" id="qte5" oninput="calculer()" style="text-align:center;"></td>
-</tr>
-
-      <tr style="background:#ccffcc; color:red;">
-        <td>Coût unitaire/produit</td>
-        <td colspan="2" id="unit1">0</td>
-        <td colspan="2" id="unit2">0</td>
-        <td colspan="2" id="unit3">0</td>
-        <td colspan="2" id="unit4">0</td>
-        <td colspan="2" id="unit5">0</td>
-      </tr>
-    </tfoot>
-  </table>
+  <thead style="background:#f0f0f0;">
+    <tr>
+      <th style="width:180px;">Matières premières</th>
+      <th colspan="2">Produit 1</th>
+      <th colspan="2">Produit 2</th>
+      <th colspan="2">Produit 3</th>
+      <th colspan="2">Produit 4</th>
+      <th colspan="2">Produit 5</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>PU</th><th>Qté</th>
+      <th>PU</th><th>Qté</th>
+      <th>PU</th><th>Qté</th>
+      <th>PU</th><th>Qté</th>
+      <th>PU</th><th>Qté</th>
+    </tr>
+  </thead>
+  <tbody id="tbody_matieres">
+    <tr>
+      <td><input type="text" value="Tissus (m)"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+    </tr>
+    <tr>
+      <td><input type="text" value="Fil"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+    </tr>
+    <tr>
+      <td><input type="text" value="Étiquette (pièces)"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+    </tr>
+  </tbody>
+  <tfoot style="font-weight:bold; background:#e6f2ff; text-align:center;">
+    <tr>
+      <td>Coût total</td>
+      <td colspan="2" id="cout1">0</td>
+      <td colspan="2" id="cout2">0</td>
+      <td colspan="2" id="cout3">0</td>
+      <td colspan="2" id="cout4">0</td>
+      <td colspan="2" id="cout5">0</td>
+    </tr>
+    <tr>
+      <td>Quantités produites</td>
+      <td colspan="2"><input type="number" id="qte1" oninput="calculer()" style="text-align:center;"></td>
+      <td colspan="2"><input type="number" id="qte2" oninput="calculer()" style="text-align:center;"></td>
+      <td colspan="2"><input type="number" id="qte3" oninput="calculer()" style="text-align:center;"></td>
+      <td colspan="2"><input type="number" id="qte4" oninput="calculer()" style="text-align:center;"></td>
+      <td colspan="2"><input type="number" id="qte5" oninput="calculer()" style="text-align:center;"></td>
+    </tr>
+    <tr style="background:#ccffcc; color:red; text-align:center;">
+      <td>Coût unitaire/produit</td>
+      <td colspan="2" id="unit1">0</td>
+      <td colspan="2" id="unit2">0</td>
+      <td colspan="2" id="unit3">0</td>
+      <td colspan="2" id="unit4">0</td>
+      <td colspan="2" id="unit5">0</td>
+    </tr>
+  </tfoot>
+</table>
       <button onclick="ajouterMat()" style="margin-top:10px; padding:5px 15px; font-size:16px;">Ajouter matière 1ère</button>
     </div>
   </fieldset>
@@ -1211,10 +1234,10 @@ input.sep{
     </tr>
     <!-- Ligne 6 : Totaux -->
     <tr style="background:#333; color:#fff; font-weight:bold;">
-      <td>Total actif</td>
-      <td><input type="text" id="bilan_total_actif" readonly class="result numeric"
+      <td style="background:#333; color:#fff; font-weight:bold;">Total actif</td>
+      <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif" readonly class="result numeric"
                  style="background:#333; color:#fff;"></td>
-      <td><input type="text" id="bilan_total_actif_avant" readonly class="result numeric"
+      <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif_avant" readonly class="result numeric"
                  style="background:#333; color:#fff;"></td>
       <td colspan="3"></td>
     </tr>
@@ -2554,44 +2577,7 @@ document.querySelectorAll('.credit-avant-actif, .credit-avant-passif')
             }
         }
     </script>
-<script>
-        function toggleActivite() {
-            const content = document.getElementById('activite-wrapper');
-            const toggleBtn = document.querySelector('#legend_activite .toggle-btn');
-            const icon = toggleBtn.querySelector('i');
-            
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
-                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
-            } else {
-                content.style.display = 'none';
-                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
-            }
-        }
-        
-        function switchActivite(activiteNum) {
-            // Désactiver tous les onglets
-            document.querySelectorAll('.activite-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Masquer tous les contenus
-            document.querySelectorAll('.activite-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Activer l'onglet sélectionné
-            document.querySelector(`.activite-tab[data-activite="${activiteNum}"]`).classList.add('active');
-            
-            // Afficher le contenu correspondant
-            document.getElementById(`activite${activiteNum}-content`).classList.add('active');
-        }
-        
-        // Ajouter l'attribut data-activite aux onglets
-        document.querySelectorAll('.activite-tab').forEach((tab, index) => {
-            tab.setAttribute('data-activite', index + 1);
-        });
-    </script>
+
 <script>
   // Fonction de formatage avec séparateur de milliers + suffixe MGA
   function formatFinancialField(el) {
@@ -2612,6 +2598,143 @@ document.querySelectorAll('.credit-avant-actif, .credit-avant-passif')
     });
   });
 </script>
+<script>
+function formatNombre(val) {
+  return val.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
+function calculer() {
+  const lignes = document.querySelectorAll("#tbody_matieres tr");
+  const nbProduits = 5;
+  let couts = Array(nbProduits).fill(0);
+
+  // Calcul des coûts totaux par produit
+  lignes.forEach(tr => {
+    const cells = tr.querySelectorAll("input[type='number']");
+    for (let i = 0; i < nbProduits; i++) {
+      let pu = parseFloat(cells[i*2].value) || 0;
+      let qte = parseFloat(cells[i*2+1].value) || 0;
+      couts[i] += pu * qte;
+    }
+  });
+
+  // Affichage des coûts totaux
+  for (let i = 0; i < nbProduits; i++) {
+    document.getElementById("cout" + (i+1)).textContent = formatNombre(couts[i]);
+  }
+
+  // Calcul des coûts unitaires
+  for (let i = 0; i < nbProduits; i++) {
+    let qteProd = parseFloat(document.getElementById("qte" + (i+1)).value) || 0;
+    let unit = qteProd > 0 ? couts[i] / qteProd : 0;
+    document.getElementById("unit" + (i+1)).textContent = formatNombre(unit);
+  }
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn_toggle_activite');
+  const content = document.getElementById('hist_activite_content');
+
+  if (!btn || !content) {
+    // Si l'un des éléments manque, on arrête proprement
+    console.warn('Bouton toggle ou contenu introuvable (id manquant).');
+    return;
+  }
+
+  const icon = btn.querySelector('i');            // l'icône dans le bouton
+  const text = btn.querySelector('.toggle-text'); // le <span> à modifier
+
+  function setCollapsed(collapsed) {
+    content.classList.toggle('collapsed', collapsed);
+    btn.setAttribute('aria-expanded', String(!collapsed));
+    // on modifie uniquement le texte du span — on ne touche pas au bouton entier
+    if (text) text.textContent = collapsed ? 'Afficher' : 'Masquer';
+    // bascule des classes d'icône (FontAwesome) si présent
+    if (icon) {
+      icon.classList.toggle('fa-eye-slash', collapsed);
+      icon.classList.toggle('fa-eye', !collapsed);
+    }
+  }
+
+  // initialisation : on lit aria-expanded si défini, sinon on affiche
+  const startCollapsed = btn.getAttribute('aria-expanded') === 'false';
+  setCollapsed(startCollapsed);
+
+  // clic
+  btn.addEventListener('click', () => {
+    const isCollapsed = content.classList.contains('collapsed');
+    setCollapsed(!isCollapsed);
+  });
+
+  // compatibilité si tu as encore onclick="toggleActivite()" dans ton HTML
+  window.toggleActivite = function() {
+    const isCollapsed = content.classList.contains('collapsed');
+    setCollapsed(!isCollapsed);
+  };
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn_toggle_activite');
+  const content = document.getElementById('hist_activite_content');
+
+  if (!btn || !content) return;
+
+  const icon = btn.querySelector('i');
+  const text = btn.querySelector('.toggle-text');
+
+  function toggleActiviteSection() {
+    const isCollapsed = content.classList.contains('collapsed');
+    content.classList.toggle('collapsed', !isCollapsed);
+    btn.setAttribute('aria-expanded', String(isCollapsed));
+    
+    if (text) text.textContent = isCollapsed ? 'Masquer' : 'Afficher';
+    if (icon) {
+      icon.classList.toggle('fa-eye-slash', !isCollapsed);
+      icon.classList.toggle('fa-eye', isCollapsed);
+    }
+  }
+
+  // Initialisation
+  const startCollapsed = btn.getAttribute('aria-expanded') === 'false';
+  content.classList.toggle('collapsed', startCollapsed);
+  if (text) text.textContent = startCollapsed ? 'Afficher' : 'Masquer';
+  if (icon) {
+    icon.classList.toggle('fa-eye-slash', !startCollapsed);
+    icon.classList.toggle('fa-eye', startCollapsed);
+  }
+
+  // Événement de clic
+  btn.addEventListener('click', toggleActiviteSection);
+
+  // Renommer la fonction globale pour éviter les conflits
+  window.toggleActiviteHistory = toggleActiviteSection;
+});
+</script>
+<script>
+  function toggleFonctionnement() {
+    const btn = document.getElementById("btn_toggle_fonctionnement");
+    const content = document.getElementById("activite-wrapper");
+    const text = btn.querySelector(".toggle-text");
+    const icon = btn.querySelector("i");
+
+    const isCollapsed = content.classList.contains("collapsed");
+
+    if (isCollapsed) {
+      content.classList.remove("collapsed");
+      btn.setAttribute("aria-expanded", "true");
+      text.textContent = "Masquer";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    } else {
+      content.classList.add("collapsed");
+      btn.setAttribute("aria-expanded", "false");
+      text.textContent = "Afficher";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    }
+  }
+</script>
 </body>
 </html>
