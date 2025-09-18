@@ -157,14 +157,47 @@ input.sep{
   padding: 5px;
   border-radius: 4px;        /* Coins légèrement arrondis */
 }
-#hist_activite_content {
-    overflow: hidden;
-    max-height: 2000px; /* assez grand pour le contenu */
-    transition: max-height 0.28s ease;
+ /* Alignement à droite pour toutes les cases numériques */
+  .numeric {
+    text-align: right;
+    padding-right: 4px;
   }
-  #hist_activite_content.collapsed {
-    max-height: 0;
-  }
+.resultat-final {
+  width: 30%;
+  font-weight: bold;         /* texte en gras */
+  color: #fff;               /* texte blanc */
+  background-color: #333;    /* fond gris foncé */
+  text-align: right;         /* aligner le texte à droite si c’est un montant */
+  padding: 4px 6px;          /* un peu d’espace intérieur */
+  border: none;              /* enlever la bordure si tu veux un rendu épuré */
+  border-radius: 4px;        /* coins légèrement arrondis */
+}
+.resultat-final {
+  width: 30%;
+  font-weight: bold;         /* texte en gras */
+  color: #fff;               /* texte blanc */
+  background-color: #333;    /* fond gris foncé */
+  text-align: right;         /* aligner le texte à droite si c’est un montant */
+  padding: 4px 6px;          /* un peu d’espace intérieur */
+  border: none;              /* enlever la bordure si tu veux un rendu épuré */
+  border-radius: 4px;        /* coins légèrement arrondis */
+}
+.resultat-bilan {
+  font-weight: bold;        /* police en gras */
+  color: #fff;              /* texte blanc */
+  background-color: #333;   /* fond gris foncé */
+  text-align: right;        /* alignement à droite pour valeurs numériques */
+  padding: 4px 6px;         /* espacement interne */
+  border: none;             /* supprimer bordure */
+  border-radius: 4px;       /* coins arrondis (optionnel) */
+}
+.section-title {
+  font-weight: bold;        /* gras */
+  color: #0066cc;           /* bleu (tu peux changer le code couleur) */
+  text-decoration: underline; /* souligné */
+  font-size: 14px;          /* optionnel : taille un peu plus grande */
+  margin-bottom: 6px;       /* espacement en dessous */
+}
 
 </style>
 </head>
@@ -382,6 +415,7 @@ input.sep{
         </fieldset>
 
 
+<!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
 <fieldset>
   <legend id="legend_hist_activite">
     <i class="fas fa-history" aria-hidden="true"></i>
@@ -394,7 +428,7 @@ input.sep{
     </button>
   </legend>
 
-  <!-- zone à masquer / afficher -->
+
   <div id="hist_activite_content">
     <table id="table_activite">
       <thead>
@@ -426,12 +460,11 @@ input.sep{
           <input type="text" name="poste" placeholder="Ex : Comptable">
         </label>
 
-        <!-- id corrigé : "Salaire" (sans saut de ligne ni espaces) -->
         <label>
           Salaire
           <input type="text" name="Salaire" placeholder="0 MGA" style="text-align:left;" id="Salaire" onblur="formatFinancialField(this)">
         </label>
-
+		
         <label>
           Solde mobile money
           <input type="text" name="solde_mobile" placeholder="0 MGA" style="text-align:left;" id="solde_mobile" onblur="formatFinancialField(this)">
@@ -485,6 +518,302 @@ input.sep{
   </div>
 </fieldset>
 
+<!-- FONCTIONNEMENT DE L'ACTIVITE -->
+        <fieldset>
+            <legend id="legend_activite">
+                <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
+                <button type="button" class="toggle-btn" onclick="toggleActivite()">
+                    <i class="fas fa-eye-slash"></i> Masquer
+                </button>
+            </legend>
+
+            <div id="activite-wrapper">
+                <div class="activite-tabs" id="activite-tabs">
+                    <div class="activite-tab active" onclick="switchActivite(1)">Activité 1</div>
+                    <div class="activite-tab" onclick="switchActivite(2)">Activité 2</div>
+                </div>
+            
+                <!-- Contenu de l'activité 1 -->
+                <div id="activite1-content" class="activite-content active">
+                    <div class="grid-2">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label>
+                                Nom de l'activité (1ère ligne) :
+                                <input type="text" id="nom_activite_premiere_ligne" readonly>
+                            </label>
+
+                            <label>
+                                Marge de l'activité (1ère ligne) :
+                                <input type="text" id="marge_activite_premiere_ligne" readonly>
+                            </label>
+
+                            <div class="section-title">1 - Chiffre d'affaires mensuel :</div>
+
+
+                            <label>
+                                Fréquence de vente (par mois) :
+                                <input type="number" id="frequence_vente" min="0" placeholder="0">
+                            </label>
+
+                            <label>
+                                Vente selon derniers jours :
+                            </label>
+                            <div class="flex-row">
+                                <input type="text" id="vente_jour_v3" placeholder="V-3">
+                                <input type="text" id="vente_jour_v2" placeholder="V-2">
+                                <input type="text" id="vente_jour_v1" placeholder="V-1">
+                                <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly class="readonly-input">
+                            </div>
+
+                            <label>
+                                Vente selon registre :
+                            </label>
+                            <div class="flex-row">
+                                <input type="text" id="vente_registre_m3" placeholder="M-3">
+                                <input type="text" id="vente_registre_m2" placeholder="M-2">
+                                <input type="text" id="vente_registre_m1" placeholder="M-1">
+                                <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                                <label for="ca_ligne1" style="width: 150px;">
+                                    CA (ligne 1) :
+                                </label>
+                                <input type="text" id="ca_ligne1" name="ca_ligne1" readonly class="blue-box resultat-bilan">
+
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                                <label for="creances_actuelles" style="width: 150px;">
+                                    Créances actuelles
+                                </label>
+                                <input type="text" id="creances_actuelles" name="creances_actuelles">
+                            </div>
+
+                            <div class="section-title">2-CAMV mensuel :</div>
+                        </div>
+                          
+                        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+                            <label style="font-weight:bold; color: darkred;">
+                                Croisements
+                            </label>
+                            <textarea id="croisements" placeholder="Saisissez ici vos croisements" class="notes-box" style="height: 300px;"></textarea>
+                            <label style="font-weight:bold; color: darkred;">
+                                Notes
+                            </label>
+                            <textarea id="notes" placeholder="Insérez ici vos notes et remarques" class="notes-box"></textarea>
+                        </div>
+
+                        <label>
+                            Fréquence d'achat (par mois) :
+                            <input type="number" id="frequence_achat" min="0" placeholder="0">
+                        </label>
+                    </div>
+
+                    <label>
+                        Achat max/min/CAMV Mensuel:
+                    </label>
+                    <div class="flex-row" style="width: 45%;">
+                        <input type="text" id="achat_max" placeholder="max">
+                        <input type="text" id="achat_min" placeholder="min">
+                        <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly class="readonly-input">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
+                            CAMV selon marge
+                        </label>
+                        <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly class="blue-box" style="width: 30%;">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
+                            CAMV selon MMP
+                        </label>
+                        <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly class="blue-box" style="width: 30%;">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="camv_final" style="width: 150px; font-weight: bold;">
+                            CAMV final
+                        </label>
+                        <input type="text" id="camv_final" name="camv_final" readonly 
+       class="blue-box resultat-final">
+
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="dettes_fournisseurs" style="width: 160px;">
+                            Dettes fournisseurs
+                        </label>
+                        <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
+                    </div>
+
+                    <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
+
+                    <div class="opex-wrapper">
+                        <table class="opex-table">
+                            <thead>
+                                <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
+                                <tr>
+                                    <td><input type="text" class="opex-input" placeholder="Autres" style="height:40px;" /></td>
+                                    <td><input type="text" class="opex-input" style="height:40px;" /></td>
+                                </tr>
+                                <tr class="opex-total">
+                                    <td>Total OPEX</td>
+                                    <td><span id="opex-total">0 MGA</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Contenu de l'activité 2 -->
+                <div id="activite2-content" class="activite-content">
+                    <div class="grid-2">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label>
+                                Nom de l'activité (2ème ligne) :
+                                <input type="text" id="nom_activite_deuxieme_ligne" readonly>
+                            </label>
+
+                            <label>
+                                Marge de l'activité (2ème ligne) :
+                                <input type="text" id="marge_activite_deuxieme_ligne" readonly>
+                            </label>
+
+                            <div class="section-title">1-Chiffre d'affaires mensuel :</div>
+
+                            <label>
+                                Fréquence de vente (par mois) :
+                                <input type="number" id="frequence_vente2" min="0" placeholder="0">
+                            </label>
+
+                            <label>
+                                Vente selon derniers jours :
+                            </label>
+                            <div class="flex-row">
+                                <input type="text" id="vente_jour_v3_2" placeholder="V-3">
+                                <input type="text" id="vente_jour_v2_2" placeholder="V-2">
+                                <input type="text" id="vente_jour_v1_2" placeholder="V-1">
+                                <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly class="readonly-input">
+                            </div>
+
+                            <label>
+                                Vente selon registre :
+                            </label>
+                            <div class="flex-row">
+                                <input type="text" id="vente_registre_m3_2" placeholder="M-3">
+                                <input type="text" id="vente_registre_m2_2" placeholder="M-2">
+                                <input type="text" id="vente_registre_m1_2" placeholder="M-1">
+                                <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                                <label for="ca_ligne2" style="width: 150px;">
+                                    CA (ligne 2) :
+                                </label>
+                                <input type="text" id="ca_ligne2" name="ca_ligne2" readonly class="blue-box resultat-bilan">
+
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                                <label for="creances_actuelles2" style="width: 150px;">
+                                    Créances actuelles
+                                </label>
+                                <input type="text" id="creances_actuelles2" name="creances_actuelles2">
+                            </div>
+
+                            <div class="section-title">2-CAMV mensuel :</div>
+                        </div>
+                          
+                        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+                            <label style="font-weight:bold; color: darkred;">
+                                Croisements
+                            </label>
+                            <textarea id="croisements2" placeholder="Saisissez ici vos croisements" class="notes-box" style="height: 300px;"></textarea>
+                            <label style="font-weight:bold; color: darkred;">
+                                Notes
+                            </label>
+                            <textarea id="notes2" placeholder="Insérez ici vos notes et remarques" class="notes-box"></textarea>
+                        </div>
+
+                        <label>
+                            Fréquence d'achat (par mois) :
+                            <input type="number" id="frequence_achat2" min="0" placeholder="0">
+                        </label>
+                    </div>
+
+                    <label>
+                        Achat max/min/CAMV Mensuel:
+                    </label>
+                    <div class="flex-row" style="width: 45%;">
+                        <input type="text" id="achat_max2" placeholder="max">
+                        <input type="text" id="achat_min2" placeholder="min">
+                        <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly class="readonly-input">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
+                            CAMV selon marge
+                        </label>
+                        <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly class="blue-box" style="width: 30%;">
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="camv_final2" style="width: 150px; font-weight: bold;">
+                            CAMV final
+                        </label>
+                        <input type="text" id="camv_final2" name="camv_final2" readonly 
+       class="blue-box resultat-final">
+
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label for="dettes_fournisseurs2" style="width: 160px;">
+                            Dettes fournisseurs
+                        </label>
+                        <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
+                    </div>
+
+                    <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
+
+                    <div class="opex-wrapper">
+                        <table class="opex-table">
+                            <thead>
+                                <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
+                                <tr>
+                                    <td><input type="text" class="opex-input2" placeholder="Autres" style="height:40px;" /></td>
+                                    <td><input type="text" class="opex-input2" style="height:40px;" /></td>
+                                </tr>
+                                <tr class="opex-total">
+                                    <td>Total OPEX</td>
+                                    <td><span id="opex-total2">0 MGA</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
 
 
 <!-- MMP -->
@@ -816,72 +1145,82 @@ input.sep{
   </legend>
 
   <div id="content_bilan">
-    <table id="table_bilan" border="1" style="border-collapse:collapse; width:100%; text-align:center; font-size:12px;">
-      <thead style="background:#f0f0f0;">
-        <tr>
-          <th>ACTIF</th>
-          <th>Analyse actuelle</th>
-          <th>Crédit antérieur ACTIF</th>
-          <th>PASSIF</th>
-          <th>Analyse actuelle</th>
-          <th>Crédit antérieur PASSIF</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Ligne 1 -->
-        <tr>
-          <td>Trésorerie activité</td>
-          <td><input type="text" id="bilan_caisse" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-actif" placeholder="0 MGA"></td>
-          <td>Dettes fournisseurs</td>
-          <td><input type="text" id="bilan_dettes_fourn" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-passif" placeholder="0 MGA"></td>
-        </tr>
-        <!-- Ligne 2 -->
-        <tr>
-          <td>Trésorerie hors activité</td>
-          <td><input type="text" id="bilan_treso_hors_act" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-actif" placeholder="0 MGA"></td>
-          <td>Dettes CT (encours)</td>
-          <td><input type="text" id="bilan_encours" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-passif" placeholder="0 MGA"></td>
-        </tr>
-        <!-- Ligne 3 -->
-        <tr>
-          <td>Créances</td>
-          <td><input type="text" id="bilan_creances" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-actif" placeholder="0 MGA"></td>
-          <td>Dettes LT</td>
-          <td><input type="text" id="bilan_dettes_lt" class="credit-avant" placeholder="0 MGA"></td>
-          <td><input type="text" class="credit-avant-passif" placeholder="0 MGA"></td>
-        </tr>
-        <!-- Ligne 4 -->
-        <tr>
-          <td>Stock</td>
-          <td><input type="text" id="bilan_stock" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-actif" placeholder="0 MGA"></td>
-          <td>Fonds propres</td>
-          <td><input type="text" id="bilan_fonds_propres" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-passif" placeholder="0 MGA"></td>
-        </tr>
-        <!-- Ligne 5 -->
-        <tr>
-          <td>Actif immobilisé</td>
-          <td><input type="text" id="bilan_actif_immo" readonly class="result"></td>
-          <td><input type="text" class="credit-avant-actif" placeholder="0 MGA"></td>
-          <td style="background:#333; color:#fff; font-weight:bold;">Total passif</td>
-          <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_passif" readonly class="result" style="background:#333; color:#fff;"></td>
-          <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_passif_avant" readonly class="result" style="background:#333; color:#fff;"></td>
-        </tr>
-        <!-- Ligne 6 : Totaux -->
-        <tr style="background:#333; color:#fff; font-weight:bold;">
-          <td>Total actif</td>
-          <td><input type="text" id="bilan_total_actif" readonly class="result" style="background:#333; color:#fff;"></td>
-          <td><input type="text" id="bilan_total_actif_avant" readonly class="result" style="background:#333; color:#fff;"></td>
-          <td colspan="3"></td>
-        </tr>
-      </tbody>
-    </table>
+    <table id="table_bilan" border="1" 
+       style="border-collapse:collapse; width:100%; text-align:center; font-size:12px;">
+  <thead style="background:#f0f0f0;">
+    <tr>
+      <th>ACTIF</th>
+      <th>Analyse actuelle</th>
+      <th>Crédit antérieur ACTIF</th>
+      <th>PASSIF</th>
+      <th>Analyse actuelle</th>
+      <th>Crédit antérieur PASSIF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Ligne 1 -->
+    <tr>
+      <td>Trésorerie activité</td>
+      <td><input type="text" id="bilan_caisse" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
+      <td>Dettes fournisseurs</td>
+      <td><input type="text" id="bilan_dettes_fourn" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
+    </tr>
+    <!-- Ligne 2 -->
+    <tr>
+      <td>Trésorerie hors activité</td>
+      <td><input type="text" id="bilan_treso_hors_act" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
+      <td>Dettes CT (encours)</td>
+      <td><input type="text" id="bilan_encours" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
+    </tr>
+    <!-- Ligne 3 -->
+    <tr>
+      <td>Créances</td>
+      <td><input type="text" id="bilan_creances" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
+      <td>Dettes LT</td>
+      <td><input type="text" id="bilan_dettes_lt" class="numeric" placeholder="0 MGA"></td>
+      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
+    </tr>
+    <!-- Ligne 4 -->
+    <tr>
+      <td>Stock</td>
+      <td><input type="text" id="bilan_stock" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
+      <td>Fonds propres</td>
+      <td><input type="text" id="bilan_fonds_propres" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
+    </tr>
+    <!-- Ligne 5 -->
+    <tr>
+      <td>Actif immobilisé</td>
+      <td><input type="text" id="bilan_actif_immo" readonly class="result numeric"></td>
+      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
+      <td style="background:#333; color:#fff; font-weight:bold;">Total passif</td>
+      <td style="background:#333; color:#fff; font-weight:bold;">
+        <input type="text" id="bilan_total_passif" readonly class="result numeric"
+               style="background:#333; color:#fff;">
+      </td>
+      <td style="background:#333; color:#fff; font-weight:bold;">
+        <input type="text" id="bilan_total_passif_avant" readonly class="result numeric"
+               style="background:#333; color:#fff;">
+      </td>
+    </tr>
+    <!-- Ligne 6 : Totaux -->
+    <tr style="background:#333; color:#fff; font-weight:bold;">
+      <td>Total actif</td>
+      <td><input type="text" id="bilan_total_actif" readonly class="result numeric"
+                 style="background:#333; color:#fff;"></td>
+      <td><input type="text" id="bilan_total_actif_avant" readonly class="result numeric"
+                 style="background:#333; color:#fff;"></td>
+      <td colspan="3"></td>
+    </tr>
+  </tbody>
+</table>
+
   </div>
 </fieldset>
 
@@ -2254,39 +2593,24 @@ document.querySelectorAll('.credit-avant-actif, .credit-avant-passif')
         });
     </script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('btn_toggle_activite');
-  const content = document.getElementById('hist_activite_content');
-  const icon = btn.querySelector('i');
-  const text = btn.querySelector('.toggle-text');
-
-  // met à jour l'état (collapsed = true => contenu masqué)
-  function setCollapsed(collapsed) {
-    content.classList.toggle('collapsed', collapsed);
-    // aria-expanded doit être "true" quand le contenu est visible
-    btn.setAttribute('aria-expanded', String(!collapsed));
-    text.textContent = collapsed ? 'Afficher' : 'Masquer';
-    if (icon) {
-      icon.classList.toggle('fa-eye-slash', collapsed);
-      icon.classList.toggle('fa-eye', !collapsed);
+  // Fonction de formatage avec séparateur de milliers + suffixe MGA
+  function formatFinancialField(el) {
+    let val = el.value.replace(/\D/g, ""); // garder seulement les chiffres
+    if (val === "") {
+      el.value = "";
+      return;
     }
+    // convertir en entier et formater
+    let num = parseInt(val, 10);
+    el.value = num.toLocaleString("fr-FR") + " MGA";
   }
 
-  // initialisation (si tu veux démarrer masqué, mettre true)
-  setCollapsed(false);
-
-  // clic
-  btn.addEventListener('click', () => {
-    const currentlyExpanded = btn.getAttribute('aria-expanded') === 'true';
-    setCollapsed(currentlyExpanded); // inverse l'état
+  // Attacher le formatage à tous les inputs numériques
+  document.querySelectorAll("input.numeric").forEach(input => {
+    input.addEventListener("blur", function() {
+      formatFinancialField(this);
+    });
   });
-
-  // --- Compatibilité si tu gardes onclick inline 'toggleActivite()' ailleurs ---
-  window.toggleActivite = function() {
-    const currentlyExpanded = btn.getAttribute('aria-expanded') === 'true';
-    setCollapsed(currentlyExpanded);
-  };
-});
 </script>
 
 </body>
