@@ -1296,7 +1296,7 @@ function parseNumberFromString(s){
   return isNaN(num) ? 0 : num;
 }
 function formatNombre(n){
-  return (Number(n)||0).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return (Number(n)||0).toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 // Fonction pour formater avec séparateur de milliers
@@ -2713,28 +2713,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-  function toggleFonctionnement() {
-    const btn = document.getElementById("btn_toggle_fonctionnement");
-    const content = document.getElementById("activite-wrapper");
-    const text = btn.querySelector(".toggle-text");
-    const icon = btn.querySelector("i");
+function toggleFonctionnement() {
+  const wrapper = document.getElementById("activite-wrapper");
+  const btn = document.getElementById("btn_toggle_fonctionnement");
+  const icon = btn.querySelector("i");
+  const text = btn.querySelector(".toggle-text");
 
-    const isCollapsed = content.classList.contains("collapsed");
-
-    if (isCollapsed) {
-      content.classList.remove("collapsed");
-      btn.setAttribute("aria-expanded", "true");
-      text.textContent = "Masquer";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
-    } else {
-      content.classList.add("collapsed");
-      btn.setAttribute("aria-expanded", "false");
-      text.textContent = "Afficher";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    }
+  if (wrapper.style.display === "none") {
+    // Afficher
+    wrapper.style.display = "block";
+    btn.setAttribute("aria-expanded", "true");
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+    text.textContent = "Masquer";
+  } else {
+    // Masquer
+    wrapper.style.display = "none";
+    btn.setAttribute("aria-expanded", "false");
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+    text.textContent = "Afficher";
   }
+}
 </script>
+
 </body>
 </html>
