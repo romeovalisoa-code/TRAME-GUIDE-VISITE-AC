@@ -8,7 +8,7 @@
 <style>
   body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; }
   h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; }
-  form { max-width: 1100px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  form { max-width: 3000px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
   fieldset { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 12px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
   legend { font-weight: bold; color: #34495e; padding: 5px 10px; background: #ecf0f1; border-radius: 8px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
   label { display: block; margin-top: 10px; font-weight: bold; color: #2c3e50; }
@@ -16,6 +16,8 @@
   input:focus, select:focus, textarea:focus { outline: none; border-color: #2980b9; box-shadow: 0 0 8px #3498db; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .inline-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; }
+  .flex-row { display: flex; gap: 10px; width: 100%; }
+  .flex-row input { flex: 1; }
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   table th, table td { border: 1px solid #bbb; padding: 8px; text-align: center; background: #fdfdfd; }
   table th { background: #ecf0f1; }
@@ -36,7 +38,7 @@
   .opex-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
   .opex-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
   
-/* DF */
+  /* DF */
   .df-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
   .df-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
   .df-table th, .df-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
@@ -45,7 +47,7 @@
 
   /* MMP styles */
   #tableMMP tfoot td { font-weight: bold; }
-  #tableMMP tfoot tr.total-row td { background-color: #333; color: #fff; }
+  #tableMMP tfoot tr.total-row td { background-color: #696969; color: #fff; }
   #tableMMP tfoot tr.mmp-row td { background-color: #f39c12; color: #fff; }
   
   /* Nouveau style pour les sections d'activité */
@@ -144,61 +146,51 @@
   .hidden {
     display: none;
   }
-input.sep{
-  text-align:right;
-  width:100%;
-  box-sizing:border-box;
-}
-.readonly-input {
-  font-weight: bold;        /* Texte en gras */
-  color: white;             /* Couleur du texte en blanc */
-  background-color: #87CEEB; /* Fond bleu ciel */
-  border: 1px solid #87CEEB; /* Bordure assortie */
-  padding: 5px;
-  border-radius: 4px;        /* Coins légèrement arrondis */
-}
- /* Alignement à droite pour toutes les cases numériques */
+  input.sep{
+    text-align:right;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .readonly-input {
+    font-weight: bold;        /* Texte en gras */
+    color: white;             /* Couleur du texte en blanc */
+    background-color: #87CEEB; /* Fond bleu ciel */
+    border: 1px solid #87CEEB; /* Bordure assortie */
+    padding: 5px;
+    border-radius: 4px;        /* Coins légèrement arrondis */
+  }
+  /* Alignement à droite pour toutes les cases numériques */
   .numeric {
     text-align: right;
     padding-right: 4px;
   }
-.resultat-final {
-  width: 30%;
-  font-weight: bold;         /* texte en gras */
-  color: #fff;               /* texte blanc */
-  background-color: #333;    /* fond gris foncé */
-  text-align: right;         /* aligner le texte à droite si c’est un montant */
-  padding: 4px 6px;          /* un peu d’espace intérieur */
-  border: none;              /* enlever la bordure si tu veux un rendu épuré */
-  border-radius: 4px;        /* coins légèrement arrondis */
-}
-.resultat-final {
-  width: 30%;
-  font-weight: bold;         /* texte en gras */
-  color: #fff;               /* texte blanc */
-  background-color: #333;    /* fond gris foncé */
-  text-align: right;         /* aligner le texte à droite si c’est un montant */
-  padding: 4px 6px;          /* un peu d’espace intérieur */
-  border: none;              /* enlever la bordure si tu veux un rendu épuré */
-  border-radius: 4px;        /* coins légèrement arrondis */
-}
-.resultat-bilan {
-  font-weight: bold;        /* police en gras */
-  color: #fff;              /* texte blanc */
-  background-color: #333;   /* fond gris foncé */
-  text-align: right;        /* alignement à droite pour valeurs numériques */
-  padding: 4px 6px;         /* espacement interne */
-  border: none;             /* supprimer bordure */
-  border-radius: 4px;       /* coins arrondis (optionnel) */
-}
-.section-title {
-  font-weight: bold;        /* gras */
-  color: #0066cc;           /* bleu (tu peux changer le code couleur) */
-  text-decoration: underline; /* souligné */
-  font-size: 14px;          /* optionnel : taille un peu plus grande */
-  margin-bottom: 6px;       /* espacement en dessous */
-}
-#hist_activite_content {
+  .resultat-final {
+    width: 30%;
+    font-weight: bold;         /* texte en gras */
+    color: #fff;               /* texte blanc */
+    background-color: #696969;    /* fond gris foncé */
+    text-align: right;         /* aligner le texte à droite si c'est un montant */
+    padding: 4px 6px;          /* un peu d'espace intérieur */
+    border: none;              /* enlever la bordure si tu veux un rendu épuré */
+    border-radius: 4px;        /* coins légèrement arrondis */
+  }
+  .resultat-bilan {
+    font-weight: bold;        /* police en gras */
+    color: #fff;              /* texte blanc */
+    background-color: #696969;   /* fond gris foncé */
+    text-align: right;        /* alignement à droite pour valeurs numériques */
+    padding: 4px 6px;         /* espacement interne */
+    border: none;             /* supprimer bordure */
+    border-radius: 4px;       /* coins arrondis (optionnel) */
+  }
+  .section-title {
+    font-weight: bold;        /* gras */
+    color: #0066cc;           /* bleu (tu peux changer le code couleur) */
+    text-decoration: underline; /* souligné */
+    font-size: 14px;          /* optionnel : taille un peu plus grande */
+    margin-bottom: 6px;       /* espacement en dessous */
+  }
+  #hist_activite_content {
     overflow: hidden;
     max-height: 2000px;
     transition: max-height 0.28s ease, opacity 0.22s ease;
@@ -219,6 +211,48 @@ input.sep{
     max-height: 0;
     opacity: 0;
   }
+
+  .blue-box {
+    background-color: #87CEEB;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #87CEEB;
+    padding: 4px 6px;
+    border-radius: 4px;
+    text-align: right;
+  }
+
+  .notes-box {
+    width: 100%;
+    min-height: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+  }
+
+  #table_cout {
+    font-size: 12px; /* réduit toute la police du tableau */
+  }
+
+  #table_cout input {
+    font-size: 12px;   /* réduit aussi dans les champs de saisie */
+    padding: 2px 4px;  /* rend les cases plus compactes */
+  }
+
+  #table_cout th, #table_cout td {
+    padding: 4px;      /* réduit l’espace intérieur */
+  }
+ #table_garanties {
+  width: auto;          /* largeur selon contenu */
+  table-layout: auto;   /* colonnes ajustables */
+}
+ #table_garanties td,
+#table_garanties th {
+  white-space: nowrap;  /* garde le texte sur une ligne si possible */
+  word-break: break-word; /* coupe les trop longs sans scroll horizontal */
+}
 
 </style>
 </head>
@@ -308,146 +342,144 @@ input.sep{
 </fieldset>
 
 <!-- INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION -->
-        <fieldset>
-            <legend id="legend_infos_generales">
-                <i class="fas fa-users"></i> INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION
-                <button type="button" class="toggle-btn" onclick="toggleGeneralInfo()">
-                    <i class="fas fa-eye-slash"></i> Masquer
-                </button>
-            </legend>
+<fieldset>
+  <legend id="legend_infos_generales">
+    <i class="fas fa-users"></i> INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION
+    <button type="button" class="toggle-btn" onclick="toggleGeneralInfo()">
+      <i class="fas fa-eye-slash"></i> Masquer
+    </button>
+  </legend>
 
-            <div id="infos_generales_content">
-                <div class="grid-2">
-                    <div>
-                        <h3>Demandeur</h3>
-                        <label>
-                            ID client : <input type="text" id="id_client">
-                        </label>
-                        
-                        <label>
-                            Rang de crédit :
-                            <select>
-                                <option>1er crédit</option>
-                                <option>2ème crédit</option>
-                                <option>3ème crédit</option>
-                                <option>4ème crédit</option>
-                                <option>5ème crédit</option>
-                            </select>
-                        </label>
-                        
-                        <label>
-                            Nom et prénoms : <input type="text" id="nom_prenom_client">
-                        </label>
-                        
-                        <label>
-                            Âge : <input type="number" min="0">
-                        </label>
-                        
-                        <label>
-                            État civil : 
-                            <select id="etat_civil_client">
-                                <option value="">--Sélectionner--</option>
-                                <option>Marié(e)</option>
-                                <option>Veuf(ve)</option>
-                                <option>Célibataire</option>
-                                <option>Concubin(e)</option>
-                                <option>Divorcé(e)</option>
-                            </select>
-                        </label>
-                        
-                        <label>
-                            Nb pers à charge : <input type="number" id="nb_client" min="0">
-                        </label>
-                        
-                        <label>
-                            Adresse domicile : 
-                            <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea>
-                        </label>
-                        
-                        <label>
-                            Adresse activité : 
-                            <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea>
-                        </label>
-                    </div>
+  <div id="infos_generales_content">
+    <div class="grid-2">
+      <div>
+        <h3>Demandeur</h3>
+        <label>
+          ID client : <input type="text" id="id_client">
+        </label>
+        
+        <label>
+          Rang de crédit :
+          <select>
+            <option>1er crédit</option>
+            <option>2ème crédit</option>
+            <option>3ème crédit</option>
+            <option>4ème crédit</option>
+            <option>5ème crédit</option>
+          </select>
+        </label>
+        
+        <label>
+          Nom et prénoms : <input type="text" id="nom_prenom_client">
+        </label>
+        
+        <label>
+          Âge : <input type="number" min="0">
+        </label>
+        
+        <label>
+          État civil : 
+          <select id="etat_civil_client">
+            <option value="">--Sélectionner--</option>
+            <option>Marié(e)</option>
+            <option>Veuf(ve)</option>
+            <option>Célibataire</option>
+            <option>Concubin(e)</option>
+            <option>Divorcé(e)</option>
+          </select>
+        </label>
+        
+        <label>
+          Nb pers à charge : <input type="number" id="nb_client" min="0">
+        </label>
+        
+        <label>
+          Adresse domicile : 
+          <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea>
+        </label>
+        
+        <label>
+          Adresse activité : 
+          <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea>
+        </label>
+      </div>
 
-                    <div>
-                        <h3>Caution</h3>
-                        <label>
-                            ID caution : <input type="text" id="id_caution">
-                        </label>
-                        
-                        <label>
-                            Lien avec le demandeur : 
-                            <select id="lien_demandeur">
-                                <option value="">--Sélectionner--</option>
-                                <option>Epoux(se)</option>
-                                <option>Concubin(e)</option>
-                                <option>Fratrie</option>
-                                <option>Ami/Collègue</option>
-                                <option>Parent</option>
-                            </select>
-                        </label>
-                        
-                        <label>
-                            Nom et prénoms : <input type="text" id="nom_prenom_caution">
-                        </label>
-                        
-                        <label>
-                            Âge : <input type="number" min="0">
-                        </label>
-                        
-                        <label>
-                            État civil : 
-                            <select id="etat_civil_caution">
-                                <option value="">--Sélectionner--</option>
-                                <option>Marié(e)</option>
-                                <option>Veuf(ve)</option>
-                                <option>Célibataire</option>
-                                <option>Concubin(e)</option>
-                                <option>Divorcé(e)</option>
-                            </select>
-                        </label>
-                        
-                        <label>
-                            Nb pers à charge : <input type="number" id="nb_caution" min="0">
-                        </label>
-                        
-                        <label>
-                            Adresse domicile : 
-                            <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea>
-                        </label>
+      <div>
+        <h3>Caution</h3>
+        <label>
+          ID caution : <input type="text" id="id_caution">
+        </label>
+        
+        <label>
+          Lien avec le demandeur : 
+          <select id="lien_demandeur">
+            <option value="">--Sélectionner--</option>
+            <option>Epoux(se)</option>
+            <option>Concubin(e)</option>
+            <option>Fratrie</option>
+            <option>Ami/Collègue</option>
+            <option>Parent</option>
+          </select>
+        </label>
+        
+        <label>
+          Nom et prénoms : <input type="text" id="nom_prenom_caution">
+        </label>
+        
+        <label>
+          Âge : <input type="number" min="0">
+        </label>
+        
+        <label>
+          État civil : 
+          <select id="etat_civil_caution">
+            <option value="">--Sélectionner--</option>
+            <option>Marié(e)</option>
+            <option>Veuf(ve)</option>
+            <option>Célibataire</option>
+            <option>Concubin(e)</option>
+            <option>Divorcé(e)</option>
+          </select>
+        </label>
+        
+        <label>
+          Nb pers à charge : <input type="number" id="nb_caution" min="0">
+        </label>
+        
+        <label>
+          Adresse domicile : 
+          <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea>
+        </label>
 
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                            <label for="revenus_mensuels_caution" style="width: 150px;">
-                                Revenus mensuels
-                            </label>
-                            <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
-                        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <label for="revenus_mensuels_caution" style="width: 150px;">
+            Revenus mensuels
+          </label>
+          <input type="text" id="revenus_mensuels_caution" name="revenus_mensuels_caution" placeholder="0 MGA">
+        </div>
 
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                            <label for="source_revenus" style="width: 150px;">
-                                Source
-                            </label>
-                            <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+          <label for="source_revenus" style="width: 150px;">
+            Source
+          </label>
+          <input type="text" id="source_revenus" name="source_revenus" placeholder="Ex : Salaire, location, commerce...">
+        </div>
+      </div>
+    </div>
+  </div>
+</fieldset>
 
 <!-- HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT -->
 <fieldset>
   <legend id="legend_hist_activite">
     <i class="fas fa-history" aria-hidden="true"></i>
     HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
-    <!-- bouton avec icône + span pour le texte (on peut cibler .toggle-text sans toucher l'icône) -->
     <button type="button" id="btn_toggle_activite" aria-expanded="true"
         style="margin-left:15px; padding:2px 8px; font-size:10px; cursor:pointer;"
         onclick="toggleActiviteHistory()">
-  <i class="fas fa-eye" aria-hidden="true"></i>
-  <span class="toggle-text" style="margin-left:6px;">Masquer</span>
-</button>
+      <i class="fas fa-eye" aria-hidden="true"></i>
+      <span class="toggle-text" style="margin-left:6px;">Masquer</span>
+    </button>
   </legend>
 
   <div id="hist_activite_content">
@@ -540,7 +572,7 @@ input.sep{
 </fieldset>
 
 <!-- FONCTIONNEMENT DE L'ACTIVITE -->
-        <fieldset>
+<fieldset>
   <legend id="legend_activite">
     <i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
     <button type="button" id="btn_toggle_fonctionnement" aria-expanded="true"
@@ -551,294 +583,292 @@ input.sep{
     </button>
   </legend>
 
-            <div id="activite-wrapper">
-                <div class="activite-tabs" id="activite-tabs">
-                    <div class="activite-tab active" onclick="switchActivite(1)">Activité 1</div>
-                    <div class="activite-tab" onclick="switchActivite(2)">Activité 2</div>
-                </div>
-            
-                <!-- Contenu de l'activité 1 -->
-                <div id="activite1-content" class="activite-content active">
-                    <div class="grid-2">
-                        
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <label>
-                                Nom de l'activité (1ère ligne) :
-                                <input type="text" id="nom_activite_premiere_ligne" readonly>
-                            </label>
+  <div id="activite-wrapper">
+    <div class="activite-tabs" id="activite-tabs">
+      <div class="activite-tab active" onclick="switchActivite(1)">Activité 1</div>
+      <div class="activite-tab" onclick="switchActivite(2)">Activité 2</div>
+    </div>
 
-                            <label>
-                                Marge de l'activité (1ère ligne) :
-                                <input type="text" id="marge_activite_premiere_ligne" readonly>
-                            </label>
+    <!-- Contenu de l'activité 1 -->
+    <div id="activite1-content" class="activite-content active">
+      <div class="grid-2">
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <label>
+            Nom de l'activité (1ère ligne) :
+            <input type="text" id="nom_activite_premiere_ligne" readonly>
+          </label>
 
-                            <div class="section-title">1 - Chiffre d'affaires mensuel :</div>
+          <label>
+            Marge de l'activité (1ère ligne) :
+            <input type="text" id="marge_activite_premiere_ligne" readonly>
+          </label>
 
+          <div class="section-title">1 - Chiffre d'affaires mensuel :</div>
 
-                            <label>
-                                Fréquence de vente (par mois) :
-                                <input type="number" id="frequence_vente" min="0" placeholder="0">
-                            </label>
+          <label>
+            Fréquence de vente (par mois) :
+            <input type="number" id="frequence_vente" min="0" placeholder="0">
+          </label>
 
-                            <label>
-                                Vente selon derniers jours :
-                            </label>
-                            <div class="flex-row">
-                                <input type="text" id="vente_jour_v3" placeholder="V-3">
-                                <input type="text" id="vente_jour_v2" placeholder="V-2">
-                                <input type="text" id="vente_jour_v1" placeholder="V-1">
-                                <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly class="readonly-input">
-                            </div>
+          <label>
+            Vente selon derniers jours :
+          </label>
+          <div class="flex-row">
+            <input type="text" id="vente_jour_v3" placeholder="V-3">
+            <input type="text" id="vente_jour_v2" placeholder="V-2">
+            <input type="text" id="vente_jour_v1" placeholder="V-1">
+            <input type="text" id="vente_mensuelle" placeholder="Vente mensuelle" readonly class="readonly-input">
+          </div>
 
-                            <label>
-                                Vente selon registre :
-                            </label>
-                            <div class="flex-row">
-                                <input type="text" id="vente_registre_m3" placeholder="M-3">
-                                <input type="text" id="vente_registre_m2" placeholder="M-2">
-                                <input type="text" id="vente_registre_m1" placeholder="M-1">
-                                <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
-                            </div>
+          <label>
+            Vente selon registre :
+          </label>
+          <div class="flex-row">
+            <input type="text" id="vente_registre_m3" placeholder="M-3">
+            <input type="text" id="vente_registre_m2" placeholder="M-2">
+            <input type="text" id="vente_registre_m1" placeholder="M-1">
+            <input type="text" id="vente_registre_mensuelle" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
+          </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                                <label for="ca_ligne1" style="width: 150px;">
-                                    CA (ligne 1) :
-                                </label>
-                                <input type="text" id="ca_ligne1" name="ca_ligne1" readonly class="blue-box resultat-bilan">
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="ca_ligne1" style="width: 150px;">
+              CA (ligne 1) :
+            </label>
+            <input type="text" id="ca_ligne1" name="ca_ligne1" readonly class="resultat-bilan">
+          </div>
 
-                            </div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="creances_actuelles" style="width: 150px;">
+              Créances actuelles
+            </label>
+            <input type="text" id="creances_actuelles" name="creances_actuelles">
+          </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                                <label for="creances_actuelles" style="width: 150px;">
-                                    Créances actuelles
-                                </label>
-                                <input type="text" id="creances_actuelles" name="creances_actuelles">
-                            </div>
+          <div class="section-title">2-CAMV mensuel :</div>
+        </div>
+          
+        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+          <label style="font-weight:bold; color: darkred;">
+            Croisements
+          </label>
+          <textarea id="croisements" placeholder="Saisissez ici vos croisements" class="notes-box" style="resize: both; overflow: auto; width:90%; max-width:90%;";"></textarea>
+          <label style="font-weight:bold; color: darkred;">
+            Notes
+          </label>
+          <textarea id="notes" placeholder="Insérez ici vos notes et remarques" class="notes-box" style="resize: both; overflow: auto; width:90%; max-width:90%;"></textarea>
+        </div>
 
-                            <div class="section-title">2-CAMV mensuel :</div>
-                        </div>
-                          
-                        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-                            <label style="font-weight:bold; color: darkred;">
-                                Croisements
-                            </label>
-                            <textarea id="croisements" placeholder="Saisissez ici vos croisements" class="notes-box" style="height: 300px;"></textarea>
-                            <label style="font-weight:bold; color: darkred;">
-                                Notes
-                            </label>
-                            <textarea id="notes" placeholder="Insérez ici vos notes et remarques" class="notes-box"></textarea>
-                        </div>
+        <label>
+          Fréquence d'achat (par mois) :
+          <input type="number" id="frequence_achat" min="0" placeholder="0">
+        </label>
+      </div>
 
-                        <label>
-                            Fréquence d'achat (par mois) :
-                            <input type="number" id="frequence_achat" min="0" placeholder="0">
-                        </label>
-                    </div>
+      <label>
+        Achat max/min/CAMV Mensuel:
+      </label>
+      <div class="flex-row" style="width: 45%;">
+        <input type="text" id="achat_max" placeholder="max">
+        <input type="text" id="achat_min" placeholder="min">
+        <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly class="readonly-input">
+      </div>
 
-                    <label>
-                        Achat max/min/CAMV Mensuel:
-                    </label>
-                    <div class="flex-row" style="width: 45%;">
-                        <input type="text" id="achat_max" placeholder="max">
-                        <input type="text" id="achat_min" placeholder="min">
-                        <input type="text" id="camv_mensuel" placeholder="CAMV Mensuel" readonly class="readonly-input">
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
+          CAMV selon marge
+        </label>
+        <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly class="blue-box" style="width: 30%;">
+      </div>
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="camv_selon_marge" style="width: 150px; font-weight: bold;">
-                            CAMV selon marge
-                        </label>
-                        <input type="text" id="camv_selon_marge" name="camv_selon_marge" readonly class="blue-box" style="width: 30%;">
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
+          CAMV selon MMP
+        </label>
+        <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly class="blue-box" style="width: 30%;">
+      </div>
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="camv_selon_mmp" style="width: 150px; font-weight: bold;">
-                            CAMV selon MMP
-                        </label>
-                        <input type="text" id="camv_selon_mmp" name="camv_selon_mmp" readonly class="blue-box" style="width: 30%;">
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_final" style="width: 150px; font-weight: bold;">
+          CAMV final
+        </label>
+        <input type="text" id="camv_final" name="camv_final" readonly 
+       class="blue-box resultat-final" 
+       style="background-color:#696969; color:white; font-weight:bold;">
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="camv_final" style="width: 150px; font-weight: bold;">
-                            CAMV final
-                        </label>
-                        <input type="text" id="camv_final" name="camv_final" readonly 
-       class="blue-box resultat-final">
+      </div>
 
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="dettes_fournisseurs" style="width: 160px;">
+          Dettes fournisseurs
+        </label>
+        <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
+      </div>
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="dettes_fournisseurs" style="width: 160px;">
-                            Dettes fournisseurs
-                        </label>
-                        <input type="text" id="dettes_fournisseurs" name="dettes_fournisseurs" style="width:250px;">
-                    </div>
+      <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
 
-                    <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
+      <div class="opex-wrapper">
+        <table class="opex-table">
+          <thead>
+            <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
+            <tr>
+              <td><input type="text" class="opex-input" placeholder="Autres" style="height:40px;" /></td>
+              <td><input type="text" class="opex-input" style="height:40px;" /></td>
+            </tr>
+            <tr class="opex-total">
+              <td>Total OPEX</td>
+              <td><span id="opex-total">0 MGA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Contenu de l'activité 2 -->
+    <div id="activite2-content" class="activite-content">
+      <div class="grid-2">
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <label>
+            Nom de l'activité (2ème ligne) :
+            <input type="text" id="nom_activite_deuxieme_ligne" readonly>
+          </label>
 
-                    <div class="opex-wrapper">
-                        <table class="opex-table">
-                            <thead>
-                                <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Transport sur achat</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr><td>Location</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr><td>Salaire</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr><td>Eau et électricité</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr><td>Imprévus</td><td><input type="text" class="opex-input" /></td></tr>
-                                <tr>
-                                    <td><input type="text" class="opex-input" placeholder="Autres" style="height:40px;" /></td>
-                                    <td><input type="text" class="opex-input" style="height:40px;" /></td>
-                                </tr>
-                                <tr class="opex-total">
-                                    <td>Total OPEX</td>
-                                    <td><span id="opex-total">0 MGA</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Contenu de l'activité 2 -->
-                <div id="activite2-content" class="activite-content">
-                    <div class="grid-2">
-                        
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <label>
-                                Nom de l'activité (2ème ligne) :
-                                <input type="text" id="nom_activite_deuxieme_ligne" readonly>
-                            </label>
+          <label>
+            Marge de l'activité (2ème ligne) :
+            <input type="text" id="marge_activite_deuxieme_ligne" readonly>
+          </label>
 
-                            <label>
-                                Marge de l'activité (2ème ligne) :
-                                <input type="text" id="marge_activite_deuxieme_ligne" readonly>
-                            </label>
+          <div class="section-title">1-Chiffre d'affaires mensuel :</div>
 
-                            <div class="section-title">1-Chiffre d'affaires mensuel :</div>
+          <label>
+            Fréquence de vente (par mois) :
+            <input type="number" id="frequence_vente2" min="0" placeholder="0">
+          </label>
 
-                            <label>
-                                Fréquence de vente (par mois) :
-                                <input type="number" id="frequence_vente2" min="0" placeholder="0">
-                            </label>
+          <label>
+            Vente selon derniers jours :
+          </label>
+          <div class="flex-row">
+            <input type="text" id="vente_jour_v3_2" placeholder="V-3">
+            <input type="text" id="vente_jour_v2_2" placeholder="V-2">
+            <input type="text" id="vente_jour_v1_2" placeholder="V-1">
+            <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly class="readonly-input">
+          </div>
 
-                            <label>
-                                Vente selon derniers jours :
-                            </label>
-                            <div class="flex-row">
-                                <input type="text" id="vente_jour_v3_2" placeholder="V-3">
-                                <input type="text" id="vente_jour_v2_2" placeholder="V-2">
-                                <input type="text" id="vente_jour_v1_2" placeholder="V-1">
-                                <input type="text" id="vente_mensuelle2" placeholder="Vente mensuelle" readonly class="readonly-input">
-                            </div>
+          <label>
+            Vente selon registre :
+          </label>
+          <div class="flex-row">
+            <input type="text" id="vente_registre_m3_2" placeholder="M-3">
+            <input type="text" id="vente_registre_m2_2" placeholder="M-2">
+            <input type="text" id="vente_registre_m1_2" placeholder="M-1">
+            <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
+          </div>
 
-                            <label>
-                                Vente selon registre :
-                            </label>
-                            <div class="flex-row">
-                                <input type="text" id="vente_registre_m3_2" placeholder="M-3">
-                                <input type="text" id="vente_registre_m2_2" placeholder="M-2">
-                                <input type="text" id="vente_registre_m1_2" placeholder="M-1">
-                                <input type="text" id="vente_registre_mensuelle2" placeholder="Vente mens RV" readonly class="readonly-input" style="color:darkgreen;">
-                            </div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="ca_ligne2" style="width: 150px;">
+              CA (ligne 2) :
+            </label>
+            <input type="text" id="ca_ligne2" name="ca_ligne2" readonly class="resultat-bilan">
+          </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                                <label for="ca_ligne2" style="width: 150px;">
-                                    CA (ligne 2) :
-                                </label>
-                                <input type="text" id="ca_ligne2" name="ca_ligne2" readonly class="blue-box resultat-bilan">
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <label for="creances_actuelles2" style="width: 150px;">
+              Créances actuelles
+            </label>
+            <input type="text" id="creances_actuelles2" name="creances_actuelles2">
+          </div>
 
-                            </div>
+          <div class="section-title">2-CAMV mensuel :</div>
+        </div>
+          
+        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
+          <label style="font-weight:bold; color: darkred;">
+            Croisements
+          </label>
+          <textarea id="croisements2" placeholder="Saisissez ici vos croisements" class="notes-box" style="height: 300px;"style="resize: both; overflow: auto; width:90%; max-width:90%;"></textarea>
+          <label style="font-weight:bold; color: darkred;">
+            Notes
+          </label>
+          <textarea id="notes2" placeholder="Insérez ici vos notes et remarques" class="notes-box"style="resize: both; overflow: auto; width:90%; max-width:90%;"></textarea>
+        </div>
 
-                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                                <label for="creances_actuelles2" style="width: 150px;">
-                                    Créances actuelles
-                                </label>
-                                <input type="text" id="creances_actuelles2" name="creances_actuelles2">
-                            </div>
+        <label>
+          Fréquence d'achat (par mois) :
+          <input type="number" id="frequence_achat2" min="0" placeholder="0">
+        </label>
+      </div>
 
-                            <div class="section-title">2-CAMV mensuel :</div>
-                        </div>
-                          
-                        <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px;">
-                            <label style="font-weight:bold; color: darkred;">
-                                Croisements
-                            </label>
-                            <textarea id="croisements2" placeholder="Saisissez ici vos croisements" class="notes-box" style="height: 300px;"></textarea>
-                            <label style="font-weight:bold; color: darkred;">
-                                Notes
-                            </label>
-                            <textarea id="notes2" placeholder="Insérez ici vos notes et remarques" class="notes-box"></textarea>
-                        </div>
+      <label>
+        Achat max/min/CAMV Mensuel:
+      </label>
+      <div class="flex-row" style="width: 45%;">
+        <input type="text" id="achat_max2" placeholder="max">
+        <input type="text" id="achat_min2" placeholder="min">
+        <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly class="readonly-input">
+      </div>
 
-                        <label>
-                            Fréquence d'achat (par mois) :
-                            <input type="number" id="frequence_achat2" min="0" placeholder="0">
-                        </label>
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
+          CAMV selon marge
+        </label>
+        <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly class="blue-box" style="width: 30%;">
+      </div>
 
-                    <label>
-                        Achat max/min/CAMV Mensuel:
-                    </label>
-                    <div class="flex-row" style="width: 45%;">
-                        <input type="text" id="achat_max2" placeholder="max">
-                        <input type="text" id="achat_min2" placeholder="min">
-                        <input type="text" id="camv_mensuel2" placeholder="CAMV Mensuel" readonly class="readonly-input">
-                    </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="camv_final2" style="width: 150px; font-weight: bold;">
+          CAMV final
+        </label>
+        <input type="text" id="camv_final2" name="camv_final2" readonly 
+       class="blue-box resultat-final" 
+       style="background-color:#696969; color:white; font-weight:bold;">
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="camv_selon_marge2" style="width: 150px; font-weight: bold;">
-                            CAMV selon marge
-                        </label>
-                        <input type="text" id="camv_selon_marge2" name="camv_selon_marge2" readonly class="blue-box" style="width: 30%;">
-                    </div>
+      </div>
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="camv_final2" style="width: 150px; font-weight: bold;">
-                            CAMV final
-                        </label>
-                        <input type="text" id="camv_final2" name="camv_final2" readonly 
-       class="blue-box resultat-final">
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <label for="dettes_fournisseurs2" style="width: 160px;">
+          Dettes fournisseurs
+        </label>
+        <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
+      </div>
 
-                    </div>
+      <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
 
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label for="dettes_fournisseurs2" style="width: 160px;">
-                            Dettes fournisseurs
-                        </label>
-                        <input type="text" id="dettes_fournisseurs2" name="dettes_fournisseurs2" style="width:250px;">
-                    </div>
-
-                    <div class="section-title">3-OPEX (Operating Expenses ou dépenses d'exploitation)</div>
-
-                    <div class="opex-wrapper">
-                        <table class="opex-table">
-                            <thead>
-                                <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
-                                <tr>
-                                    <td><input type="text" class="opex-input2" placeholder="Autres" style="height:40px;" /></td>
-                                    <td><input type="text" class="opex-input2" style="height:40px;" /></td>
-                                </tr>
-                                <tr class="opex-total">
-                                    <td>Total OPEX</td>
-                                    <td><span id="opex-total2">0 MGA</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
+      <div class="opex-wrapper">
+        <table class="opex-table">
+          <thead>
+            <tr><th>Dépense</th><th>Montant (MGA)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Transport sur achat</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Location</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Salaire</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Eau et électricité</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Impôt / Taxes</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr><td>Imprévus</td><td><input type="text" class="opex-input2" /></td></tr>
+            <tr>
+              <td><input type="text" class="opex-input2" placeholder="Autres" style="height:40px;" /></td>
+              <td><input type="text" class="opex-input2" style="height:40px;" /></td>
+            </tr>
+            <tr class="opex-total">
+              <td>Total OPEX</td>
+              <td><span id="opex-total2">0 MGA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</fieldset>
 
 <!-- MMP -->
 <fieldset>
@@ -904,7 +934,8 @@ input.sep{
   </legend>
 
   <div id="actifs-wrapper">
-    <table id="table_garanties" border="1" style="width:100%; border-collapse: collapse; margin-top: 10px; font-size: 11px;">
+    <table id="table_garanties" border="1" 
+       style="border-collapse: collapse; margin-top: 10px; font-size: 11px;">
       <thead>
         <tr style="font-size: 10px;">
           <th>Désignations</th>
@@ -923,19 +954,33 @@ input.sep{
       <tbody></tbody>
       <tfoot>
         <tr>
-          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total garanties :</td>
-          <td id="total_garanties" colspan="3" style="background-color: #555; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">
+            Total garanties :
+          </td>
+          <td id="total_garanties" colspan="3" 
+              style="background-color:#555; color:white; font-weight:bold; text-align:left; font-size:11px;">
+            0 MGA
+          </td>
           <td></td>
         </tr>
         <tr>
-          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">Total actifs :</td>
-          <td id="total_actifs" colspan="3" style="background-color: #ff8c00; color: white; font-weight: bold; text-align: left; font-size: 11px;">0 MGA</td>
+          <td colspan="7" style="text-align:right;font-weight:bold; font-size: 11px;">
+            Total actifs :
+          </td>
+          <td id="total_actifs" colspan="3" 
+              style="background-color:#ff8c00; color:white; font-weight:bold; text-align:left; font-size:11px;">
+            0 MGA
+          </td>
           <td></td>
         </tr>
       </tfoot>
     </table>
 
     <button type="button" id="ajouter_garantie" style="margin-top:10px; font-size: 11px;">Ajouter garantie</button>
+    <button type="button" onclick="exportToExcel()" 
+        style="margin-top:10px; font-size:11px; background:#28a745; color:white; padding:5px 10px; cursor:pointer;">
+  Exporter en Excel
+</button>
   </div>
 </fieldset>
 
@@ -973,7 +1018,7 @@ input.sep{
           <td><input type="text" class="df-label" placeholder="Autres charges" style="width:100%; height:25px; padding:2px;"></td>
           <td><input type="text" class="df-input" style="width:100%; height:25px; padding:2px;"></td>
         </tr>
-        <tr class="df-total" style="font-weight:bold; background-color:#333; color:#fff;">
+        <tr class="df-total" style="font-weight:bold; background-color:#696969; color:#fff;">
           <td style="text-align:left; padding:5px;">Total dépenses familiales</td>
           <td style="text-align:left; padding:5px;"><span id="df-total">0 MGA</span></td>
         </tr>
@@ -1072,91 +1117,91 @@ input.sep{
 </fieldset>
 
 <!-- COÛT DE PRODUCTION -->
- <fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
-   <legend id="cout_prod">
-      <i class="fas fa-industry"></i> COÛT DE PRODUCTION
-      <small>(À utiliser uniquement si l'activité est une activité de production)</small>
-      <button type="button" class="toggle-btn" onclick="toggleSection()">
-        <i class="fas fa-eye-slash"></i> Masquer
-      </button>
-    </legend>
+<fieldset style="width: 100%; margin: 0 auto; padding: 10px; box-sizing: border-box;">
+  <legend id="cout_prod">
+    <i class="fas fa-industry"></i> COÛT DE PRODUCTION
+    <small>(À utiliser uniquement si l'activité est une activité de production)</small>
+    <button type="button" class="toggle-btn" onclick="toggleSection()">
+      <i class="fas fa-eye-slash"></i> Masquer
+    </button>
+  </legend>
 
-    <div id="content_cout_prod">
-      <table id="table_cout" border="1" style="border-collapse:collapse; width:100%; text-align:center;">
-  <thead style="background:#f0f0f0;">
-    <tr>
-      <th style="width:180px;">Matières premières</th>
-      <th colspan="2">Produit 1</th>
-      <th colspan="2">Produit 2</th>
-      <th colspan="2">Produit 3</th>
-      <th colspan="2">Produit 4</th>
-      <th colspan="2">Produit 5</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th>PU</th><th>Qté</th>
-      <th>PU</th><th>Qté</th>
-      <th>PU</th><th>Qté</th>
-      <th>PU</th><th>Qté</th>
-      <th>PU</th><th>Qté</th>
-    </tr>
-  </thead>
-  <tbody id="tbody_matieres">
-    <tr>
-      <td><input type="text" value="Tissus (m)"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-    </tr>
-    <tr>
-      <td><input type="text" value="Fil"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-    </tr>
-    <tr>
-      <td><input type="text" value="Étiquette (pièces)"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-      <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
-    </tr>
-  </tbody>
-  <tfoot style="font-weight:bold; background:#e6f2ff; text-align:center;">
-    <tr>
-      <td>Coût total</td>
-      <td colspan="2" id="cout1">0</td>
-      <td colspan="2" id="cout2">0</td>
-      <td colspan="2" id="cout3">0</td>
-      <td colspan="2" id="cout4">0</td>
-      <td colspan="2" id="cout5">0</td>
-    </tr>
-    <tr>
-      <td>Quantités produites</td>
-      <td colspan="2"><input type="number" id="qte1" oninput="calculer()" style="text-align:center;"></td>
-      <td colspan="2"><input type="number" id="qte2" oninput="calculer()" style="text-align:center;"></td>
-      <td colspan="2"><input type="number" id="qte3" oninput="calculer()" style="text-align:center;"></td>
-      <td colspan="2"><input type="number" id="qte4" oninput="calculer()" style="text-align:center;"></td>
-      <td colspan="2"><input type="number" id="qte5" oninput="calculer()" style="text-align:center;"></td>
-    </tr>
-    <tr style="background:#ccffcc; color:red; text-align:center;">
-      <td>Coût unitaire/produit</td>
-      <td colspan="2" id="unit1">0</td>
-      <td colspan="2" id="unit2">0</td>
-      <td colspan="2" id="unit3">0</td>
-      <td colspan="2" id="unit4">0</td>
-      <td colspan="2" id="unit5">0</td>
-    </tr>
-  </tfoot>
-</table>
-      <button onclick="ajouterMat()" style="margin-top:10px; padding:5px 15px; font-size:16px;">Ajouter matière 1ère</button>
-    </div>
-  </fieldset>
+  <div id="content_cout_prod">
+    <table id="table_cout" border="1" style="border-collapse:collapse; width:100%; text-align:center;">
+      <thead style="background:#f0f0f0;">
+        <tr>
+          <th style="width:180px;">Matières premières</th>
+          <th colspan="2">Produit 1</th>
+          <th colspan="2">Produit 2</th>
+          <th colspan="2">Produit 3</th>
+          <th colspan="2">Produit 4</th>
+          <th colspan="2">Produit 5</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>PU</th><th>Qté</th>
+          <th>PU</th><th>Qté</th>
+          <th>PU</th><th>Qté</th>
+          <th>PU</th><th>Qté</th>
+          <th>PU</th><th>Qté</th>
+        </tr>
+      </thead>
+      <tbody id="tbody_matieres">
+        <tr>
+          <td><input type="text" value="Tissus (m)"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Fil"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Étiquette (pièces)"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+          <td><input type="number" oninput="calculer()"></td><td><input type="number" oninput="calculer()"></td>
+        </tr>
+      </tbody>
+      <tfoot style="font-weight:bold; background:#e6f2ff; text-align:center;">
+        <tr>
+          <td>Coût total</td>
+          <td colspan="2" id="cout1">0</td>
+          <td colspan="2" id="cout2">0</td>
+          <td colspan="2" id="cout3">0</td>
+          <td colspan="2" id="cout4">0</td>
+          <td colspan="2" id="cout5">0</td>
+        </tr>
+        <tr>
+          <td>Quantités produites</td>
+          <td colspan="2"><input type="number" id="qte1" oninput="calculer()" style="text-align:center;"></td>
+          <td colspan="2"><input type="number" id="qte2" oninput="calculer()" style="text-align:center;"></td>
+          <td colspan="2"><input type="number" id="qte3" oninput="calculer()" style="text-align:center;"></td>
+          <td colspan="2"><input type="number" id="qte4" oninput="calculer()" style="text-align:center;"></td>
+          <td colspan="2"><input type="number" id="qte5" oninput="calculer()" style="text-align:center;"></td>
+        </tr>
+        <tr style="background:#ccffcc; color:red; text-align:center;">
+          <td>Coût unitaire/produit</td>
+          <td colspan="2" id="unit1">0</td>
+          <td colspan="2" id="unit2">0</td>
+          <td colspan="2" id="unit3">0</td>
+          <td colspan="2" id="unit4">0</td>
+          <td colspan="2" id="unit5">0</td>
+        </tr>
+      </tfoot>
+    </table>
+    <button onclick="ajouterMat()" style="margin-top:10px; padding:5px 15px; font-size:16px;">Ajouter matière 1ère</button>
+  </div>
+</fieldset>
 
 <!-- BILAN -->
 <fieldset style="width:100%; margin:0 auto; padding:10px; box-sizing:border-box;">
@@ -1170,85 +1215,81 @@ input.sep{
   <div id="content_bilan">
     <table id="table_bilan" border="1" 
        style="border-collapse:collapse; width:100%; text-align:center; font-size:12px;">
-  <thead style="background:#f0f0f0;">
-    <tr>
-      <th>ACTIF</th>
-      <th>Analyse actuelle</th>
-      <th>Crédit antérieur ACTIF</th>
-      <th>PASSIF</th>
-      <th>Analyse actuelle</th>
-      <th>Crédit antérieur PASSIF</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Ligne 1 -->
-    <tr>
-      <td>Trésorerie activité</td>
-      <td><input type="text" id="bilan_caisse" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
-      <td>Dettes fournisseurs</td>
-      <td><input type="text" id="bilan_dettes_fourn" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
-    </tr>
-    <!-- Ligne 2 -->
-    <tr>
-      <td>Trésorerie hors activité</td>
-      <td><input type="text" id="bilan_treso_hors_act" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
-      <td>Dettes CT (encours)</td>
-      <td><input type="text" id="bilan_encours" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
-    </tr>
-    <!-- Ligne 3 -->
-    <tr>
-      <td>Créances</td>
-      <td><input type="text" id="bilan_creances" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
-      <td>Dettes LT</td>
-      <td><input type="text" id="bilan_dettes_lt" class="numeric" placeholder="0 MGA"></td>
-      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
-    </tr>
-    <!-- Ligne 4 -->
-    <tr>
-      <td>Stock</td>
-      <td><input type="text" id="bilan_stock" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
-      <td>Fonds propres</td>
-      <td><input type="text" id="bilan_fonds_propres" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"></td>
-    </tr>
-    <!-- Ligne 5 -->
-    <tr>
-      <td>Actif immobilisé</td>
-      <td><input type="text" id="bilan_actif_immo" readonly class="result numeric"></td>
-      <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"></td>
-      <td style="background:#333; color:#fff; font-weight:bold;">Total passif</td>
-      <td style="background:#333; color:#fff; font-weight:bold;">
-        <input type="text" id="bilan_total_passif" readonly class="result numeric"
-               style="background:#333; color:#fff;">
-      </td>
-      <td style="background:#333; color:#fff; font-weight:bold;">
-        <input type="text" id="bilan_total_passif_avant" readonly class="result numeric"
-               style="background:#333; color:#fff;">
-      </td>
-    </tr>
-    <!-- Ligne 6 : Totaux -->
-    <tr style="background:#333; color:#fff; font-weight:bold;">
-      <td style="background:#333; color:#fff; font-weight:bold;">Total actif</td>
-      <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif" readonly class="result numeric"
-                 style="background:#333; color:#fff;"></td>
-      <td style="background:#333; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif_avant" readonly class="result numeric"
-                 style="background:#333; color:#fff;"></td>
-      <td colspan="3"></td>
-    </tr>
-  </tbody>
-</table>
-
+      <thead style="background:#f0f0f0;">
+        <tr>
+          <th>ACTIF</th>
+          <th>Analyse actuelle</th>
+          <th>Crédit antérieur ACTIF</th>
+          <th>PASSIF</th>
+          <th>Analyse actuelle</th>
+          <th>Crédit antérieur PASSIF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Ligne 1 -->
+        <tr>
+          <td>Trésorerie activité</td>
+          <td><input type="text" id="bilan_caisse" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td>Dettes fournisseurs</td>
+          <td><input type="text" id="bilan_dettes_fourn" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+        </tr>
+        <!-- Ligne 2 -->
+        <tr>
+          <td>Trésorerie hors activité</td>
+          <td><input type="text" id="bilan_treso_hors_act" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td>Dettes CT (encours)</td>
+          <td><input type="text" id="bilan_encours" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+        </tr>
+        <!-- Ligne 3 -->
+        <tr>
+          <td>Créances</td>
+          <td><input type="text" id="bilan_creances" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td>Dettes LT</td>
+          <td><input type="text" id="bilan_dettes_lt" class="numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+        </tr>
+        <!-- Ligne 4 -->
+        <tr>
+          <td>Stock</td>
+          <td><input type="text" id="bilan_stock" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td>Fonds propres</td>
+          <td><input type="text" id="bilan_fonds_propres" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+        </tr>
+        <!-- Ligne 5 -->
+        <tr>
+          <td>Actif immobilisé</td>
+          <td><input type="text" id="bilan_actif_immo" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td style="background:#696969; color:#fff; font-weight:bold;">Total passif</td>
+          <td style="background:#696969; color:#fff; font-weight:bold;">
+            <input type="text" id="bilan_total_passif" readonly class="result numeric"
+                   style="background:#696969; color:#fff;">
+          </td>
+          <td style="background:#696969; color:#fff; font-weight:bold;">
+            <input type="text" id="bilan_total_passif_avant" readonly class="result numeric"
+                   style="background:#696969; color:#fff;">
+          </td>
+        </tr>
+        <!-- Ligne 6 : Totaux -->
+        <tr style="background:#696969; color:#fff; font-weight:bold;">
+          <td style="background:#696969; color:#fff; font-weight:bold;">Total actif</td>
+          <td style="background:#696969; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif" readonly class="result numeric"
+                     style="background:#696969; color:#fff;"></td>
+          <td style="background:#696969; color:#fff; font-weight:bold;"><input type="text" id="bilan_total_actif_avant" readonly class="result numeric"
+                     style="background:#696969; color:#fff;"></td>
+          <td colspan="3"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </fieldset>
-
- 
- 
 
 <!-- BOUTONS D'ACTION -->
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
@@ -1670,9 +1711,9 @@ function ajouterProduit(){
     <td><input type="number" class="stock" value="0"></td>
     <td><input type="text" class="achat" value="0"></td>
     <td><input type="text" class="vente" value="0"></td>
-    <td class="montantAchat">0</td>
-    <td class="montantVente">0</td>
-    <td class="montantStock">0</td>
+    <td class="montantAchat">0,00</td>
+    <td class="montantVente">0,00</td>
+    <td class="montantStock">0,00</td>
   `;
   tbody.appendChild(tr);
   bindMMPRow(tr);
@@ -1718,18 +1759,28 @@ function calculerMMP() {
 /*************************************************
  *  GESTION DES ONGLETS D'ACTIVITÉ
  *************************************************/
-function activerOnglet(ongletId) {
-  document.querySelectorAll('.activite-tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  
+function switchActivite(num) {
+  // Masquer tous les contenus
   document.querySelectorAll('.activite-content').forEach(content => {
     content.classList.remove('active');
   });
   
-  document.querySelector(`.activite-tab[data-activite="${ongletId}"]`).classList.add('active');
+  // Désactiver tous les onglets
+  document.querySelectorAll('.activite-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
   
-  document.getElementById(`activite${ongletId}-content`).classList.add('active');
+  // Activer le contenu sélectionné
+  const targetContent = document.getElementById('activite' + num + '-content');
+  if (targetContent) {
+    targetContent.classList.add('active');
+  }
+  
+  // Activer l'onglet sélectionné
+  const tabs = document.querySelectorAll('.activite-tab');
+  if (tabs[num - 1]) {
+    tabs[num - 1].classList.add('active');
+  }
 }
 
 /*************************************************
@@ -2016,16 +2067,17 @@ function ajouterMat() {
 /*************************************************
  *  FONCTIONS DE BASCULEMENT SECTIONS
  *************************************************/
-function toggleSection(sectionId, btn) {
-  const section = document.getElementById(sectionId);
-  if (!section || !btn) return;
-  
-  if (section.style.display === "none") {
-    section.style.display = "block";
-    btn.textContent = "Masquer";
+function toggleSection() {
+  const content = document.getElementById("content_cout_prod");
+  const btn = document.querySelector("#cout_prod .toggle-btn");
+  const icon = btn.querySelector("i");
+
+  if (content.style.display === "none") {
+    content.style.display = "block";
+    btn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
   } else {
-    section.style.display = "none";
-    btn.textContent = "Afficher";
+    content.style.display = "none";
+    btn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
   }
 }
 
@@ -2071,20 +2123,6 @@ function toggleMMP() {
   }
 }
 
-function toggleActivite() {
-  const wrapper = document.getElementById("activite-wrapper");
-  const btn = document.querySelector("#legend_activite button");
-  if (!wrapper || !btn) return;
-  
-  if (wrapper.style.display === "none") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-
 function toggleCroisement() {
   const fs = document.querySelector("#croisement_specifique").parentNode;
   if (!fs) return;
@@ -2101,6 +2139,129 @@ function toggleCroisement() {
     table.style.display = "none";
     btn.textContent = "Afficher";
   }
+}
+
+function toggleFonctionnement() {
+  const wrapper = document.getElementById("activite-wrapper");
+  const btn = document.getElementById("btn_toggle_fonctionnement");
+  const icon = btn.querySelector("i");
+  const text = btn.querySelector(".toggle-text");
+
+  if (wrapper.style.display === "none") {
+    wrapper.style.display = "block";
+    btn.setAttribute("aria-expanded", "true");
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+    text.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.setAttribute("aria-expanded", "false");
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+    text.textContent = "Afficher";
+  }
+}
+
+function toggleActiviteHistory() {
+  const content = document.getElementById('hist_activite_content');
+  const btn = document.getElementById('btn_toggle_activite');
+  const icon = btn.querySelector('i');
+  const text = btn.querySelector('.toggle-text');
+
+  if (content.classList.contains('collapsed')) {
+    content.classList.remove('collapsed');
+    btn.setAttribute('aria-expanded', 'true');
+    if (text) text.textContent = 'Masquer';
+    if (icon) {
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    }
+  } else {
+    content.classList.add('collapsed');
+    btn.setAttribute('aria-expanded', 'false');
+    if (text) text.textContent = 'Afficher';
+    if (icon) {
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+}
+
+function toggleGeneralInfo() {
+  const content = document.getElementById('infos_generales_content');
+  const toggleBtn = document.querySelector('#legend_infos_generales .toggle-btn');
+  const icon = toggleBtn.querySelector('i');
+  
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
+  } else {
+    content.style.display = 'none';
+    toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
+  }
+}
+
+function toggleBilan() {
+  const tbl = document.getElementById('content_bilan');
+  const btn = document.querySelector('#legend_bilan .toggle-btn');
+  const ic = btn?.querySelector('i');
+
+  if (!tbl || !btn || !ic) return;
+
+  if (tbl.style.display === 'none') {
+    tbl.style.display = 'block';
+    ic.className = 'fas fa-eye-slash';
+    btn.lastChild.textContent = ' Masquer';
+  } else {
+    tbl.style.display = 'none';
+    ic.className = 'fas fa-eye';
+    btn.lastChild.textContent = ' Afficher';
+  }
+}
+
+/*************************************************
+ *  BILAN
+ *************************************************/
+function majBilan(){
+  /* ----- ACTIF ----- */
+  const caisse    = parseNumberFromString(document.getElementById('Caisse')?.value||0);
+  const mobil     = parseNumberFromString(document.getElementById('solde_mobile')?.value||0);
+  const epargne   = parseNumberFromString(document.getElementById('solde_epargne')?.value||0);
+  const creance1  = parseNumberFromString(document.getElementById('creances_actuelles')?.value||0);
+  const creance2  = parseNumberFromString(document.getElementById('creances_actuelles2')?.value||0);
+  const stock     = parseNumberFromString(document.getElementById('totalStock')?.textContent||0);
+  const actifImmo = parseNumberFromString(document.getElementById('total_actifs')?.textContent||0);
+
+  document.getElementById('bilan_caisse').value            = fmtMGA(caisse);
+  document.getElementById('bilan_treso_hors_act').value    = fmtMGA(mobil+epargne);
+  document.getElementById('bilan_creances').value          = fmtMGA(creance1+creance2);
+  document.getElementById('bilan_stock').value             = fmtMGA(stock);
+  document.getElementById('bilan_actif_immo').value        = fmtMGA(actifImmo);
+
+  const totalActif = caisse+mobil+epargne+creance1+creance2+stock+actifImmo;
+  document.getElementById('bilan_total_actif').value       = fmtMGA(totalActif);
+
+  /* ----- PASSIF ----- */
+  const dettesF1 = parseNumberFromString(document.getElementById('dettes_fournisseurs')?.value||0);
+  const dettesF2 = parseNumberFromString(document.getElementById('dettes_fournisseurs2')?.value||0);
+  const encours  = parseNumberFromString(document.getElementById('encours_credit')?.value||0);
+  const dettesLT = parseNumberFromString(document.getElementById('bilan_dettes_lt')?.value||0);
+
+  document.getElementById('bilan_dettes_fourn').value = fmtMGA(dettesF1+dettesF2);
+  document.getElementById('bilan_encours').value      = fmtMGA(encours);
+
+  const fondsPropres = totalActif - (dettesF1+dettesF2+encours+dettesLT);
+  document.getElementById('bilan_fonds_propres').value= fmtMGA(fondsPropres);
+
+  const totalPassif = dettesF1+dettesF2+encours+dettesLT+fondsPropres;
+  document.getElementById('bilan_total_passif').value = fmtMGA(totalPassif);
+
+  /* ----- Crédit antérieur : sommes ----- */
+  let sumActAvant = 0, sumPasAvant = 0;
+  document.querySelectorAll('#table_bilan .credit-avant-actif').forEach((inp,i)=>{sumActAvant+=parseNumberFromString(inp.value||0);});
+  document.querySelectorAll('#table_bilan .credit-avant-passif').forEach((inp,i)=>{sumPasAvant+=parseNumberFromString(inp.value||0);});
+  document.getElementById('bilan_total_actif_avant').value  = fmtMGA(sumActAvant);
+  document.getElementById('bilan_total_passif_avant').value = fmtMGA(sumPasAvant);
 }
 
 /*************************************************
@@ -2332,13 +2493,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // MMP : binder la première ligne
   document.querySelectorAll('#tableMMP tbody tr').forEach(bindMMPRow);
 
-  // Gestion des onglets d'activité
-  document.querySelectorAll('.activite-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      activerOnglet(tab.getAttribute('data-activite'));
-    });
-  });
-
   // Ajout des séparateurs de milliers pour les champs spécifiés
   document.querySelectorAll('.thousands-separator').forEach(input => {
     input.addEventListener('input', function() {
@@ -2411,6 +2565,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
     btnAjouter.addEventListener('click', ajouterGarantie);
   }
 
+  // Bilan - Abonnements
+  ['Caisse','solde_mobile','solde_epargne','creances_actuelles','creances_actuelles2',
+   'totalStock','total_actifs','dettes_fournisseurs','dettes_fournisseurs2','encours_credit','bilan_dettes_lt']
+  .forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',majBilan);
+  });
+  document.querySelectorAll('#table_bilan .credit-avant-actif, #table_bilan .credit-avant-passif')
+          .forEach(inp=>inp.addEventListener('input',majBilan));
+
   // Inits
   updateOpexTotal();
   updateOpexTotal2();
@@ -2424,318 +2588,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
   majCAMVMensuel2();
   calculerMMP();
   updateTotalDF();
-});
-</script>
-<script>
-    function toggleSection() {
-      const content = document.getElementById("content_cout_prod");
-      const btn = document.querySelector("#cout_prod .toggle-btn");
-      const icon = btn.querySelector("i");
-
-      if (content.style.display === "none") {
-        content.style.display = "block";
-        btn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
-      } else {
-        content.style.display = "none";
-        btn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
-      }
-    }
-  </script>
- <!-- ----------  SCRIPT BILAN ---------- -->
-<script>
-/* Masquer/Afficher */
-function toggleBilan() {
-  const tbl = document.getElementById('content_bilan');
-  const btn = document.querySelector('#legend_bilan .toggle-btn');
-  const ic = btn?.querySelector('i');
-
-  if (!tbl || !btn || !ic) return;
-
-  if (tbl.style.display === 'none') {
-    tbl.style.display = 'block';
-    ic.className = 'fas fa-eye-slash';
-    btn.lastChild.textContent = ' Masquer';
-  } else {
-    tbl.style.display = 'none';
-    ic.className = 'fas fa-eye';
-    btn.lastChild.textContent = ' Afficher';
-  }
-}
-
-/* Formatage */
-function fmtMGA(n){return (n||0).toLocaleString('fr-FR')+' MGA';}
-function parseNumberFromString(s){
-  if(!s) return 0;
-  return parseFloat(String(s).replace(/[^\d\.,-]/g,'').replace(',','.'))||0;
-}
-
-/* Mise à jour complète */
-function majBilan(){
-  /* ----- ACTIF ----- */
-  const caisse    = parseNumberFromString(document.getElementById('Caisse')?.value||0);
-  const mobil     = parseNumberFromString(document.getElementById('solde_mobile')?.value||0);
-  const epargne   = parseNumberFromString(document.getElementById('solde_epargne')?.value||0);
-  const creance1  = parseNumberFromString(document.getElementById('creances_actuelles')?.value||0);
-  const creance2  = parseNumberFromString(document.getElementById('creances_actuelles2')?.value||0);
-  const stock     = parseNumberFromString(document.getElementById('totalStock')?.textContent||0);
-  const actifImmo = parseNumberFromString(document.getElementById('total_actifs')?.textContent||0);
-
-  document.getElementById('bilan_caisse').value            = fmtMGA(caisse);
-  document.getElementById('bilan_treso_hors_act').value    = fmtMGA(mobil+epargne);
-  document.getElementById('bilan_creances').value          = fmtMGA(creance1+creance2);
-  document.getElementById('bilan_stock').value             = fmtMGA(stock);
-  document.getElementById('bilan_actif_immo').value        = fmtMGA(actifImmo);
-
-  const totalActif = caisse+mobil+epargne+creance1+creance2+stock+actifImmo;
-  document.getElementById('bilan_total_actif').value       = fmtMGA(totalActif);
-
-  /* ----- PASSIF ----- */
-  const dettesF1 = parseNumberFromString(document.getElementById('dettes_fournisseurs')?.value||0);
-  const dettesF2 = parseNumberFromString(document.getElementById('dettes_fournisseurs2')?.value||0);
-  const encours  = parseNumberFromString(document.getElementById('encours_credit')?.value||0);
-  const dettesLT = parseNumberFromString(document.getElementById('bilan_dettes_lt')?.value||0);
-
-  document.getElementById('bilan_dettes_fourn').value = fmtMGA(dettesF1+dettesF2);
-  document.getElementById('bilan_encours').value      = fmtMGA(encours);
-
-  const fondsPropres = totalActif - (dettesF1+dettesF2+encours+dettesLT);
-  document.getElementById('bilan_fonds_propres').value= fmtMGA(fondsPropres);
-
-  const totalPassif = dettesF1+dettesF2+encours+dettesLT+fondsPropres;
-  document.getElementById('bilan_total_passif').value = fmtMGA(totalPassif);
-
-  /* ----- Crédit antérieur : sommes ----- */
-  let sumActAvant = 0, sumPasAvant = 0;
-  document.querySelectorAll('#table_bilan .credit-avant-actif').forEach((inp,i)=>{sumActAvant+=parseNumberFromString(inp.value||0);});
-  document.querySelectorAll('#table_bilan .credit-avant-passif').forEach((inp,i)=>{sumPasAvant+=parseNumberFromString(inp.value||0);});
-  document.getElementById('bilan_total_actif_avant').value  = fmtMGA(sumActAvant);
-  document.getElementById('bilan_total_passif_avant').value = fmtMGA(sumPasAvant);
-}
-
-/* Abonnements */
-document.addEventListener('DOMContentLoaded',()=>{
-  ['Caisse','solde_mobile','solde_epargne','creances_actuelles','creances_actuelles2',
-   'totalStock','total_actifs','dettes_fournisseurs','dettes_fournisseurs2','encours_credit','bilan_dettes_lt']
-  .forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.addEventListener('input',majBilan);
-  });
-  document.querySelectorAll('#table_bilan .credit-avant-actif, #table_bilan .credit-avant-passif')
-          .forEach(inp=>inp.addEventListener('input',majBilan));
   majBilan();
 });
-
 </script>
- <script>
-/* ----------  Séparateur de milliers + alignement à droite  ---------- */
-function formatSepMilliers(inp){
-  let start = inp.selectionStart;
-  let raw   = inp.value.replace(/[^\d]/g,'');
-  if(raw===''){inp.value=''; return;}
-  let n = parseInt(raw,10);
-  inp.value = n.toLocaleString('fr-FR')+' MGA';
-  let delta = inp.value.length - raw.length - 4; // longueur ajoutée (espaces + MGA)
-  inp.setSelectionRange(start + delta, start + delta);
-}
-
-function attachSepMilliers(){
-  document.querySelectorAll('input.sep').forEach(el=>{
-    el.addEventListener('input',e=>{
-      formatSepMilliers(e.target);
-      majBilan();          // recalcule les totaux
-    });
-    el.addEventListener('focus',e=>{
-      e.target.value = e.target.value.replace(/[^\d]/g,'');
-    });
-    el.addEventListener('blur',e=>{
-      formatSepMilliers(e.target);
-      majBilan();
-    });
-  });
-}
-
-/* au chargement */
-document.addEventListener('DOMContentLoaded',attachSepMilliers);
-document.addEventListener('DOMContentLoaded', () => {
-document.querySelectorAll('.credit-avant-actif, .credit-avant-passif')
-          .forEach(inp => inp.addEventListener('input', majBilan));
-});
-
-</script> 
-<script>
-        function toggleGeneralInfo() {
-            const content = document.getElementById('infos_generales_content');
-            const toggleBtn = document.querySelector('#legend_infos_generales .toggle-btn');
-            const icon = toggleBtn.querySelector('i');
-            
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
-                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer';
-            } else {
-                content.style.display = 'none';
-                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Afficher';
-            }
-        }
-    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
-  // Fonction de formatage avec séparateur de milliers + suffixe MGA
-  function formatFinancialField(el) {
-    let val = el.value.replace(/\D/g, ""); // garder seulement les chiffres
-    if (val === "") {
-      el.value = "";
-      return;
-    }
-    // convertir en entier et formater
-    let num = parseInt(val, 10);
-    el.value = num.toLocaleString("fr-FR") + " MGA";
-  }
+function exportToExcel() {
+  var table = document.getElementById("table_garanties").cloneNode(true);
 
-  // Attacher le formatage à tous les inputs numériques
-  document.querySelectorAll("input.numeric").forEach(input => {
-    input.addEventListener("blur", function() {
-      formatFinancialField(this);
-    });
-  });
-</script>
-<script>
-function formatNombre(val) {
-  return val.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function calculer() {
-  const lignes = document.querySelectorAll("#tbody_matieres tr");
-  const nbProduits = 5;
-  let couts = Array(nbProduits).fill(0);
-
-  // Calcul des coûts totaux par produit
-  lignes.forEach(tr => {
-    const cells = tr.querySelectorAll("input[type='number']");
-    for (let i = 0; i < nbProduits; i++) {
-      let pu = parseFloat(cells[i*2].value) || 0;
-      let qte = parseFloat(cells[i*2+1].value) || 0;
-      couts[i] += pu * qte;
-    }
+  // Remplacer tous les <input> et <select> par leur valeur
+  var inputs = table.querySelectorAll("input, select, textarea");
+  inputs.forEach(el => {
+    var td = el.parentNode;
+    var value = el.value || "";
+    td.textContent = value; // remplacer par la valeur saisie
   });
 
-  // Affichage des coûts totaux
-  for (let i = 0; i < nbProduits; i++) {
-    document.getElementById("cout" + (i+1)).textContent = formatNombre(couts[i]);
-  }
+  // Créer le workbook à partir de ce tableau "nettoyé"
+  var workbook = XLSX.utils.table_to_book(table, { sheet: "Garanties" });
 
-  // Calcul des coûts unitaires
-  for (let i = 0; i < nbProduits; i++) {
-    let qteProd = parseFloat(document.getElementById("qte" + (i+1)).value) || 0;
-    let unit = qteProd > 0 ? couts[i] / qteProd : 0;
-    document.getElementById("unit" + (i+1)).textContent = formatNombre(unit);
-  }
+  // Sauvegarder
+  XLSX.writeFile(workbook, "garanties.xlsx");
 }
 </script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('btn_toggle_activite');
-  const content = document.getElementById('hist_activite_content');
 
-  if (!btn || !content) {
-    // Si l'un des éléments manque, on arrête proprement
-    console.warn('Bouton toggle ou contenu introuvable (id manquant).');
-    return;
-  }
-
-  const icon = btn.querySelector('i');            // l'icône dans le bouton
-  const text = btn.querySelector('.toggle-text'); // le <span> à modifier
-
-  function setCollapsed(collapsed) {
-    content.classList.toggle('collapsed', collapsed);
-    btn.setAttribute('aria-expanded', String(!collapsed));
-    // on modifie uniquement le texte du span — on ne touche pas au bouton entier
-    if (text) text.textContent = collapsed ? 'Afficher' : 'Masquer';
-    // bascule des classes d'icône (FontAwesome) si présent
-    if (icon) {
-      icon.classList.toggle('fa-eye-slash', collapsed);
-      icon.classList.toggle('fa-eye', !collapsed);
-    }
-  }
-
-  // initialisation : on lit aria-expanded si défini, sinon on affiche
-  const startCollapsed = btn.getAttribute('aria-expanded') === 'false';
-  setCollapsed(startCollapsed);
-
-  // clic
-  btn.addEventListener('click', () => {
-    const isCollapsed = content.classList.contains('collapsed');
-    setCollapsed(!isCollapsed);
-  });
-
-  // compatibilité si tu as encore onclick="toggleActivite()" dans ton HTML
-  window.toggleActivite = function() {
-    const isCollapsed = content.classList.contains('collapsed');
-    setCollapsed(!isCollapsed);
-  };
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('btn_toggle_activite');
-  const content = document.getElementById('hist_activite_content');
-
-  if (!btn || !content) return;
-
-  const icon = btn.querySelector('i');
-  const text = btn.querySelector('.toggle-text');
-
-  function toggleActiviteSection() {
-    const isCollapsed = content.classList.contains('collapsed');
-    content.classList.toggle('collapsed', !isCollapsed);
-    btn.setAttribute('aria-expanded', String(isCollapsed));
-    
-    if (text) text.textContent = isCollapsed ? 'Masquer' : 'Afficher';
-    if (icon) {
-      icon.classList.toggle('fa-eye-slash', !isCollapsed);
-      icon.classList.toggle('fa-eye', isCollapsed);
-    }
-  }
-
-  // Initialisation
-  const startCollapsed = btn.getAttribute('aria-expanded') === 'false';
-  content.classList.toggle('collapsed', startCollapsed);
-  if (text) text.textContent = startCollapsed ? 'Afficher' : 'Masquer';
-  if (icon) {
-    icon.classList.toggle('fa-eye-slash', !startCollapsed);
-    icon.classList.toggle('fa-eye', startCollapsed);
-  }
-
-  // Événement de clic
-  btn.addEventListener('click', toggleActiviteSection);
-
-  // Renommer la fonction globale pour éviter les conflits
-  window.toggleActiviteHistory = toggleActiviteSection;
-});
-</script>
-<script>
-function toggleFonctionnement() {
-  const wrapper = document.getElementById("activite-wrapper");
-  const btn = document.getElementById("btn_toggle_fonctionnement");
-  const icon = btn.querySelector("i");
-  const text = btn.querySelector(".toggle-text");
-
-  if (wrapper.style.display === "none") {
-    // Afficher
-    wrapper.style.display = "block";
-    btn.setAttribute("aria-expanded", "true");
-    icon.classList.remove("fa-eye-slash");
-    icon.classList.add("fa-eye");
-    text.textContent = "Masquer";
-  } else {
-    // Masquer
-    wrapper.style.display = "none";
-    btn.setAttribute("aria-expanded", "false");
-    icon.classList.remove("fa-eye");
-    icon.classList.add("fa-eye-slash");
-    text.textContent = "Afficher";
-  }
-}
-</script>
 
 </body>
 </html>
