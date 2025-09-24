@@ -253,6 +253,28 @@
   white-space: nowrap;  /* garde le texte sur une ligne si possible */
   word-break: break-word; /* coupe les trop longs sans scroll horizontal */
 }
+ .bold-row {
+    font-weight: bold;
+  }
+  .red-text {
+    color: #d9534f;
+  }
+  #table_cashflow td, #table_cashflow th {
+    padding: 5px;
+  }
+
+  #table_cout th,
+  #table_cout td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  #table_cout input {
+    text-align: center;   /* Texte centré dans les champs */
+    width: 100%;          /* Pour bien occuper la cellule */
+    box-sizing: border-box;
+  }
+
 
 </style>
 </head>
@@ -269,6 +291,7 @@
 <fieldset>
   <legend><i class="fas fa-info-circle"></i> INFORMATIONS SUR LA DEMANDE DE CREDIT</legend>
   
+  <div class="inline-2">
   <label>
     Agence :
     <select required>
@@ -290,7 +313,7 @@
   <label>
     AC traitant : <input type="text" required>
   </label>
-
+  </div>
   <div class="inline-2">
     <label>
       Date de visite : <input type="date" id="date_visite" required>
@@ -299,15 +322,19 @@
       Heure de visite : <input type="time" id="heure_visite" required>
     </label>
   </div>
-
+<div class="inline-2">
   <label>
-    Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly>
+    Montant de la demande (MGA) : <input type="text" id="montant_demande" readonly
+       style="font-weight:bold; color:white; background-color:orange;">
+
   </label>
   
   <label>
     Durée (mois) : <input type="number" min="0" required>
   </label>
+  </div>
   
+  <div class="inline-2">
   <label>
     Capacité de paiement (MGA) : <input type="text" id="capacite_paiement" required>
   </label>
@@ -315,7 +342,7 @@
   <label>
     Taux d'intérêt annuel (%) : <input type="number" step="0.01" value="39" readonly>
   </label>
-  
+  </div>
   <label>
     Date de remboursement demandée : <input type="date" required>
   </label>
@@ -914,7 +941,7 @@
           <td id="totalStock">0,00</td>
         </tr>
         <tr class="mmp-row">
-          <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span> %</td>
+          <td colspan="8" style="text-align: right;">MMP = <span id="mmp">0,00</span></td>
         </tr>
       </tfoot>
     </table>
@@ -1064,9 +1091,9 @@
       </tr>
       <tr>
         <td>Frais par voyage A/R</td>
-        <td><input type="number" name="frais_nat"></td>
+        <td><input type="text" name="frais_nat" class="thousands-separator"></td>
         <td>Frais de transport/kg</td>
-        <td><input type="number" name="frais_march"></td>
+        <td><input type="text" name="frais_march" class="thousands-separator"></td>
         <td>Nombre de jours travaillés</td>
         <td><input type="text" name="jours_bus" class="thousands-separator"></td>
       </tr>
@@ -1239,7 +1266,8 @@
         <tr>
           <td>Trésorerie hors activité</td>
           <td><input type="text" id="bilan_treso_hors_act" readonly class="result numeric"></td>
-          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
+          <td><input type="text" class="credit-avant-actif numeric" placeholder="0 MGA"style="text-align:right;" id="
+		  " onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
           <td>Dettes CT (encours)</td>
           <td><input type="text" id="bilan_encours" readonly class="result numeric"></td>
           <td><input type="text" class="credit-avant-passif numeric" placeholder="0 MGA"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"style="text-align:right;" id="Salaire" onblur="formatFinancialField(this)"></td>
@@ -1290,6 +1318,120 @@
     </table>
   </div>
 </fieldset>
+
+<!-- CASH FLOW -->
+<fieldset style="width:100%; margin:0 auto; padding:10px; box-sizing:border-box;">
+  <legend id="legend_cashflow">
+    <i class="fas fa-chart-line fa-lg"></i> CASH FLOW
+    <button type="button" class="toggle-btn" onclick="toggleCashFlow()">
+      <i class="fas fa-eye-slash"></i> Masquer
+    </button>
+  </legend>
+
+  <div id="content_cashflow">
+    <table id="table_cashflow" border="1" style="border-collapse:collapse; width:100%; font-size:12px;">
+      <thead style="background:#f0f0f0; text-align:center;">
+        <tr>
+          <th style="width:20%;">Analyse actuelle</th>
+          <th style="width:20%;">CONSOLIDE</th>
+          <th style="width:20%;">Activité 1 </th>
+          <th style="width:20%;">Activité 2 </th>
+          <th style="width:20%;">Analyse antérieure</th>
+        </tr>
+      </thead>
+      <tbody style="text-align:left;">
+        <tr>
+          <td>Chiffre d'affaires Mensuel</td>
+          <td><input type="text" id="CA_mensuel" readonly class="result numeric"></td>
+          <td><input type="text" id="CA_activité1" readonly class="result numeric"></td>
+          <td><input type="text" id="CA_activité2" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr>
+          <td>Coût d'achat des marchandises vendues (CAMV)</td>
+          <td><input type="text" id="CAMV_mensuel" readonly class="result numeric"></td>
+          <td><input type="text" id="CAMV_activité1" readonly class="result numeric"></td>
+          <td><input type="text" id="CAMV_activité2" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>CASH FLOW BRUT</td>
+          <td><input type="text" id="Cash_flow_brut" readonly class="result numeric" style="background-color: orange; color: white; font-weight: bold;"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr>
+          <td>Total OPEX</td>
+          <td><input type="text" id="Total_opex" readonly class="result numeric"></td>
+          <td><input type="text" id="Total_opex1" readonly class="result numeric"></td>
+          <td><input type="text" id="Total_opex2" readonly class="result numeric"></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>CASH FLOW NET</td>
+          <td><input type="text" id="Cash_flow_net" readonly class="result numeric" style="background-color: orange; color: white; font-weight: bold;"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>ECHEANCES DE CREDIT</td>
+          <td><input type="text" id="echeances" class="numeric"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>AUTRES REVENUS</td>
+          <td><input type="text" id="Autres_revenus" readonly class="result numeric"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>DEPENSES FAMILIALES</td>
+          <td><input type="text" id="Depenses_familiales" class="numeric"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row">
+          <td>CASH FLOW</td>
+          <td><input type="text" id="Cash_flow" readonly class="result numeric" style="background-color: #003366; color: white; font-weight: bold;"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr>
+          <td>DSCR = 50%</td>
+          <td><input type="text" id="DSCR" readonly class="result numeric" style="background-color: #d3d3d3; color: black; font-weight: bold;"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+
+        <tr class="bold-row red-text">
+          <td>Mensualité proposée</td>
+          <td><input type="text" class="mensualité_proposée numeric" placeholder="0 MGA"></td>
+          <td></td>
+          <td></td>
+          <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</fieldset>
+
 
 <!-- BOUTONS D'ACTION -->
 <button type="button" class="submit-btn" onclick="sauvegarder()">Sauvegarder</button>
@@ -1752,7 +1894,7 @@ function calculerMMP() {
   } else {
     document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
   }
-  
+    
   majCAMVSelonMMP();
 }
 
@@ -2222,6 +2364,23 @@ function toggleBilan() {
 /*************************************************
  *  BILAN
  *************************************************/
+ function toggleCashFlow() {
+  const tbl = document.getElementById('content_cashflow');
+  const btn = document.querySelector('#legend_cashflow .toggle-btn');
+  const ic = btn?.querySelector('i');
+
+  if (!tbl || !btn || !ic) return;
+
+  if (tbl.style.display === 'none') {
+    tbl.style.display = 'block';
+    ic.className = 'fas fa-eye-slash';
+    btn.lastChild.textContent = ' Masquer';
+  } else {
+    tbl.style.display = 'none';
+    ic.className = 'fas fa-eye';
+    btn.lastChild.textContent = ' Afficher';
+  }
+}
 function majBilan(){
   /* ----- ACTIF ----- */
   const caisse    = parseNumberFromString(document.getElementById('Caisse')?.value||0);
@@ -2611,6 +2770,100 @@ function exportToExcel() {
   // Sauvegarder
   XLSX.writeFile(workbook, "garanties.xlsx");
 }
+</script>
+<script>
+function calculerCashFlow() {
+  // Fonction générique pour récupérer une valeur numérique
+  const getVal = id => {
+    let el = document.getElementById(id);
+    if (!el) return 0;
+
+    let val = el.tagName === "SPAN" ? el.textContent : el.value;
+    return parseFloat(val.replace(/[^\d.-]/g, '').replace(',', '.')) || 0;
+  };
+
+  // Fonction pour mettre à jour une valeur
+  const setVal = (id, val) => {
+    let el = document.getElementById(id);
+    if (!el) return;
+
+    if (el.tagName === "SPAN") {
+      el.textContent = val.toFixed(2) + " MGA";
+    } else {
+      el.value = val.toFixed(2);
+    }
+  };
+
+  // 1️⃣ CA
+  let CA_activite1 = getVal("ca_ligne1"); 
+  let CA_activite2 = getVal("ca_ligne2");
+  let CA_mensuel  = CA_activite1 + CA_activite2;
+
+  // 2️⃣ CAMV
+  let CAMV_activite1 = getVal("camv_final");
+  let CAMV_activite2 = getVal("camv_final2");
+  let CAMV_mensuel   = CAMV_activite1 + CAMV_activite2;
+
+  // 3️⃣ Cash flow brut
+  let Cash_flow_brut = CA_mensuel - CAMV_mensuel;
+
+  // 4️⃣ OPEX
+  let Total_opex1 = getVal("opex-total");
+  let Total_opex2 = getVal("opex-total2");
+  let Total_opex  = Total_opex1 + Total_opex2;
+
+  // 5️⃣ Cash flow net
+  let Cash_flow_net = Cash_flow_brut - Total_opex;
+
+  // 6️⃣ Échéances
+  let echeances = getVal("echeances");
+
+  // 7️⃣ Revenus & Salaire
+  let revenus_mensuels_caution = getVal("revenus_mensuels_caution");
+  let lien_demandeur = document.getElementById("lien_demandeur")?.value || "";
+  let Salaire = getVal("Salaire");
+
+  let Autres_revenus = Salaire + (
+    (lien_demandeur === "Epoux(se)" || lien_demandeur === "Concubin(e)") 
+      ? revenus_mensuels_caution 
+      : 0
+  );
+
+  // 8️⃣ Dépenses familiales
+  let Depenses_familiales = getVal("df-total");
+
+  // 9️⃣ Cash flow final
+  let Cash_flow = Cash_flow_net - echeances + Autres_revenus - Depenses_familiales;
+
+  // 🔟 DSCR
+  let DSCR = Cash_flow * 0.5;
+
+  // Mise à jour des champs
+  setVal("CA_activité1", CA_activite1);
+  setVal("CA_activité2", CA_activite2);
+  setVal("CA_mensuel", CA_mensuel);
+
+  setVal("CAMV_activité1", CAMV_activite1);
+  setVal("CAMV_activité2", CAMV_activite2);
+  setVal("CAMV_mensuel", CAMV_mensuel);
+
+  setVal("Cash_flow_brut", Cash_flow_brut);
+
+  setVal("Total_opex1", Total_opex1);
+  setVal("Total_opex2", Total_opex2);
+  setVal("Total_opex", Total_opex);
+
+  setVal("Cash_flow_net", Cash_flow_net);
+  setVal("Autres_revenus", Autres_revenus);
+  setVal("Depenses_familiales", Depenses_familiales);
+
+  setVal("Cash_flow", Cash_flow);
+  setVal("DSCR", DSCR);
+}
+
+// Écouteurs d’évènements
+document.addEventListener("input", calculerCashFlow);
+document.addEventListener("DOMContentLoaded", calculerCashFlow);
 </script>
 
 
