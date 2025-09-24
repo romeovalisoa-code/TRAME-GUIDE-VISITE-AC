@@ -1382,7 +1382,7 @@
 
         <tr class="bold-row">
           <td>ECHEANCES DE CREDIT</td>
-          <td><input type="text" id="echeances" class="numeric"></td>
+          <td><input type="text" id="echeances_credit" readonly class="result numeric"></td>
           <td></td>
           <td></td>
           <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
@@ -1398,7 +1398,7 @@
 
         <tr class="bold-row">
           <td>DEPENSES FAMILIALES</td>
-          <td><input type="text" id="Depenses_familiales" class="numeric"></td>
+          <td><input type="text" id="Depenses_familiales" readonly class="result numeric"></td>
           <td></td>
           <td></td>
           <td><input type="text" class="credit-anterieur numeric" placeholder="0 MGA"></td>
@@ -1431,6 +1431,7 @@
     </table>
   </div>
 </fieldset>
+
 
 
 <!-- BOUTONS D'ACTION -->
@@ -2777,7 +2778,6 @@ function calculerCashFlow() {
   const getVal = id => {
     let el = document.getElementById(id);
     if (!el) return 0;
-
     let val = el.tagName === "SPAN" ? el.textContent : el.value;
     return parseFloat(val.replace(/[^\d.-]/g, '').replace(',', '.')) || 0;
   };
@@ -2786,11 +2786,10 @@ function calculerCashFlow() {
   const setVal = (id, val) => {
     let el = document.getElementById(id);
     if (!el) return;
-
     if (el.tagName === "SPAN") {
-      el.textContent = val.toFixed(2) + " MGA";
+      el.textContent = val.toLocaleString("fr-FR") + " MGA";
     } else {
-      el.value = val.toFixed(2);
+      el.value = val.toLocaleString("fr-FR") + " MGA";
     }
   };
 
@@ -2815,8 +2814,10 @@ function calculerCashFlow() {
   // 5️⃣ Cash flow net
   let Cash_flow_net = Cash_flow_brut - Total_opex;
 
-  // 6️⃣ Échéances
-  let echeances = getVal("echeances");
+  // 6️⃣ Échéances (⚠️ ici il faut soit récupérer d’un champ externe, soit calculer)
+  let echeances = getVal("echeances"); 
+  // Exemple : si tu as une valeur calculée ailleurs, mets-la ici :
+  // echeances = getVal("mensualité_credit") * getVal("nb_mois") / 12;
 
   // 7️⃣ Revenus & Salaire
   let revenus_mensuels_caution = getVal("revenus_mensuels_caution");
@@ -2835,10 +2836,10 @@ function calculerCashFlow() {
   // 9️⃣ Cash flow final
   let Cash_flow = Cash_flow_net - echeances + Autres_revenus - Depenses_familiales;
 
-  // 🔟 DSCR
+  // 🔟 DSCR (50%)
   let DSCR = Cash_flow * 0.5;
 
-  // Mise à jour des champs
+  // ✅ Mise à jour des champs
   setVal("CA_activité1", CA_activite1);
   setVal("CA_activité2", CA_activite2);
   setVal("CA_mensuel", CA_mensuel);
@@ -2854,6 +2855,7 @@ function calculerCashFlow() {
   setVal("Total_opex", Total_opex);
 
   setVal("Cash_flow_net", Cash_flow_net);
+  setVal("echeances_credit", echeances);   // ⚠️ ajout pour afficher la valeur calculée
   setVal("Autres_revenus", Autres_revenus);
   setVal("Depenses_familiales", Depenses_familiales);
 
@@ -2865,6 +2867,7 @@ function calculerCashFlow() {
 document.addEventListener("input", calculerCashFlow);
 document.addEventListener("DOMContentLoaded", calculerCashFlow);
 </script>
+
 
 
 </body>
