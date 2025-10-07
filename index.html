@@ -571,7 +571,7 @@
     </table>
   </div>
 </fieldset>
-
+<button type="button" class="submit-btn" onclick="genererSynthesePDF()"><i class="fas fa-file-pdf"></i> Synthèse de crédit en PDF</button>
 <button type="button" class="submit-btn" onclick="copierEtSauvegarder()"><i class="fas fa-copy"></i> Copier et Sauvegarder</button>
 </form>
 
@@ -1369,6 +1369,7 @@ function majMensualites() {
   let mensu_comite = calculMensualite(montant_comite, duree_comite);
   document.getElementById("mensualite_ac").value = mensu_ac ? mensu_ac.toLocaleString("fr-FR", {minimumFractionDigits:0, maximumFractionDigits:0}) + " MGA" : "";
   document.getElementById("mensualite_comite").value = mensu_comite ? mensu_comite.toLocaleString("fr-FR", {minimumFractionDigits:0, maximumFractionDigits:0}) + " MGA" : "";
+  controleMensualite();   // ✅ vérif immédiate
   syncMensualite();
   calculerCouvertureGaranties();
   calculerRatios();
@@ -1667,5 +1668,153 @@ document.addEventListener('DOMContentLoaded', ()=>{
 document.addEventListener("input", calculerCashFlow);
 document.addEventListener("input", majMensualites);
 </script>
+<script>
+function genererSynthesePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+
+  const marg = 50;
+  let y = 80;
+
+  /* ---------- helpers ---------- */
+  const val = id => {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  let v = el.value || el.textContent || '';
+  v = v.toString()
+       .replace(/\//g, '')        // enlève tous les "/"
+       .replace(/MGA/g, 'Ar')     // remplace MGA par Ar (si tu veux)
+       .replace(/\s/g, '')        // retire les espaces existants
+       .replace(/\B(?=(\d{3})+(?!\d))/g, ' '); // remet un espace tous les 3 chiffres
+  return v.trim();
+};
+  const nb = id => {
+    const v = val(id).replace(/[^\d]/g, '');
+    return v ? parseInt(v, 10) : 0;
+  };
+
+  /* ---------- en-tête ---------- */
+  doc.setFontSize(18);
+  doc.text('Synthèse de demande de crédit', marg, y);
+  y += 30;
+
+  /* ---------- bloc 1 : infos demande ---------- */
+  doc.setFontSize(12);
+  doc.text(`Demandeur : ${val('nom_prenom_client')}`, marg, y);
+  y += 20;
+  doc.text(`Montant demandé : ${val('montant_demande')}`, marg, y);
+  y += 20;
+  doc.text(`Durée (mois) : ${document.querySelector('input[type="number"][min]')?.value || ''}`, marg, y);
+  y += 20;
+  doc.text(`Capacité de paiement : ${val('capacite_paiement')}`, marg, y);
+  y += 30;
+
+  /* ---------- bloc 2 : activités ---------- */
+  const activites = [];
+  document.querySelectorAll('#tbody_activite tr').forEach(tr => {
+    const nom = tr.querySelector('select[name="nom_activite[]"]')?.value || '';
+    const mrg = tr.querySelector('input[name="marge_activite[]"]')?.value || '';
+    const anc = tr.querySelector('input[name="anciennete_activite[]"]')?.value || '';
+    if (nom) activites.push([nom, mrg, anc + ' an(s)']);
+  });
+  if (activites.length) {
+    doc.text('Activités', marg, y);
+    y += 10;
+    doc.autoTable({
+      startY: y,
+      head: [['Activité', 'Marge', 'Ancienneté']],
+      body: activites,
+      theme: 'grid',
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [66, 139, 202] }
+    });
+    y = doc.lastAutoTable.finalY + 25;
+  }
+
+  /* ---------- bloc 3 : ratios ---------- */
+  const ratios = [
+    ['DSCR', val('dscr')],
+    ['Couverture garanties', val('couverture_garanties')],
+    ['Ratio endettement', val('ratio_endettement')],
+    ['Ratio liquidité', val('ratio_liquidite')]
+  ];
+  doc.text('Ratios', marg, y);
+  y += 10;
+  doc.autoTable({
+    startY: y,
+    head: [['Ratio', 'Valeur']],
+    body: ratios,
+    theme: 'grid',
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [66, 139, 202] }
+  });
+  y = doc.lastAutoTable.finalY + 25;
+
+  /* ---------- bloc 4 : décision ---------- */
+  const propAC   = val('mensualite_ac');
+  const propCom  = val('mensualite_comite');
+  doc.text('Décision', marg, y);
+  y += 20;
+  doc.text(`Mensualité proposée AC : ${propAC}`, marg, y);
+  y += 18;
+  doc.text(`Mensualité comité : ${propCom}`, marg, y);
+
+  /* ---------- sauvegarde ---------- */
+  const nomF = `Synthese_${val('nom_prenom_client').replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(nomF);
+}
+
+</script>
+<script>
+/* -------- contrôle mensualité / capacité -------- */
+function rawNumber(selector) {
+  const el = typeof selector === 'string' ? document.getElementById(selector) : selector;
+  if (!el) return 0;
+  // enlève tous les caractères non numériques
+  return parseInt((el.value || el.textContent || '').replace(/\D/g, ''), 10) || 0;
+}
+
+function controleMensualite() {
+  const mensEl = document.getElementById('mensualite_comite');
+  const capEl  = document.getElementById('capacite_paiement');
+  if (!mensEl || !capEl) return;
+
+  const mens = rawNumber(mensEl);
+  const cap  = rawNumber(capEl);
+
+  // reset couleurs
+  [mensEl, capEl].forEach(el => {
+    el.style.backgroundColor = '';
+    el.style.color = '';
+  });
+
+  if (mens > cap && cap > 0) {
+    mensEl.style.backgroundColor = 'red';
+    mensEl.style.color = 'white';
+    capEl.style.backgroundColor  = 'red';
+    capEl.style.color  = 'white';
+    // POP-UP UNIQUE (sans boucle)
+    if (!window.alreadyShown) {
+      alert('La mensualité comité dépasse la capacité de paiement !');
+      window.alreadyShown = true;
+      setTimeout(() => window.alreadyShown = false, 2000); // 2 s avant de pouvoir re-déclencher
+    }
+  }
+}
+
+/* -------- vérification immédiate + écouteurs -------- */
+window.addEventListener('DOMContentLoaded', () => {
+  const mensEl = document.getElementById('mensualite_comite');
+  const capEl  = document.getElementById('capacite_paiement');
+
+  /* écouteurs classiques */
+  if (mensEl) mensEl.addEventListener('input', controleMensualite);
+  if (capEl)  capEl.addEventListener('input', controleMensualite);
+
+  /* contrôle dès le chargement si valeurs déjà présentes */
+  controleMensualite();
+});
+</script>
+
 </body>
 </html>
