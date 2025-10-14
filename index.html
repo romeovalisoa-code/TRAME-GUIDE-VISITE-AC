@@ -160,6 +160,7 @@
         <label>Âge : <input type="number" min="0"></label>
         <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option><option>Divorcé(e)</option></select></label>
         <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
+		<label>N°téléphone : <input type="text" id="num_client" min="0"></label>
         <label>Adresse domicile : <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea></label>
         <label>Adresse activité : <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea></label>
       </div>
@@ -171,6 +172,7 @@
         <label>Âge : <input type="number" min="0"></label>
         <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option><option>Divorcé(e)</option></select></label>
         <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
+		<label>N°téléphone : <input type="text" id="num_caution" min="0"></label>
         <label>Adresse domicile : <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea></label>
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
           <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
@@ -571,6 +573,197 @@
     </table>
   </div>
 </fieldset>
+
+<fieldset style="width:100%; margin-top:20px; padding:10px; box-sizing:border-box;">
+    <legend id="legend_references">
+      <i class="fas fa-user-friends"></i> REFERENCES MORALES ET PROFESSIONNELLES
+      <button type="button" id="btnToggleReferences" onclick="toggleReferences()" style="margin-left:10px;">Masquer</button>
+    </legend>
+
+    <div id="references-wrapper">
+      <table id="table_references" style="width:100%; border-collapse:collapse; text-align:center;">
+        <thead style="background-color:#2E8B57; color:black;">
+          <tr>
+            <th style="width:3%;">N°</th>
+            <th style="width:25%;">Nom et prénoms</th>
+            <th style="width:15%;">Relation avec le demandeur</th>
+            <th style="width:15%;">Contact</th>
+            <th style="width:20%;">Adresse</th>
+            <th style="width:5%;">🗑</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 4 lignes par défaut -->
+          <tr>
+            <td>1</td>
+            <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+            <td>
+              <select name="relation_reference[]" style="width:95%;" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Ami">Ami(e)</option>
+                <option value="Famille">Famille</option>
+                <option value="Époux(se)">Époux(se)</option>
+                <option value="Frère">Frère</option>
+                <option value="Sœur">Sœur</option>
+                <option value="Parent">Parent</option>
+                <option value="Fils">Fils</option>
+                <option value="Fille">Fille</option>
+                <option value="Autres">Autres</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" name="contact_reference[]" required
+                     placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+                     oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+            </td>
+            <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+            <td>
+              <select name="relation_reference[]" style="width:95%;" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Ami">Ami(e)</option>
+                <option value="Famille">Famille</option>
+                <option value="Époux(se)">Époux(se)</option>
+                <option value="Frère">Frère</option>
+                <option value="Sœur">Sœur</option>
+                <option value="Parent">Parent</option>
+                <option value="Fils">Fils</option>
+                <option value="Fille">Fille</option>
+                <option value="Autres">Autres</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" name="contact_reference[]" required
+                     placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+                     oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+            </td>
+            <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+            <td>
+              <select name="relation_reference[]" style="width:95%;" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Ami">Ami(e)</option>
+                <option value="Famille">Famille</option>
+                <option value="Époux(se)">Époux(se)</option>
+                <option value="Frère">Frère</option>
+                <option value="Sœur">Sœur</option>
+                <option value="Parent">Parent</option>
+                <option value="Fils">Fils</option>
+                <option value="Fille">Fille</option>
+                <option value="Autres">Autres</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" name="contact_reference[]" required
+                     placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+                     oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+            </td>
+            <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+            <td>
+              <select name="relation_reference[]" style="width:95%;" required>
+                <option value="">-- Sélectionner --</option>
+                <option value="Ami">Ami(e)</option>
+                <option value="Famille">Famille</option>
+                <option value="Époux(se)">Époux(se)</option>
+                <option value="Frère">Frère</option>
+                <option value="Sœur">Sœur</option>
+                <option value="Parent">Parent</option>
+                <option value="Fils">Fils</option>
+                <option value="Fille">Fille</option>
+                <option value="Autres">Autres</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" name="contact_reference[]" required
+                     placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+                     oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+            </td>
+            <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:10px;">
+        <button type="button" onclick="ajouterLigneReference()" style="background-color:#2E8B57; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">
+          ➕ Ajouter une ligne
+        </button>
+      </div>
+    </div>
+  </fieldset>
+  
+  <fieldset style="width:100%; margin-top:20px; padding:10px; box-sizing:border-box;">
+  <legend id="legend_risques">
+    <i class="fas fa-exclamation-triangle"></i> RISQUES
+    <button type="button" id="btnToggleRisques" onclick="toggleRisques()" style="margin-left:10px;">Masquer</button>
+  </legend>
+
+  <div id="risques-wrapper">
+    <table id="table_risques" style="width:100%; border-collapse:collapse; text-align:center;">
+      <thead style="background-color:#2E8B57; color:black;">
+        <tr>
+          <th style="width:40%;">Risques identifiés</th>
+          <th style="width:20%;">Niveau du Risque</th>
+          <th style="width:35%;">Mitigation des risques</th>
+          <th style="width:5%;">🗑</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Ligne par défaut -->
+        <tr>
+          <td><textarea name="risque[]" style="width:95%; resize:none; overflow:hidden;" required oninput="autoResize(this)"></textarea></td>
+          <td>
+            <select name="niveau_risque[]" style="width:95%;" required>
+              <option value="">-- Sélectionner --</option>
+              <option value="Faible">Faible</option>
+              <option value="Moyen">Moyen</option>
+              <option value="Élevé">Élevé</option>
+            </select>
+          </td>
+          <td><textarea name="mitigation[]" style="width:95%; resize:none; overflow:hidden;" required oninput="autoResize(this)"></textarea></td>
+          <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:10px;">
+      <button type="button" onclick="ajouterLigneRisque()" 
+              style="background-color:#2E8B57; color:white; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">
+        ➕ Ajouter ligne risque
+      </button>
+    </div>
+  </div>
+</fieldset>
+
+<fieldset style="width:100%; margin-top:20px; padding:10px; box-sizing:border-box;">
+  <legend id="legend_points">
+    <i class="fas fa-map-marker-alt"></i> POINTS D'ATTACHE : Où est ce qu'on peut trouver le client s'il disparait? Quel est notre moyen de prise?
+    <button type="button" id="btnTogglePoints" onclick="togglePoints()" style="margin-left:10px;">Masquer</button>
+  </legend>
+
+  <div id="point-wrapper">
+    <textarea id="pointsTextarea" 
+              style="width:100%; resize:none; overflow:hidden; padding:5px; box-sizing:border-box;" 
+              placeholder="Saisir les points d'attache ici..." 
+              oninput="autoResize(this)">
+    </textarea>
+  </div>
+</fieldset>
+
+  
 <button type="button" class="submit-btn" onclick="genererSynthesePDF()"><i class="fas fa-file-pdf"></i> Synthèse de crédit en PDF</button>
 <button type="button" class="submit-btn" onclick="copierEtSauvegarder()"><i class="fas fa-copy"></i> Copier et Sauvegarder</button>
 </form>
@@ -1673,98 +1866,252 @@ function genererSynthesePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
 
-  const marg = 50;
-  let y = 80;
+  const marg = 40;
+  let y = 60;
+  const pageHeight = doc.internal.pageSize.height;
 
-  /* ---------- helpers ---------- */
   const val = id => {
-  const el = document.getElementById(id);
-  if (!el) return '';
-  let v = el.value || el.textContent || '';
-  v = v.toString()
-       .replace(/\//g, '')        // enlève tous les "/"
-       .replace(/MGA/g, 'Ar')     // remplace MGA par Ar (si tu veux)
-       .replace(/\s/g, '')        // retire les espaces existants
-       .replace(/\B(?=(\d{3})+(?!\d))/g, ' '); // remet un espace tous les 3 chiffres
-  return v.trim();
-};
-  const nb = id => {
-    const v = val(id).replace(/[^\d]/g, '');
-    return v ? parseInt(v, 10) : 0;
+    const el = document.getElementById(id);
+    if (!el) return '';
+    let v = el.value || el.textContent || '';
+
+    // Pour ID client et ID caution : enlever tout sauf lettres et chiffres
+    if (id === 'id_client' || id === 'id_caution') {
+      return v.replace(/[^a-zA-Z0-9]/g, '');
+    }
+
+    // Pour les autres champs : enlever MGA, Ar, /, espaces multiples
+    v = v.toString().replace(/MGA/g, '').replace(/Ar/g, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
+
+    // Si c'est un nombre (après nettoyage), formater en milliers et ajouter ' Ar'
+    const numOnly = v.replace(/[^\d]/g, '');
+    if (numOnly && !isNaN(numOnly)) {
+      const formatted = parseInt(numOnly, 10).toLocaleString('fr-FR');
+      return formatted + ' Ar';
+    }
+
+    return v;
   };
 
-  /* ---------- en-tête ---------- */
-  doc.setFontSize(18);
-  doc.text('Synthèse de demande de crédit', marg, y);
-  y += 30;
+  const checkPage = (space = 40) => {
+    if (y + space > pageHeight - 50) {
+      doc.addPage();
+      y = 50;
+    }
+  };
 
-  /* ---------- bloc 1 : infos demande ---------- */
-  doc.setFontSize(12);
-  doc.text(`Demandeur : ${val('nom_prenom_client')}`, marg, y);
-  y += 20;
-  doc.text(`Montant demandé : ${val('montant_demande')}`, marg, y);
-  y += 20;
-  doc.text(`Durée (mois) : ${document.querySelector('input[type="number"][min]')?.value || ''}`, marg, y);
-  y += 20;
-  doc.text(`Capacité de paiement : ${val('capacite_paiement')}`, marg, y);
-  y += 30;
+  const addSection = (title, size = 12) => {
+    checkPage(30);
+    doc.setFontSize(size);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, marg, y);
+    y += size === 14 ? 20 : 18;
+    doc.setFont('helvetica', 'normal');
+  };
 
-  /* ---------- bloc 2 : activités ---------- */
-  const activites = [];
-  document.querySelectorAll('#tbody_activite tr').forEach(tr => {
+  const addText = (text, indent = 0) => {
+    checkPage();
+    doc.setFontSize(10);
+    // Nettoyer le texte avant affichage : enlever espaces multiples et mettre '/' serré
+    const cleanText = text.replace(/\s+/g, ' ').replace(/\s\/\s/g, '/').trim();
+    doc.text(cleanText, marg + indent, y);
+    y += 15;
+  };
+
+  // TITRE PRINCIPAL
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const idClient = (val('id_client') || '').replace(/\s/g, '');
+  const nomClient = (val('nom_prenom_client') || '').replace(/\s/g, '');
+  doc.text(`SYNTHESE DE ${idClient} - ${nomClient}`, marg, y);
+  y += 25;
+  doc.setFont('helvetica', 'normal');
+
+  // Informations principales (attention aux sélecteurs génériques)
+  const agenceEl = document.querySelector('select');
+  const agence = agenceEl ? agenceEl.value : '';
+  addText(`Agence : ${agence}`);
+  const acTraitantInput = document.querySelector('label:nth-child(2) input');
+  const acTraitant = acTraitantInput ? acTraitantInput.value : '';
+  addText(`AC traitant : ${acTraitant}`);
+  addText(`Date de visite : ${formatDateFR(val('date_visite'))}     Heure : ${val('heure_visite')}`);
+  y += 10;
+
+  // 1. INFORMATIONS SUR LA DEMANDE
+  addSection('1. INFORMATIONS SUR LA DEMANDE DE CREDIT', 14);
+  addText(`Montant de la demande : ${val('montant_demande')}`);
+  const dureeInput = document.querySelectorAll('input[type="number"]')[0];
+  addText(`Durée : ${dureeInput ? dureeInput.value : ''} mois`);
+  addText(`Capacité de paiement : ${val('capacite_paiement')}`);
+  const dateRemb = document.querySelectorAll('input[type="date"]')[1];
+  addText(`Date de remboursement demandée : ${formatDateFR(dateRemb ? dateRemb.value : '')}`);
+  addText('Objet du crédit :');
+  document.querySelectorAll('#tbody_objet tr').forEach(tr => {
+    const lib = tr.querySelector('input[name="libelle[]"]')?.value || '';
+    const mt = tr.querySelector('input[name="montant_objet[]"]')?.value || '';
+    if (lib) addText(`  - ${lib} : ${mt}`, 10);
+  });
+
+  // 2. INFOS GENERALES
+  addSection('2. INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION', 14);
+  addText('DEMANDEUR :');
+  addText(`  ID client : ${val('id_client')}`, 5);
+  addText(`  Nom : ${val('nom_prenom_client')}`, 5);
+  addText(`  État civil : ${document.getElementById('etat_civil_client')?.value || ''}`, 5);
+  addText(`  Personnes à charge : ${val('nb_client')}`, 5);
+  addText(`  Téléphone : ${formatPhone(val('num_client'))}`, 5);
+
+  addText('CAUTION :');
+  addText(`  ID : ${val('id_caution')}`, 5);
+  addText(`  Nom : ${val('nom_prenom_caution')}`, 5);
+  addText(`  Lien : ${document.getElementById('lien_demandeur')?.value || ''}`, 5);
+  addText(`  Téléphone : ${formatPhone(val('num_caution'))}`, 5);
+  addText(`  Revenus mensuels : ${val('revenus_mensuels_caution')}`, 5);
+
+  // 3. HISTORIQUE
+  addSection('3. HISTORIQUE DE L\'ACTIVITE ET ENGAGEMENT', 14);
+  document.querySelectorAll('#tbody_activite tr').forEach((tr, i) => {
     const nom = tr.querySelector('select[name="nom_activite[]"]')?.value || '';
     const mrg = tr.querySelector('input[name="marge_activite[]"]')?.value || '';
     const anc = tr.querySelector('input[name="anciennete_activite[]"]')?.value || '';
-    if (nom) activites.push([nom, mrg, anc + ' an(s)']);
+    const sec = tr.querySelector('select[name="secteur_activite[]"]')?.value || '';
+    if (nom) addText(`  Activité ${i+1} : ${nom} | Marge: ${mrg} | Ancienneté: ${anc} ans | Secteur: ${sec}`, 5);
   });
-  if (activites.length) {
-    doc.text('Activités', marg, y);
-    y += 10;
-    doc.autoTable({
-      startY: y,
-      head: [['Activité', 'Marge', 'Ancienneté']],
-      body: activites,
-      theme: 'grid',
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [66, 139, 202] }
+
+  // 4. INFOS SALARIALES
+  addSection('4. INFORMATIONS SALARIALES & FINANCIERES', 14);
+  addText(`Salaire : ${val('Salaire')}`);
+  addText(`Solde mobile money : ${val('solde_mobile')}`);
+  addText(`Solde épargne/banque : ${val('solde_epargne')}`);
+  addText(`Caisse : ${val('Caisse')}`);
+  addText(`Échéances banque/IMF : ${val('echeances')}`);
+  addText(`Encours de crédit : ${val('encours_credit')}`);
+
+  checkPage(100);
+
+  // 5. FONCTIONNEMENT
+  addSection('5. FONCTIONNEMENT DE L\'ACTIVITE', 14);
+  addText(`CA Ligne 1 : ${val('ca_ligne1')}`);
+  addText(`CAMV Final Ligne 1 : ${val('camv_final')}`);
+  addText(`CA Ligne 2 : ${val('ca_ligne2')}`);
+  addText(`CAMV Final Ligne 2 : ${val('camv_final2')}`);
+
+  // 6. MMP
+  addSection('6. MARGE MOYENNE PONDEREE (MMP)', 14);
+  const mmpRaw = val('mmp') || '';
+  const mmpPct = mmpRaw.replace(/Ar/g, '%').trim();
+  addText(`MMP : ${mmpPct}`);
+
+  // 7. GARANTIES
+  addSection('7. ACTIFS IMMOBILISES/GARANTIES', 14);
+  addText(`Total garanties : ${val('total_garanties')}`);
+  addText(`Total actifs : ${val('total_actifs')}`);
+
+  // 8. DEPENSES
+  addSection('8. DEPENSES FAMILIALES', 14);
+  addText(`Total dépenses familiales : ${val('df-total')}`);
+
+  // 9. BILAN
+  addSection('9. BILAN', 14);
+  addText(`Total Actif : ${val('bilan_total_actif')}`);
+  addText(`Total Passif : ${val('bilan_total_passif')}`);
+
+  // 10. CASH FLOW
+  addSection('10. CASH FLOW', 14);
+  addText(`CA mensuel : ${val('CA_mensuel')}`);
+  addText(`CAMV mensuel : ${val('CAMV_mensuel')}`);
+  addText(`Cash flow brut : ${val('Cash_flow_brut')}`);
+  addText(`Cash flow net : ${val('Cash_flow_net')}`);
+  addText(`Cash flow final : ${val('Cash_flow')}`);
+  addText(`DSCR (50%) : ${val('DSCR') || val('dscr')}`);
+
+  checkPage(100);
+
+  // 11. RATIOS
+  addSection('11. RATIOS', 14);
+  const dscrVal = (val('DSCR') || val('dscr') || '').toString().replace(/Ar|\s/g, '');
+  addText(`DSCR : ${dscrVal}`);
+  addText(`Couverture garanties : ${(val('couverture_garanties') || '').replace(/Ar|\s/g, '')}`);
+  addText(`Ratio endettement : ${val('ratio_endettement')}`);
+  addText(`Ratio liquidité : ${val('ratio_liquidite')}`);
+  addText(`Ratio solvabilité : ${val('ratio_solvabilite')}`);
+
+  // 12. PROPOSITION
+  addSection('12. PROPOSITION AC/DECISION COMITE', 14);
+  const montantAC = document.querySelector('[name="montant_ac"]')?.value || '';
+  const dureeAC = document.querySelector('[name="duree_ac"]')?.value || '';
+  const montantCom = document.querySelector('[name="montant_comite"]')?.value || '';
+  const dureeCom = document.querySelector('[name="duree_comite"]')?.value || '';
+
+  // Nettoyer et formater les montants
+  const cleanMontant = (m) => {
+    if (!m) return '';
+    const num = m.replace(/[^\d]/g, '');
+    return num ? parseInt(num, 10).toLocaleString('fr-FR') + ' Ar' : m;
+  };
+
+  addText(`Proposition AC : ${cleanMontant(montantAC)} / ${dureeAC} mois`);
+  addText(`Mensualite AC : ${val('mensualite_ac')}`);
+  addText(`Decision comite : ${cleanMontant(montantCom)} / ${dureeCom} mois`);
+  addText(`Mensualite comite : ${val('mensualite_comite')}`);
+
+  // 13. REFERENCES
+  addSection('13. REFERENCES MORALES ET PROFESSIONNELLES', 14);
+  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
+    const nom = tr.querySelector('input[name="nom_reference[]"]')?.value || '';
+    const rel = tr.querySelector('select[name="relation_reference[]"]')?.value || '';
+    const contact = tr.querySelector('input[name="contact_reference[]"]')?.value || '';
+    const adresse = tr.querySelector('input[name="adresse_reference[]"]')?.value || '';
+    const contactInfo = contact || adresse || '';
+    if (nom) addText(`  ${i+1}. ${nom} - ${rel} - ${contactInfo}`, 5);
+  });
+
+  // 14. RISQUES
+  addSection('14. RISQUES', 14);
+  document.querySelectorAll('#table_risques tbody tr').forEach((tr, i) => {
+    const risque = tr.querySelector('textarea[name="risque[]"]')?.value || '';
+    const niveau = tr.querySelector('select[name="niveau_risque[]"]')?.value || '';
+    const mitigation = tr.querySelector('textarea[name="mitigation[]"]')?.value || '';
+    if (risque) {
+      addText(`  Risque ${i+1} [${niveau}] : ${risque}`, 5);
+      addText(`  Mitigation : ${mitigation}`, 10);
+    }
+  });
+
+  // 15. POINTS D'ATTACHE
+  addSection('15. POINTS D\'ATTACHE', 14);
+  const points = document.getElementById('pointsTextarea')?.value || '';
+  if (points) {
+    const lignes = points.split('\n');
+    lignes.forEach(ligne => {
+      if (ligne.trim()) addText(`  ${ligne.trim()}`, 5);
     });
-    y = doc.lastAutoTable.finalY + 25;
   }
 
-  /* ---------- bloc 3 : ratios ---------- */
-  const ratios = [
-    ['DSCR', val('dscr')],
-    ['Couverture garanties', val('couverture_garanties')],
-    ['Ratio endettement', val('ratio_endettement')],
-    ['Ratio liquidité', val('ratio_liquidite')]
-  ];
-  doc.text('Ratios', marg, y);
-  y += 10;
-  doc.autoTable({
-    startY: y,
-    head: [['Ratio', 'Valeur']],
-    body: ratios,
-    theme: 'grid',
-    styles: { fontSize: 10 },
-    headStyles: { fillColor: [66, 139, 202] }
-  });
-  y = doc.lastAutoTable.finalY + 25;
-
-  /* ---------- bloc 4 : décision ---------- */
-  const propAC   = val('mensualite_ac');
-  const propCom  = val('mensualite_comite');
-  doc.text('Décision', marg, y);
-  y += 20;
-  doc.text(`Mensualité proposée AC : ${propAC}`, marg, y);
-  y += 18;
-  doc.text(`Mensualité comité : ${propCom}`, marg, y);
-
-  /* ---------- sauvegarde ---------- */
-  const nomF = `Synthese_${val('nom_prenom_client').replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+  const safeFileNamePart = (val('nom_prenom_client') || '').replace(/[^a-z0-9]/gi, '_');
+  const nomF = `Synthese_${safeFileNamePart}_${new Date().toISOString().slice(0, 10)}.pdf`;
   doc.save(nomF);
 }
 
+function formatDateFR(dateStr) {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length < 3) return dateStr;
+  const [yyyy, mm, dd] = parts;
+  return `${dd}-${mm}-${yyyy}`;
+}
+
+function formatPhone(num) {
+  if (!num) return '';
+  const digits = (num + '').replace(/\D/g, '');
+  // si 10 chiffres (format attendu), formater
+  if (digits.length === 10) {
+    return `${digits.slice(0,3)} ${digits.slice(3,5)} ${digits.slice(5,8)} ${digits.slice(8)}`;
+  }
+  return num;
+}
 </script>
+
 <script>
 /* -------- contrôle mensualité / capacité -------- */
 function rawNumber(selector) {
@@ -1815,6 +2162,268 @@ window.addEventListener('DOMContentLoaded', () => {
   controleMensualite();
 });
 </script>
+<script>
+function toggleReferences() {
+  const wrapper = document.getElementById("references-wrapper");
+  const btn = document.getElementById("btnToggleReferences");
+  if (wrapper.style.display === "none" || wrapper.style.display === "") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function ajouterLigneReference() {
+  const tbody = document.querySelector('#table_references tbody');
+  const ligneCount = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td>${ligneCount}</td>
+    <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+    <td>
+      <select name="relation_reference[]" style="width:95%;" required>
+        <option value="">-- Sélectionner --</option>
+        <option value="Ami">Ami(e)</option>
+        <option value="Famille">Famille</option>
+        <option value="Époux(se)">Époux(se)</option>
+        <option value="Frère">Frère</option>
+        <option value="Sœur">Sœur</option>
+        <option value="Parent">Parent</option>
+        <option value="Fils">Fils</option>
+        <option value="Fille">Fille</option>
+        <option value="Autres">Autres</option>
+      </select>
+    </td>
+    <td>
+      <input type="text" name="contact_reference[]" required
+             placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+             oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+    </td>
+    <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+    <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+  `;
+  tbody.appendChild(tr);
+  renumeroterReferences();
+}
+
+function supprimerLigne(btn) {
+  const tr = btn.closest('tr');
+  tr.remove();
+  renumeroterReferences();
+}
+
+function renumeroterReferences() {
+  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
+    tr.querySelector('td:first-child').textContent = i + 1;
+  });
+}
+
+// Format de contact : xxx xx xxx xx
+function maskContact(input) {
+  let digits = input.value.replace(/\D/g, ''); // supprimer tout sauf chiffres
+  
+  // Limiter à 10 chiffres maximum
+  digits = digits.substring(0, 10);
+  
+  // Formater : xxx xx xxx xx
+  let formatted = '';
+  if (digits.length <= 3) {
+    formatted = digits;
+  } else if (digits.length <= 5) {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3);
+  } else if (digits.length <= 8) {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5);
+  } else {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5, 8) + ' ' + digits.substring(8);
+  }
+  
+  input.value = formatted;
+}
+
+function onlyDigits(event) {
+  if (event.ctrlKey || event.metaKey || event.key === 'Backspace' || event.key === 'Tab' || event.key.startsWith('Arrow')) return;
+  if (!/[0-9]/.test(event.key)) event.preventDefault();
+}
+
+// Validation avant soumission
+document.getElementById('mainForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const rows = document.querySelectorAll('#table_references tbody tr');
+  const noms = document.querySelectorAll('input[name="nom_reference[]"]');
+  const relations = document.querySelectorAll('select[name="relation_reference[]"]');
+  const contacts = document.querySelectorAll('input[name="contact_reference[]"]');
+  const adresses = document.querySelectorAll('input[name="adresse_reference[]"]');
+  
+  let erreurs = [];
+  
+  // Retirer les styles d'erreur précédents
+  noms.forEach(n => n.classList.remove('error'));
+  relations.forEach(r => r.classList.remove('error'));
+  contacts.forEach(c => c.classList.remove('error'));
+  adresses.forEach(a => a.classList.remove('error'));
+  
+  // Vérifier qu'il y a au moins 4 lignes
+  if (rows.length < 4) {
+    alert('⚠️ Vous devez avoir au moins 4 références.');
+    return false;
+  }
+  
+  // Vérifier chaque ligne
+  rows.forEach((row, index) => {
+    const nom = noms[index];
+    const relation = relations[index];
+    const contact = contacts[index];
+    const adresse = adresses[index];
+    
+    // Vérifier nom
+    if (!nom.value.trim()) {
+      nom.classList.add('error');
+      erreurs.push(`Ligne ${index + 1}: Le nom et prénoms sont obligatoires.`);
+    }
+    
+    // Vérifier relation
+    if (!relation.value) {
+      relation.classList.add('error');
+      erreurs.push(`Ligne ${index + 1}: La relation est obligatoire.`);
+    }
+    
+    // Vérifier contact
+    if (!contact.value.trim()) {
+      contact.classList.add('error');
+      erreurs.push(`Ligne ${index + 1}: Le contact est obligatoire.`);
+    } else {
+      const digitsLength = contact.value.replace(/\D/g, '').length;
+      if (digitsLength !== 10) {
+        contact.classList.add('error');
+        erreurs.push(`Ligne ${index + 1}: Le contact doit contenir exactement 10 chiffres (format: xxx xx xxx xx).`);
+      }
+    }
+    
+    // Vérifier adresse
+    if (!adresse.value.trim()) {
+      adresse.classList.add('error');
+      erreurs.push(`Ligne ${index + 1}: L'adresse est obligatoire.`);
+    }
+  });
+  
+  // Afficher les erreurs
+  if (erreurs.length > 0) {
+    alert('⚠️ Veuillez corriger les erreurs suivantes:\n\n' + erreurs.join('\n'));
+    return false;
+  }
+  
+  // Si tout est valide
+  alert('✅ Formulaire valide ! Toutes les références sont complètes.');
+  // Ici vous pouvez ajouter le code pour soumettre réellement le formulaire
+  // this.submit();
+});
+</script>
+<script>
+function autoResize(textarea) {
+  textarea.style.height = 'auto'; // reset
+  textarea.style.height = (textarea.scrollHeight) + 'px';
+}
+
+function ajouterLigneRisque() {
+  const table = document.getElementById('table_risques').getElementsByTagName('tbody')[0];
+  const newRow = table.insertRow();
+
+  // Risques identifiés
+  const cell1 = newRow.insertCell(0);
+  const textareaRisque = document.createElement('textarea');
+  textareaRisque.name = 'risque[]';
+  textareaRisque.style.width = '95%';
+  textareaRisque.style.resize = 'none';
+  textareaRisque.style.overflow = 'hidden';
+  textareaRisque.required = true;
+  textareaRisque.addEventListener('input', () => autoResize(textareaRisque));
+  cell1.appendChild(textareaRisque);
+  autoResize(textareaRisque); // ajuste hauteur dès l'ajout
+
+  // Niveau du Risque
+  const cell2 = newRow.insertCell(1);
+  const selectNiveau = document.createElement('select');
+  selectNiveau.name = 'niveau_risque[]';
+  selectNiveau.style.width = '95%';
+  selectNiveau.required = true;
+  ["", "Faible", "Moyen", "Élevé"].forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt;
+    option.text = opt === "" ? "-- Sélectionner --" : opt;
+    selectNiveau.appendChild(option);
+  });
+  cell2.appendChild(selectNiveau);
+
+  // Mitigation
+  const cell3 = newRow.insertCell(2);
+  const textareaMitigation = document.createElement('textarea');
+  textareaMitigation.name = 'mitigation[]';
+  textareaMitigation.style.width = '95%';
+  textareaMitigation.style.resize = 'none';
+  textareaMitigation.style.overflow = 'hidden';
+  textareaMitigation.required = true;
+  textareaMitigation.addEventListener('input', () => autoResize(textareaMitigation));
+  cell3.appendChild(textareaMitigation);
+  autoResize(textareaMitigation); // ajuste hauteur dès l'ajout
+
+  // Bouton supprimer
+  const cell4 = newRow.insertCell(3);
+  const btnSuppr = document.createElement('button');
+  btnSuppr.type = 'button';
+  btnSuppr.textContent = '🗑';
+  btnSuppr.onclick = function() { supprimerLigne(this); };
+  cell4.appendChild(btnSuppr);
+}
+
+function supprimerLigne(btn) {
+  const row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+}
+
+function toggleRisques() {
+  const wrapper = document.getElementById('risques-wrapper');
+  const btn = document.getElementById('btnToggleRisques');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    btn.textContent = 'Masquer';
+  } else {
+    wrapper.style.display = 'none';
+    btn.textContent = 'Afficher';
+  }
+}
+</script>
+<script>
+// Fonction pour ajuster automatiquement la hauteur du textarea
+function autoResize(textarea) {
+  textarea.style.height = 'auto'; // reset
+  textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+// Fonction pour afficher/masquer le champ
+function togglePoints() {
+  const wrapper = document.getElementById('point-wrapper');
+  const btn = document.getElementById('btnTogglePoints');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    btn.textContent = 'Masquer';
+  } else {
+    wrapper.style.display = 'none';
+    btn.textContent = 'Afficher';
+  }
+}
+
+// Ajuster la hauteur initiale si le textarea a déjà du texte
+document.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('pointsTextarea');
+  autoResize(textarea);
+});
+</script>
+
 
 </body>
 </html>
+
