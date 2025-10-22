@@ -2,19 +2,21 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TRAME - GUIDE CREDIT < 2 500 000 MGA</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-  body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; }
-  h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; }
+  body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; margin: 0; }
+  h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; margin: 0; }
   form { max-width: 3000px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
   fieldset { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 12px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
   legend { font-weight: bold; color: #34495e; padding: 5px 10px; background: #ecf0f1; border-radius: 8px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
   label { display: block; margin-top: 10px; font-weight: bold; color: #2c3e50; }
-  input, select, textarea { width: 95%; padding: 8px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; }
+  input, select, textarea { width: 95%; padding: 8px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; box-sizing: border-box; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: #2980b9; box-shadow: 0 0 8px #3498db; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .inline-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; }
@@ -45,18 +47,11 @@
   #tableMMP tfoot td { font-weight: bold; }
   #tableMMP tfoot tr.total-row td { background-color: #696969; color: #fff; }
   #tableMMP tfoot tr.mmp-row td { background-color: #f39c12; color: #fff; }
-  .activite-section { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; display: none; }
-  .activite-section.active { display: block; }
-  .activite-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db; }
-  .activite-title { font-weight: bold; color: #2c3e50; font-size: 18px; }
   .activite-tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #3498db; }
   .activite-tab { padding: 10px 20px; background: #ecf0f1; border: 1px solid #ddd; border-bottom: none; border-radius: 5px 5px 0 0; cursor: pointer; margin-right: 5px; font-weight: bold; }
   .activite-tab.active { background: #3498db; color: white; }
   .activite-content { display: none; }
   .activite-content.active { display: block; }
-  .icon-label { display: flex; align-items: center; gap: 8px; }
-  .icon-label i { width: 20px; text-align: center; color: #2980b9; }
-  legend i { margin-right: 8px; color: #2c3e50; }
   input.result { background:#e3f2fd; font-weight:bold; text-align:right; border:none; width: 100%; padding: 3px; }
   .toggle-btn { cursor: pointer; border: none; background: none; font-size: 14px; margin-left: 10px; color: #007BFF; }
   .hidden { display: none; }
@@ -86,15 +81,16 @@
   .readonly-blue { background-color: #b3d9ff; border: 1px solid #7fbfff; color: #000; }
   .ratio-red { background-color: #ff0000 !important; color: white !important; }
   .ratio-green { background-color: #87CEEB !important; color: white !important; }
+  .error { border: 2px solid red !important; }
 </style>
 </head>
 <body>
 
 <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
-  <h1 style="margin: 0;">TRAME - GUIDE CREDIT < 2 500 000 MGA</h1>
+  <h1>TRAME - GUIDE CREDIT < 2 500 000 MGA</h1>
 </div>
 
-<form>
+<form id="mainForm">
 <fieldset>
   <legend><i class="fas fa-info-circle"></i> INFORMATIONS SUR LA DEMANDE DE CREDIT</legend>
   <div class="inline-2">
@@ -160,7 +156,7 @@
         <label>Âge : <input type="number" min="0"></label>
         <label>État civil : <select id="etat_civil_client"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option><option>Divorcé(e)</option></select></label>
         <label>Nb pers à charge : <input type="number" id="nb_client" min="0"></label>
-		<label>N°téléphone : <input type="text" id="num_client" min="0"></label>
+		<label>N°téléphone : <input type="text" id="num_client" placeholder="xxx xx xxx xx"></label>
         <label>Adresse domicile : <textarea id="adresse_domicile_client" placeholder="Adresse domicile (condition de logt)"></textarea></label>
         <label>Adresse activité : <textarea id="adresse_activite_client" placeholder="Adresse activité (condition de logt)"></textarea></label>
       </div>
@@ -172,7 +168,7 @@
         <label>Âge : <input type="number" min="0"></label>
         <label>État civil : <select id="etat_civil_caution"><option value="">--Sélectionner--</option><option>Marié(e)</option><option>Veuf(ve)</option><option>Célibataire</option><option>Concubin(e)</option><option>Divorcé(e)</option></select></label>
         <label>Nb pers à charge : <input type="number" id="nb_caution" min="0"></label>
-		<label>N°téléphone : <input type="text" id="num_caution" min="0"></label>
+		<label>N°téléphone : <input type="text" id="num_caution" placeholder="xxx xx xxx xx"></label>
         <label>Adresse domicile : <textarea id="adresse_domicile_caution" placeholder="Adresse domicile (condition de logt)"></textarea></label>
         <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
           <label for="revenus_mensuels_caution" style="width: 150px;">Revenus mensuels</label>
@@ -189,7 +185,7 @@
 
 <fieldset>
   <legend id="legend_hist_activite"><i class="fas fa-history"></i> HISTORIQUE DE L'ACTIVITE ET ENGAGEMENT
-    <button type="button" id="btn_toggle_activite" onclick="toggleActiviteHistory()"><i class="fas fa-eye"></i><span class="toggle-text">Masquer</span></button>
+    <button type="button" id="btn_toggle_activite" onclick="toggleActiviteHistory()"><i class="fas fa-eye-slash"></i> Masquer</button>
   </legend>
   <div id="hist_activite_content">
     <table id="table_activite">
@@ -217,7 +213,7 @@
 
 <fieldset>
   <legend id="legend_activite"><i class="fas fa-chart-bar"></i> FONCTIONNEMENT DE L'ACTIVITE
-    <button type="button" id="btn_toggle_fonctionnement" onclick="toggleFonctionnement()"><i class="fas fa-eye"></i><span class="toggle-text">Masquer</span></button>
+    <button type="button" id="btn_toggle_fonctionnement" onclick="toggleFonctionnement()"><i class="fas fa-eye-slash"></i> Masquer</button>
   </legend>
   <div id="activite-wrapper">
     <div class="activite-tabs" id="activite-tabs">
@@ -593,7 +589,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- 4 lignes par défaut -->
           <tr>
             <td>1</td>
             <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
@@ -617,7 +612,7 @@
                      oninput="maskContact(this)" onkeydown="onlyDigits(event)">
             </td>
             <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
-            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+            <td><button type="button" onclick="supprimerLigneRef(this)">🗑</button></td>
           </tr>
           <tr>
             <td>2</td>
@@ -642,7 +637,7 @@
                      oninput="maskContact(this)" onkeydown="onlyDigits(event)">
             </td>
             <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
-            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+            <td><button type="button" onclick="supprimerLigneRef(this)">🗑</button></td>
           </tr>
           <tr>
             <td>3</td>
@@ -667,7 +662,7 @@
                      oninput="maskContact(this)" onkeydown="onlyDigits(event)">
             </td>
             <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
-            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+            <td><button type="button" onclick="supprimerLigneRef(this)">🗑</button></td>
           </tr>
           <tr>
             <td>4</td>
@@ -692,7 +687,7 @@
                      oninput="maskContact(this)" onkeydown="onlyDigits(event)">
             </td>
             <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
-            <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+            <td><button type="button" onclick="supprimerLigneRef(this)">🗑</button></td>
           </tr>
         </tbody>
       </table>
@@ -722,7 +717,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Ligne par défaut -->
         <tr>
           <td><textarea name="risque[]" style="width:95%; resize:none; overflow:hidden;" required oninput="autoResize(this)"></textarea></td>
           <td>
@@ -734,7 +728,7 @@
             </select>
           </td>
           <td><textarea name="mitigation[]" style="width:95%; resize:none; overflow:hidden;" required oninput="autoResize(this)"></textarea></td>
-          <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
+          <td><button type="button" onclick="supprimerLigneRisque(this)">🗑</button></td>
         </tr>
       </tbody>
     </table>
@@ -768,7 +762,6 @@
 <button type="button" class="submit-btn" onclick="copierEtSauvegarder()"><i class="fas fa-copy"></i> Copier et Sauvegarder</button>
 </form>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const ACTIVITES_MARGES = {
   "Epicerie": "16%", "Epi-bar": "23%", "Boulangerie": "5%", "Pâtisserie": "25%", "Menuiserie": "30%",
@@ -973,7 +966,7 @@ function majCAMVSelonMMP() {
   const ca = parseNumberFromString(document.getElementById('ca_ligne1').value) || 0;
   const mmpElem = document.getElementById('mmp');
   let mmpStr = "0%";
-  if (mmpElem) { mmpStr = (mmpElem.value !== undefined ? mmpElem.value : mmpElem.textContent || "0%").trim(); }
+  if (mmpElem) { mmpStr = (mmpElem.textContent || "0%").trim(); }
   let mmp = parseFloat(String(mmpStr).replace(/\s|%/g, '')) / 100;
   if (isNaN(mmp)) mmp = 0;
   let camvMMP = 0;
@@ -1085,11 +1078,7 @@ function calculerMMP() {
   document.getElementById("totalVente").textContent = formatNombre(totalVente);
   document.getElementById("totalStock").textContent = formatNombre(totalStock);
   const mmp = totalAchat > 0 ? ((totalVente - totalAchat) / totalAchat * 100) : 0;
-  if (document.getElementById("mmp").tagName === "INPUT") {
-    document.getElementById("mmp").value = formatNombre(mmp) + " %";
-  } else {
-    document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
-  }
+  document.getElementById("mmp").textContent = formatNombre(mmp) + " %";
   majCAMVSelonMMP();
 }
 
@@ -1107,8 +1096,6 @@ function formatFinancialField(input) {
   let value = input.value.replace(/\D/g, '');
   const numValue = parseInt(value || 0);
   input.value = numValue.toLocaleString('fr-FR') + ' MGA';
-  const displayElement = document.getElementById(input.id + '_display');
-  if (displayElement) { displayElement.textContent = input.value; }
 }
 
 const tableBody = document.querySelector('#table_garanties tbody');
@@ -1373,19 +1360,18 @@ function toggleFonctionnement() {
   const wrapper = document.getElementById("activite-wrapper");
   const btn = document.getElementById("btn_toggle_fonctionnement");
   const icon = btn.querySelector("i");
-  const text = btn.querySelector(".toggle-text");
   if (wrapper.style.display === "none") {
     wrapper.style.display = "block";
     btn.setAttribute("aria-expanded", "true");
     icon.classList.remove("fa-eye");
     icon.classList.add("fa-eye-slash");
-    text.textContent = "Masquer";
+    btn.childNodes[1].textContent = " Masquer";
   } else {
     wrapper.style.display = "none";
     btn.setAttribute("aria-expanded", "false");
     icon.classList.remove("fa-eye-slash");
     icon.classList.add("fa-eye");
-    text.textContent = "Afficher";
+    btn.childNodes[1].textContent = " Afficher";
   }
 }
 
@@ -1393,23 +1379,18 @@ function toggleActiviteHistory() {
   const content = document.getElementById('hist_activite_content');
   const btn = document.getElementById('btn_toggle_activite');
   const icon = btn.querySelector('i');
-  const text = btn.querySelector('.toggle-text');
   if (content.classList.contains('collapsed')) {
     content.classList.remove('collapsed');
     btn.setAttribute('aria-expanded', 'true');
-    if (text) text.textContent = 'Masquer';
-    if (icon) {
-      icon.classList.remove('fa-eye');
-      icon.classList.add('fa-eye-slash');
-    }
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+    btn.childNodes[1].textContent = ' Masquer';
   } else {
     content.classList.add('collapsed');
     btn.setAttribute('aria-expanded', 'false');
-    if (text) text.textContent = 'Afficher';
-    if (icon) {
-      icon.classList.remove('fa-eye-slash');
-      icon.classList.add('fa-eye');
-    }
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+    btn.childNodes[1].textContent = ' Afficher';
   }
 }
 
@@ -1562,7 +1543,7 @@ function majMensualites() {
   let mensu_comite = calculMensualite(montant_comite, duree_comite);
   document.getElementById("mensualite_ac").value = mensu_ac ? mensu_ac.toLocaleString("fr-FR", {minimumFractionDigits:0, maximumFractionDigits:0}) + " MGA" : "";
   document.getElementById("mensualite_comite").value = mensu_comite ? mensu_comite.toLocaleString("fr-FR", {minimumFractionDigits:0, maximumFractionDigits:0}) + " MGA" : "";
-  controleMensualite();   // ✅ vérif immédiate
+  controleMensualite();
   syncMensualite();
   calculerCouvertureGaranties();
   calculerRatios();
@@ -1611,7 +1592,7 @@ function calculerRatios() {
     : 0;
   const ratioStockEl = document.getElementById('ratio_stock');
   if (ratioStockEl) {
-    ratioStockEl.value = ratio_stock.toFixed(2);
+    ratioStockEl.value = ratio_stock.toFixed(2).replace('.', ',');
   }
 
   const ratio_solvabilite = (bilan_caisse + bilan_creances + bilan_stock + montant_comite) !== 0 
@@ -1619,7 +1600,7 @@ function calculerRatios() {
     : 0;
   const ratioSolvEl = document.getElementById('ratio_solvabilite');
   if (ratioSolvEl) {
-    ratioSolvEl.value = ratio_solvabilite.toFixed(2);
+    ratioSolvEl.value = ratio_solvabilite.toFixed(2).replace('.', ',');
     if (ratio_solvabilite < 1) {
       ratioSolvEl.classList.add('ratio-red');
       ratioSolvEl.classList.remove('ratio-green');
@@ -1634,7 +1615,7 @@ function calculerRatios() {
     : 0;
   const ratioEndEl = document.getElementById('ratio_endettement');
   if (ratioEndEl) {
-    ratioEndEl.value = ratio_endettement.toFixed(2);
+    ratioEndEl.value = ratio_endettement.toFixed(2).replace('.', ',');
     if (ratio_endettement > 1) {
       ratioEndEl.classList.add('ratio-red');
       ratioEndEl.classList.remove('ratio-green');
@@ -1647,7 +1628,7 @@ function calculerRatios() {
   const dscr = cash_flow !== 0 ? (mensualite_comite / cash_flow) * 100 : 0;
   const dscrEl = document.getElementById('dscr');
   if (dscrEl) {
-    dscrEl.value = dscr.toFixed(2) + " %";
+    dscrEl.value = dscr.toFixed(2).replace('.', ',') + " %";
     if (dscr > 50) {
       dscrEl.classList.add('ratio-red');
       dscrEl.classList.remove('ratio-green');
@@ -1662,7 +1643,7 @@ function calculerRatios() {
     : 0;
   const ratioLiqEl = document.getElementById('ratio_liquidite');
   if (ratioLiqEl) {
-    ratioLiqEl.value = ratio_liquidite.toFixed(2);
+    ratioLiqEl.value = ratio_liquidite.toFixed(2).replace('.', ',');
     if (ratio_liquidite < 1.5) {
       ratioLiqEl.classList.add('ratio-red');
       ratioLiqEl.classList.remove('ratio-green');
@@ -1685,53 +1666,576 @@ function exportToExcel() {
   XLSX.writeFile(workbook, "garanties.xlsx");
 }
 
+function rawNumber(selector) {
+  const el = typeof selector === 'string' ? document.getElementById(selector) : selector;
+  if (!el) return 0;
+  return parseInt((el.value || el.textContent || '').replace(/\D/g, ''), 10) || 0;
+}
+
+function controleMensualite() {
+  const mensEl = document.getElementById('mensualite_comite');
+  const capEl  = document.getElementById('capacite_paiement');
+  if (!mensEl || !capEl) return;
+
+  const mens = rawNumber(mensEl);
+  const cap  = rawNumber(capEl);
+
+  [mensEl, capEl].forEach(el => {
+    el.style.backgroundColor = '';
+    el.style.color = '';
+  });
+
+  if (mens > cap && cap > 0) {
+    mensEl.style.backgroundColor = 'red';
+    mensEl.style.color = 'white';
+    capEl.style.backgroundColor  = 'red';
+    capEl.style.color  = 'white';
+    if (!window.alreadyShown) {
+      alert('⚠️ La mensualité comité dépasse la capacité de paiement !');
+      window.alreadyShown = true;
+      setTimeout(() => window.alreadyShown = false, 2000);
+    }
+  }
+}
+
+function toggleReferences() {
+  const wrapper = document.getElementById("references-wrapper");
+  const btn = document.getElementById("btnToggleReferences");
+  if (wrapper.style.display === "none" || wrapper.style.display === "") {
+    wrapper.style.display = "block";
+    btn.textContent = "Masquer";
+  } else {
+    wrapper.style.display = "none";
+    btn.textContent = "Afficher";
+  }
+}
+
+function ajouterLigneReference() {
+  const tbody = document.querySelector('#table_references tbody');
+  const ligneCount = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td>${ligneCount}</td>
+    <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
+    <td>
+      <select name="relation_reference[]" style="width:95%;" required>
+        <option value="">-- Sélectionner --</option>
+        <option value="Ami">Ami(e)</option>
+        <option value="Famille">Famille</option>
+        <option value="Époux(se)">Époux(se)</option>
+        <option value="Frère">Frère</option>
+        <option value="Sœur">Sœur</option>
+        <option value="Parent">Parent</option>
+        <option value="Fils">Fils</option>
+        <option value="Fille">Fille</option>
+        <option value="Autres">Autres</option>
+      </select>
+    </td>
+    <td>
+      <input type="text" name="contact_reference[]" required
+             placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
+             oninput="maskContact(this)" onkeydown="onlyDigits(event)">
+    </td>
+    <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
+    <td><button type="button" onclick="supprimerLigneRef(this)">🗑</button></td>
+  `;
+  tbody.appendChild(tr);
+  renumeroterReferences();
+}
+
+function supprimerLigneRef(btn) {
+  const tr = btn.closest('tr');
+  tr.remove();
+  renumeroterReferences();
+}
+
+function renumeroterReferences() {
+  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
+    tr.querySelector('td:first-child').textContent = i + 1;
+  });
+}
+
+function maskContact(input) {
+  let digits = input.value.replace(/\D/g, '');
+  digits = digits.substring(0, 10);
+  let formatted = '';
+  if (digits.length <= 3) {
+    formatted = digits;
+  } else if (digits.length <= 5) {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3);
+  } else if (digits.length <= 8) {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5);
+  } else {
+    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5, 8) + ' ' + digits.substring(8);
+  }
+  input.value = formatted;
+}
+
+function onlyDigits(event) {
+  if (event.ctrlKey || event.metaKey || event.key === 'Backspace' || event.key === 'Tab' || event.key.startsWith('Arrow')) return;
+  if (!/[0-9]/.test(event.key)) event.preventDefault();
+}
+
+function autoResize(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = (textarea.scrollHeight) + 'px';
+}
+
+function ajouterLigneRisque() {
+  const table = document.getElementById('table_risques').getElementsByTagName('tbody')[0];
+  const newRow = table.insertRow();
+
+  const cell1 = newRow.insertCell(0);
+  const textareaRisque = document.createElement('textarea');
+  textareaRisque.name = 'risque[]';
+  textareaRisque.style.width = '95%';
+  textareaRisque.style.resize = 'none';
+  textareaRisque.style.overflow = 'hidden';
+  textareaRisque.required = true;
+  textareaRisque.addEventListener('input', () => autoResize(textareaRisque));
+  cell1.appendChild(textareaRisque);
+  autoResize(textareaRisque);
+
+  const cell2 = newRow.insertCell(1);
+  const selectNiveau = document.createElement('select');
+  selectNiveau.name = 'niveau_risque[]';
+  selectNiveau.style.width = '95%';
+  selectNiveau.required = true;
+  ["", "Faible", "Moyen", "Élevé"].forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt;
+    option.text = opt === "" ? "-- Sélectionner --" : opt;
+    selectNiveau.appendChild(option);
+  });
+  cell2.appendChild(selectNiveau);
+
+  const cell3 = newRow.insertCell(2);
+  const textareaMitigation = document.createElement('textarea');
+  textareaMitigation.name = 'mitigation[]';
+  textareaMitigation.style.width = '95%';
+  textareaMitigation.style.resize = 'none';
+  textareaMitigation.style.overflow = 'hidden';
+  textareaMitigation.required = true;
+  textareaMitigation.addEventListener('input', () => autoResize(textareaMitigation));
+  cell3.appendChild(textareaMitigation);
+  autoResize(textareaMitigation);
+
+  const cell4 = newRow.insertCell(3);
+  const btnSuppr = document.createElement('button');
+  btnSuppr.type = 'button';
+  btnSuppr.textContent = '🗑';
+  btnSuppr.onclick = function() { supprimerLigneRisque(this); };
+  cell4.appendChild(btnSuppr);
+}
+
+function supprimerLigneRisque(btn) {
+  const row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+}
+
+function toggleRisques() {
+  const wrapper = document.getElementById('risques-wrapper');
+  const btn = document.getElementById('btnToggleRisques');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    btn.textContent = 'Masquer';
+  } else {
+    wrapper.style.display = 'none';
+    btn.textContent = 'Afficher';
+  }
+}
+
+function togglePoints() {
+  const wrapper = document.getElementById('point-wrapper');
+  const btn = document.getElementById('btnTogglePoints');
+  if (wrapper.style.display === 'none') {
+    wrapper.style.display = 'block';
+    btn.textContent = 'Masquer';
+  } else {
+    wrapper.style.display = 'none';
+    btn.textContent = 'Afficher';
+  }
+}
+
+function formatAsXXX_XX_XXX_XX(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10);
+  const g1 = digits.slice(0, 3);
+  const g2 = digits.slice(3, 5);
+  const g3 = digits.slice(5, 8);
+  const g4 = digits.slice(8, 10);
+  return [g1, g2, g3, g4].filter(Boolean).join(' ');
+}
+
+function applyPhoneFormat(id) {
+  const input = document.getElementById(id);
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    input.value = formatAsXXX_XX_XXX_XX(input.value);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (allowed.includes(e.key)) return;
+    if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+  });
+
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const pasted = (e.clipboardData || window.clipboardData).getData('text');
+    const digits = pasted.replace(/\D/g, '').slice(0, 10);
+    input.value = formatAsXXX_XX_XXX_XX(digits);
+  });
+}
+
 function copierEtSauvegarder(){
   const total = parseNumberFromString(document.getElementById('total_objet')?.value || '0');
-  if(total > 2575000){ alert("Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
+  if(total > 2575000){ alert("⚠️ Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
   const nomPrenom = (document.getElementById('nom_prenom_client')?.value || 'Demandeur').replace(/[^a-zA-Z0-9]/g,'_');
   const now = new Date();
   const pad = n => ('0'+n).slice(-2);
   const dateStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
   const fileName = `${nomPrenom}_${dateStr}.html`;
-  const cloneBody = document.body.cloneNode(true);
-  cloneBody.querySelectorAll('input, textarea, select').forEach(el => {
-    el.setAttribute('readonly','readonly');
-    if(el.tagName === 'SELECT') el.setAttribute('disabled','disabled');
-    if(el.tagName === 'TEXTAREA') el.innerHTML = el.value;
-    else el.setAttribute('value', el.value);
+  
+  const selectValues = [];
+  document.querySelectorAll('select').forEach(select => {
+    const selectedOption = select.options[select.selectedIndex];
+    selectValues.push({
+      element: select,
+      text: selectedOption ? selectedOption.text : '',
+      value: selectedOption ? selectedOption.value : ''
+    });
   });
+  
+  selectValues.forEach((item, index) => {
+    item.element.setAttribute('data-select-index', index);
+  });
+  
+  const cloneBody = document.body.cloneNode(true);
+  
+  cloneBody.querySelectorAll('select').forEach(selectEl => {
+    const index = parseInt(selectEl.getAttribute('data-select-index'));
+    const savedData = selectValues[index];
+    
+    if (savedData && savedData.text) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = savedData.text;
+      input.setAttribute('readonly', 'readonly');
+      input.setAttribute('data-original-value', savedData.value);
+      
+      const computedStyle = window.getComputedStyle(selectEl);
+      input.style.width = selectEl.style.width || '95%';
+      input.style.padding = '8px';
+      input.style.border = '1px solid #ccc';
+      input.style.borderRadius = '8px';
+      input.style.backgroundColor = '#f0f0f0';
+      input.style.fontFamily = computedStyle.fontFamily;
+      input.style.fontSize = computedStyle.fontSize;
+      
+      selectEl.parentNode.replaceChild(input, selectEl);
+    }
+  });
+  
+  document.querySelectorAll('select').forEach(select => {
+    select.removeAttribute('data-select-index');
+  });
+  
+  cloneBody.querySelectorAll('input:not([data-original-value]), textarea').forEach(el => {
+    el.setAttribute('readonly', 'readonly');
+    if (el.tagName === 'TEXTAREA') {
+      el.textContent = el.value;
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+
   cloneBody.querySelectorAll('button').forEach(b => b.style.display = 'none');
+  
   const unlockScript = document.createElement('script');
   unlockScript.textContent = `
     document.addEventListener('DOMContentLoaded', () => {
-      const pwd = prompt('Fichier verrouillé. Entrez le mot de passe pour déverrouiller :');
-      if(pwd === '2110'){
-        document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
-        document.querySelectorAll('select').forEach(s => { s.removeAttribute('disabled'); s.removeAttribute('readonly'); });
-        alert('Fichier déverrouillé !');
-      } else { alert('Mot de passe incorrect. Le fichier reste en lecture seule.'); }
+      const inputContainer = document.createElement('div');
+      inputContainer.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:10000;font-family:Arial,sans-serif;';
+      
+      inputContainer.innerHTML = \`
+        <div style="text-align:center;">
+          <h2 style="margin:0 0 20px 0;color:#2c3e50;">🔒 Fichier verrouillé</h2>
+          <p style="margin:0 0 20px 0;color:#666;">Entrez le mot de passe pour déverrouiller :</p>
+          <input type="password" id="pwdInput" style="width:250px;padding:10px;border:2px solid #3498db;border-radius:8px;font-size:16px;text-align:center;" placeholder="••••••••">
+          <div style="margin-top:20px;">
+            <button id="btnUnlock" style="background:#27ae60;color:white;border:none;padding:10px 30px;border-radius:8px;cursor:pointer;font-size:16px;margin-right:10px;">Déverrouiller</button>
+            <button id="btnCancel" style="background:#e74c3c;color:white;border:none;padding:10px 30px;border-radius:8px;cursor:pointer;font-size:16px;">Annuler</button>
+          </div>
+        </div>
+      \`;
+      
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;';
+      
+      document.body.appendChild(overlay);
+      document.body.appendChild(inputContainer);
+      
+      const pwdInput = document.getElementById('pwdInput');
+      const btnUnlock = document.getElementById('btnUnlock');
+      const btnCancel = document.getElementById('btnCancel');
+      
+      pwdInput.focus();
+      
+      const checkPassword = () => {
+        const pwd = pwdInput.value;
+        if(pwd === '2110'){
+          document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
+          overlay.remove();
+          inputContainer.remove();
+          alert('✅ Fichier déverrouillé !');
+        } else { 
+          pwdInput.value = '';
+          pwdInput.style.borderColor = '#e74c3c';
+          pwdInput.placeholder = 'Mot de passe incorrect !';
+          setTimeout(() => {
+            pwdInput.style.borderColor = '#3498db';
+            pwdInput.placeholder = '••••••••';
+          }, 2000);
+        }
+      };
+      
+      btnUnlock.addEventListener('click', checkPassword);
+      btnCancel.addEventListener('click', () => {
+        overlay.remove();
+        inputContainer.remove();
+        alert('❌ Fichier reste verrouillé en lecture seule.');
+      });
+      
+      pwdInput.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') checkPassword();
+      });
     });
   `;
   cloneBody.appendChild(unlockScript);
+  
   const htmlContent = `<!DOCTYPE html>\n<html lang="fr">\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
   const blob = new Blob([htmlContent], {type:'text/html'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
   a.click();
-  document.querySelectorAll('form input, form textarea, form select').forEach(el => {
-    if(el.type === 'date' || el.type === 'time') el.value = '';
-    else if(el.type === 'number') el.value = '';
-    else if(el.tagName === 'SELECT') el.selectedIndex = 0;
-    else el.value = '';
+  
+  alert('✅ Fichier sauvegardé avec succès !');
+}
+
+function genererSynthesePDF() {
+  if (!window.jspdf) {
+    alert("⚠️ jsPDF n'est pas chargé !");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+
+  const marg = 40;
+  let y = 60;
+  const pageHeight = doc.internal.pageSize.height;
+
+  const val = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return '';
+    let v = el.value || el.textContent || '';
+
+    if (id === 'id_client' || id === 'id_caution') {
+      return v.replace(/[^a-zA-Z0-9]/g, '').trim();
+    }
+
+    v = v.replace(/MGA|Ar/gi, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
+
+    const numOnly = v.replace(/[^\d]/g, '');
+    if (numOnly && !isNaN(numOnly) && id !== 'heure_visite' && id !== 'date_visite') {
+      return parseInt(numOnly, 10).toLocaleString('fr-FR');
+    }
+
+    return v;
+  };
+
+  const checkPage = (space = 40) => {
+    if (y + space > pageHeight - 50) {
+      doc.addPage();
+      y = 50;
+    }
+  };
+
+  const addSection = (title, size = 12) => {
+    checkPage(30);
+    doc.setFontSize(size);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, marg, y);
+    y += size === 14 ? 20 : 18;
+    doc.setFont('helvetica', 'normal');
+  };
+
+  const addText = (text, indent = 0) => {
+    if (!text) return;
+    checkPage();
+    const cleanText = text.replace(/\s+/g, ' ').replace(/\s\/\s/g, '/').trim();
+    doc.setFontSize(10);
+    doc.text(cleanText, marg + indent, y);
+    y += 15;
+  };
+
+  const formatDateFR = (dateStr) => {
+    if (!dateStr) return '';
+    const clean = dateStr.replace(/\D/g,'');
+    if (clean.length===8 && dateStr.includes('-')) {
+      const [yyyy, mm, dd] = dateStr.split('-');
+      return `${dd}/${mm}/${yyyy}`;
+    }
+    return dateStr;
+  };
+
+  const formatHeureFR = (heureStr) => {
+    if(!heureStr) return '';
+    const digits = heureStr.replace(/\D/g,'');
+    if(digits.length===4) return `${digits.slice(0,2)}:${digits.slice(2)}`;
+    if(digits.length===3) return `0${digits[0]}:${digits.slice(1)}`;
+    if(digits.length===2) return `${digits.padStart(2,'0')}:00`;
+    if(digits.length===1) return `0${digits}:00`;
+    return '';
+  };
+
+  const formatPhone = (num) => {
+    if(!num) return '';
+    const digits = num.replace(/\D/g,'');
+    if(digits.length===10){
+      return `${digits.slice(0,3)} ${digits.slice(3,5)} ${digits.slice(5,8)} ${digits.slice(8,10)}`;
+    }
+    return digits;
+  };
+
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  const idClient = val('id_client');
+  const nomClient = val('nom_prenom_client');
+  doc.text(`SYNTHESE DE CREDIT - ${idClient} - ${nomClient}`, marg, y);
+  y += 25;
+  doc.setFont('helvetica', 'normal');
+
+  const agence = document.querySelector('select')?.value || '';
+  const acTraitant = document.querySelectorAll('input[type="text"]')[0]?.value || '';
+  addText(`Agence : ${agence}`);
+  addText(`AC traitant : ${acTraitant}`);
+  addText(`Date de visite : ${formatDateFR(val('date_visite'))}     Heure : ${formatHeureFR(val('heure_visite'))}`);
+  y += 10;
+
+  addSection('1. INFORMATIONS SUR LA DEMANDE DE CREDIT', 14);
+  addText(`Montant de la demande : ${val('montant_demande')} MGA`);
+  addText(`Durée : ${document.querySelectorAll('input[type="number"]')[0]?.value || ''} mois`);
+  addText(`Capacité de paiement : ${val('capacite_paiement')} MGA`);
+  addText(`Date de remboursement demandée : ${formatDateFR(document.querySelectorAll('input[type="date"]')[1]?.value || '')}`);
+  addText('Objet du crédit :');
+  document.querySelectorAll('#tbody_objet tr').forEach(tr => {
+    const lib = tr.querySelector('input[name="libelle[]"]')?.value || '';
+    const mt = tr.querySelector('input[name="montant_objet[]"]')?.value || '';
+    if (lib) addText(`  - ${lib} : ${mt}`, 10);
   });
-  ['tbody_objet','tbody_activite','tableMMP tbody','table_garanties tbody'].forEach(id => {
-    const tb = document.getElementById(id) || document.querySelector('#'+id);
-    if(tb && tb.rows) { [...tb.rows].slice(1).forEach(r => r.remove()); }
+
+  addSection('2. INFORMATIONS GENERALES', 14);
+  addText('DEMANDEUR :');
+  addText(`  ID client : ${val('id_client')}`, 5);
+  addText(`  Nom : ${val('nom_prenom_client')}`, 5);
+  addText(`  État civil : ${document.getElementById('etat_civil_client')?.value || ''}`, 5);
+  addText(`  Personnes à charge : ${val('nb_client')}`, 5);
+  addText(`  Téléphone : ${formatPhone(val('num_client'))}`, 5);
+
+  addText('CAUTION :');
+  addText(`  ID : ${val('id_caution')}`, 5);
+  addText(`  Nom : ${val('nom_prenom_caution')}`, 5);
+  addText(`  Lien : ${document.getElementById('lien_demandeur')?.value || ''}`, 5);
+  addText(`  Téléphone : ${formatPhone(val('num_caution'))}`, 5);
+  addText(`  Revenus mensuels : ${val('revenus_mensuels_caution')} MGA`, 5);
+
+  addSection('3. HISTORIQUE DE L\'ACTIVITE', 14);
+  document.querySelectorAll('#tbody_activite tr').forEach((tr, i) => {
+    const nom = tr.querySelector('select[name="nom_activite[]"]')?.value || '';
+    if (!nom) return;
+    const mrg = tr.querySelector('input[name="marge_activite[]"]')?.value || '';
+    const anc = tr.querySelector('input[name="anciennete_activite[]"]')?.value || '';
+    const sec = tr.querySelector('select[name="secteur_activite[]"]')?.value || '';
+    addText(`  Activité ${i+1} : ${nom} | Marge: ${mrg} | Ancienneté: ${anc} ans | Secteur: ${sec}`, 5);
   });
-  updateTotalDepuisObjet(); updateOpexTotal(); updateOpexTotal2(); calculerMMP();
-  if (typeof recalculerTotaux === 'function') recalculerTotaux();
-  updateTotalDF();
+
+  addSection('4. INFORMATIONS FINANCIERES', 14);
+  ['Salaire','solde_mobile','solde_epargne','Caisse','echeances','encours_credit']
+    .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)} MGA`));
+
+  addSection('5. FONCTIONNEMENT DE L\'ACTIVITE', 14);
+  addText(`CA ligne 1 : ${val('ca_ligne1')}`);
+  addText(`CAMV final : ${val('camv_final')}`);
+  addText(`CA ligne 2 : ${val('ca_ligne2')}`);
+  addText(`CAMV final 2 : ${val('camv_final2')}`);
+
+  addSection('6. MARGE MOYENNE PONDEREE (MMP)', 14);
+  addText(`MMP : ${val('mmp')}`);
+
+  addSection('7. ACTIFS IMMOBILISES / GARANTIES', 14);
+  addText(`Total garanties : ${val('total_garanties')}`);
+  addText(`Total actifs : ${val('total_actifs')}`);
+
+  addSection('8. DEPENSES FAMILIALES', 14);
+  addText(`Total dépenses familiales : ${val('df-total')}`);
+
+  addSection('9. BILAN', 14);
+  addText(`Total Actif : ${val('bilan_total_actif')}`);
+  addText(`Total Passif : ${val('bilan_total_passif')}`);
+
+  addSection('10. CASH FLOW', 14);
+  ['CA_mensuel','CAMV_mensuel','Cash_flow_brut','Cash_flow_net','Cash_flow','DSCR']
+    .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)}`));
+
+  addSection('11. RATIOS', 14);
+  ['ratio_stock','ratio_endettement','ratio_liquidite','ratio_solvabilite','dscr','couverture_garanties']
+    .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)}`));
+
+  addSection('12. PROPOSITION AC / DECISION COMITE', 14);
+  const cleanMontant = m => {
+    if (!m) return '';
+    const num = m.replace(/[^\d]/g, '');
+    return num ? parseInt(num,10).toLocaleString('fr-FR') : m;
+  };
+  addText(`Proposition AC : ${cleanMontant(document.querySelector('[name="montant_ac"]')?.value)} MGA / ${(document.querySelector('[name="duree_ac"]')?.value || '')} mois`);
+  addText(`Mensualité AC : ${val('mensualite_ac')}`);
+  addText(`Décision comité : ${cleanMontant(document.querySelector('[name="montant_comite"]')?.value)} MGA / ${(document.querySelector('[name="duree_comite"]')?.value || '')} mois`);
+  addText(`Mensualité comité : ${val('mensualite_comite')}`);
+
+  addSection('13. REFERENCES MORALES ET PROFESSIONNELLES', 14);
+  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
+    const nom = tr.querySelector('input[name="nom_reference[]"]')?.value || '';
+    if (!nom) return;
+    const rel = tr.querySelector('select[name="relation_reference[]"]')?.value || '';
+    const contact = tr.querySelector('input[name="contact_reference[]"]')?.value || '';
+    const adresse = tr.querySelector('input[name="adresse_reference[]"]')?.value || '';
+    addText(`  ${i+1}. ${nom} - ${rel} - ${contact || adresse}`, 5);
+  });
+
+  addSection('14. RISQUES', 14);
+  document.querySelectorAll('#table_risques tbody tr').forEach((tr,i) => {
+    const risque = tr.querySelector('textarea[name="risque[]"]')?.value || '';
+    if (!risque) return;
+    const niveau = tr.querySelector('select[name="niveau_risque[]"]')?.value || '';
+    const mitigation = tr.querySelector('textarea[name="mitigation[]"]')?.value || '';
+    addText(`  Risque ${i+1} [${niveau}] : ${risque}`, 5);
+    if (mitigation) addText(`  Mitigation : ${mitigation}`, 10);
+  });
+
+  addSection('15. POINTS D\'ATTACHE', 14);
+  const points = document.getElementById('pointsTextarea')?.value || '';
+  points.split('\n').forEach(line => {
+    if (line.trim()) addText(`  ${line.trim()}`, 5);
+  });
+
+  const safeName = (val('nom_prenom_client') || 'Client').replace(/[^a-z0-9]/gi,'_');
+  const filename = `Synthese_${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
+  doc.save(filename);
+  alert('✅ PDF généré avec succès !');
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -1849,581 +2353,52 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   document.querySelectorAll('#table_bilan .credit-avant-actif, #table_bilan .credit-avant-passif').forEach(inp=>inp.addEventListener('input',majBilan));
   
-  document.getElementById("mensualite_comite").addEventListener("input", syncMensualite);
-  document.getElementById("mensualite_comite").addEventListener("change", syncMensualite);
+  const mensComEl = document.getElementById("mensualite_comite");
+  if (mensComEl) {
+    mensComEl.addEventListener("input", syncMensualite);
+    mensComEl.addEventListener("change", syncMensualite);
+  }
+  
+  const capEl = document.getElementById('capacite_paiement');
+  if (capEl) capEl.addEventListener('input', controleMensualite);
+  if (mensComEl) mensComEl.addEventListener('input', controleMensualite);
+  
+  applyPhoneFormat('num_client');
+  applyPhoneFormat('num_caution');
   
   updateOpexTotal(); updateOpexTotal2(); updateTotalDepuisObjet();
   majCALigne1(); majCAMVSelonMarge(); majCAMVSelonMMP(); majCAMVMensuel();
   majCALigne2(); majCAMVSelonMarge2(); majCAMVMensuel2();
   calculerMMP(); updateTotalDF(); majBilan();
+  
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ['num_client', 'num_caution'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = input.value.replace(/\s+/g, '');
+      });
+    });
+  }
 }); 
 
 document.addEventListener("input", calculerCashFlow);
 document.addEventListener("input", majMensualites);
-</script>
-<script>
-function genererSynthesePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
 
-  const marg = 40;
-  let y = 60;
-  const pageHeight = doc.internal.pageSize.height;
-
-  const val = id => {
-    const el = document.getElementById(id);
-    if (!el) return '';
-    let v = el.value || el.textContent || '';
-
-    // Pour ID client et ID caution : enlever tout sauf lettres et chiffres
-    if (id === 'id_client' || id === 'id_caution') {
-      return v.replace(/[^a-zA-Z0-9]/g, '');
-    }
-
-    // Pour les autres champs : enlever MGA, Ar, /, espaces multiples
-    v = v.toString().replace(/MGA/g, '').replace(/Ar/g, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
-
-    // Si c'est un nombre (après nettoyage), formater en milliers et ajouter ' Ar'
-    const numOnly = v.replace(/[^\d]/g, '');
-    if (numOnly && !isNaN(numOnly)) {
-      const formatted = parseInt(numOnly, 10).toLocaleString('fr-FR');
-      return formatted + ' Ar';
-    }
-
-    return v;
-  };
-
-  const checkPage = (space = 40) => {
-    if (y + space > pageHeight - 50) {
-      doc.addPage();
-      y = 50;
-    }
-  };
-
-  const addSection = (title, size = 12) => {
-    checkPage(30);
-    doc.setFontSize(size);
-    doc.setFont('helvetica', 'bold');
-    doc.text(title, marg, y);
-    y += size === 14 ? 20 : 18;
-    doc.setFont('helvetica', 'normal');
-  };
-
-  const addText = (text, indent = 0) => {
-    checkPage();
-    doc.setFontSize(10);
-    // Nettoyer le texte avant affichage : enlever espaces multiples et mettre '/' serré
-    const cleanText = text.replace(/\s+/g, ' ').replace(/\s\/\s/g, '/').trim();
-    doc.text(cleanText, marg + indent, y);
-    y += 15;
-  };
-
-  // TITRE PRINCIPAL
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  const idClient = (val('id_client') || '').replace(/\s/g, '');
-  const nomClient = (val('nom_prenom_client') || '').replace(/\s/g, '');
-  doc.text(`SYNTHESE DE ${idClient} - ${nomClient}`, marg, y);
-  y += 25;
-  doc.setFont('helvetica', 'normal');
-
-  // Informations principales (attention aux sélecteurs génériques)
-  const agenceEl = document.querySelector('select');
-  const agence = agenceEl ? agenceEl.value : '';
-  addText(`Agence : ${agence}`);
-  const acTraitantInput = document.querySelector('label:nth-child(2) input');
-  const acTraitant = acTraitantInput ? acTraitantInput.value : '';
-  addText(`AC traitant : ${acTraitant}`);
-  addText(`Date de visite : ${formatDateFR(val('date_visite'))}     Heure : ${val('heure_visite')}`);
-  y += 10;
-
-  // 1. INFORMATIONS SUR LA DEMANDE
-  addSection('1. INFORMATIONS SUR LA DEMANDE DE CREDIT', 14);
-  addText(`Montant de la demande : ${val('montant_demande')}`);
-  const dureeInput = document.querySelectorAll('input[type="number"]')[0];
-  addText(`Durée : ${dureeInput ? dureeInput.value : ''} mois`);
-  addText(`Capacité de paiement : ${val('capacite_paiement')}`);
-  const dateRemb = document.querySelectorAll('input[type="date"]')[1];
-  addText(`Date de remboursement demandée : ${formatDateFR(dateRemb ? dateRemb.value : '')}`);
-  addText('Objet du crédit :');
-  document.querySelectorAll('#tbody_objet tr').forEach(tr => {
-    const lib = tr.querySelector('input[name="libelle[]"]')?.value || '';
-    const mt = tr.querySelector('input[name="montant_objet[]"]')?.value || '';
-    if (lib) addText(`  - ${lib} : ${mt}`, 10);
-  });
-
-  // 2. INFOS GENERALES
-  addSection('2. INFORMATIONS GENERALES SUR LE DEMANDEUR / CAUTION', 14);
-  addText('DEMANDEUR :');
-  addText(`  ID client : ${val('id_client')}`, 5);
-  addText(`  Nom : ${val('nom_prenom_client')}`, 5);
-  addText(`  État civil : ${document.getElementById('etat_civil_client')?.value || ''}`, 5);
-  addText(`  Personnes à charge : ${val('nb_client')}`, 5);
-  addText(`  Téléphone : ${formatPhone(val('num_client'))}`, 5);
-
-  addText('CAUTION :');
-  addText(`  ID : ${val('id_caution')}`, 5);
-  addText(`  Nom : ${val('nom_prenom_caution')}`, 5);
-  addText(`  Lien : ${document.getElementById('lien_demandeur')?.value || ''}`, 5);
-  addText(`  Téléphone : ${formatPhone(val('num_caution'))}`, 5);
-  addText(`  Revenus mensuels : ${val('revenus_mensuels_caution')}`, 5);
-
-  // 3. HISTORIQUE
-  addSection('3. HISTORIQUE DE L\'ACTIVITE ET ENGAGEMENT', 14);
-  document.querySelectorAll('#tbody_activite tr').forEach((tr, i) => {
-    const nom = tr.querySelector('select[name="nom_activite[]"]')?.value || '';
-    const mrg = tr.querySelector('input[name="marge_activite[]"]')?.value || '';
-    const anc = tr.querySelector('input[name="anciennete_activite[]"]')?.value || '';
-    const sec = tr.querySelector('select[name="secteur_activite[]"]')?.value || '';
-    if (nom) addText(`  Activité ${i+1} : ${nom} | Marge: ${mrg} | Ancienneté: ${anc} ans | Secteur: ${sec}`, 5);
-  });
-
-  // 4. INFOS SALARIALES
-  addSection('4. INFORMATIONS SALARIALES & FINANCIERES', 14);
-  addText(`Salaire : ${val('Salaire')}`);
-  addText(`Solde mobile money : ${val('solde_mobile')}`);
-  addText(`Solde épargne/banque : ${val('solde_epargne')}`);
-  addText(`Caisse : ${val('Caisse')}`);
-  addText(`Échéances banque/IMF : ${val('echeances')}`);
-  addText(`Encours de crédit : ${val('encours_credit')}`);
-
-  checkPage(100);
-
-  // 5. FONCTIONNEMENT
-  addSection('5. FONCTIONNEMENT DE L\'ACTIVITE', 14);
-  addText(`CA Ligne 1 : ${val('ca_ligne1')}`);
-  addText(`CAMV Final Ligne 1 : ${val('camv_final')}`);
-  addText(`CA Ligne 2 : ${val('ca_ligne2')}`);
-  addText(`CAMV Final Ligne 2 : ${val('camv_final2')}`);
-
-  // 6. MMP
-  addSection('6. MARGE MOYENNE PONDEREE (MMP)', 14);
-  const mmpRaw = val('mmp') || '';
-  const mmpPct = mmpRaw.replace(/Ar/g, '%').trim();
-  addText(`MMP : ${mmpPct}`);
-
-  // 7. GARANTIES
-  addSection('7. ACTIFS IMMOBILISES/GARANTIES', 14);
-  addText(`Total garanties : ${val('total_garanties')}`);
-  addText(`Total actifs : ${val('total_actifs')}`);
-
-  // 8. DEPENSES
-  addSection('8. DEPENSES FAMILIALES', 14);
-  addText(`Total dépenses familiales : ${val('df-total')}`);
-
-  // 9. BILAN
-  addSection('9. BILAN', 14);
-  addText(`Total Actif : ${val('bilan_total_actif')}`);
-  addText(`Total Passif : ${val('bilan_total_passif')}`);
-
-  // 10. CASH FLOW
-  addSection('10. CASH FLOW', 14);
-  addText(`CA mensuel : ${val('CA_mensuel')}`);
-  addText(`CAMV mensuel : ${val('CAMV_mensuel')}`);
-  addText(`Cash flow brut : ${val('Cash_flow_brut')}`);
-  addText(`Cash flow net : ${val('Cash_flow_net')}`);
-  addText(`Cash flow final : ${val('Cash_flow')}`);
-  addText(`DSCR (50%) : ${val('DSCR') || val('dscr')}`);
-
-  checkPage(100);
-
-  // 11. RATIOS
-  addSection('11. RATIOS', 14);
-  const dscrVal = (val('DSCR') || val('dscr') || '').toString().replace(/Ar|\s/g, '');
-  addText(`DSCR : ${dscrVal}`);
-  addText(`Couverture garanties : ${(val('couverture_garanties') || '').replace(/Ar|\s/g, '')}`);
-  addText(`Ratio endettement : ${val('ratio_endettement')}`);
-  addText(`Ratio liquidité : ${val('ratio_liquidite')}`);
-  addText(`Ratio solvabilité : ${val('ratio_solvabilite')}`);
-
-  // 12. PROPOSITION
-  addSection('12. PROPOSITION AC/DECISION COMITE', 14);
-  const montantAC = document.querySelector('[name="montant_ac"]')?.value || '';
-  const dureeAC = document.querySelector('[name="duree_ac"]')?.value || '';
-  const montantCom = document.querySelector('[name="montant_comite"]')?.value || '';
-  const dureeCom = document.querySelector('[name="duree_comite"]')?.value || '';
-
-  // Nettoyer et formater les montants
-  const cleanMontant = (m) => {
-    if (!m) return '';
-    const num = m.replace(/[^\d]/g, '');
-    return num ? parseInt(num, 10).toLocaleString('fr-FR') + ' Ar' : m;
-  };
-
-  addText(`Proposition AC : ${cleanMontant(montantAC)} / ${dureeAC} mois`);
-  addText(`Mensualite AC : ${val('mensualite_ac')}`);
-  addText(`Decision comite : ${cleanMontant(montantCom)} / ${dureeCom} mois`);
-  addText(`Mensualite comite : ${val('mensualite_comite')}`);
-
-  // 13. REFERENCES
-  addSection('13. REFERENCES MORALES ET PROFESSIONNELLES', 14);
-  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
-    const nom = tr.querySelector('input[name="nom_reference[]"]')?.value || '';
-    const rel = tr.querySelector('select[name="relation_reference[]"]')?.value || '';
-    const contact = tr.querySelector('input[name="contact_reference[]"]')?.value || '';
-    const adresse = tr.querySelector('input[name="adresse_reference[]"]')?.value || '';
-    const contactInfo = contact || adresse || '';
-    if (nom) addText(`  ${i+1}. ${nom} - ${rel} - ${contactInfo}`, 5);
-  });
-
-  // 14. RISQUES
-  addSection('14. RISQUES', 14);
-  document.querySelectorAll('#table_risques tbody tr').forEach((tr, i) => {
-    const risque = tr.querySelector('textarea[name="risque[]"]')?.value || '';
-    const niveau = tr.querySelector('select[name="niveau_risque[]"]')?.value || '';
-    const mitigation = tr.querySelector('textarea[name="mitigation[]"]')?.value || '';
-    if (risque) {
-      addText(`  Risque ${i+1} [${niveau}] : ${risque}`, 5);
-      addText(`  Mitigation : ${mitigation}`, 10);
-    }
-  });
-
-  // 15. POINTS D'ATTACHE
-  addSection('15. POINTS D\'ATTACHE', 14);
-  const points = document.getElementById('pointsTextarea')?.value || '';
-  if (points) {
-    const lignes = points.split('\n');
-    lignes.forEach(ligne => {
-      if (ligne.trim()) addText(`  ${ligne.trim()}`, 5);
-    });
-  }
-
-  const safeFileNamePart = (val('nom_prenom_client') || '').replace(/[^a-z0-9]/gi, '_');
-  const nomF = `Synthese_${safeFileNamePart}_${new Date().toISOString().slice(0, 10)}.pdf`;
-  doc.save(nomF);
-}
-
-function formatDateFR(dateStr) {
-  if (!dateStr) return '';
-  const parts = dateStr.split('-');
-  if (parts.length < 3) return dateStr;
-  const [yyyy, mm, dd] = parts;
-  return `${dd}-${mm}-${yyyy}`;
-}
-
-function formatPhone(num) {
-  if (!num) return '';
-  const digits = (num + '').replace(/\D/g, '');
-  // si 10 chiffres (format attendu), formater
-  if (digits.length === 10) {
-    return `${digits.slice(0,3)} ${digits.slice(3,5)} ${digits.slice(5,8)} ${digits.slice(8)}`;
-  }
-  return num;
-}
-</script>
-
-<script>
-/* -------- contrôle mensualité / capacité -------- */
-function rawNumber(selector) {
-  const el = typeof selector === 'string' ? document.getElementById(selector) : selector;
-  if (!el) return 0;
-  // enlève tous les caractères non numériques
-  return parseInt((el.value || el.textContent || '').replace(/\D/g, ''), 10) || 0;
-}
-
-function controleMensualite() {
-  const mensEl = document.getElementById('mensualite_comite');
-  const capEl  = document.getElementById('capacite_paiement');
-  if (!mensEl || !capEl) return;
-
-  const mens = rawNumber(mensEl);
-  const cap  = rawNumber(capEl);
-
-  // reset couleurs
-  [mensEl, capEl].forEach(el => {
-    el.style.backgroundColor = '';
-    el.style.color = '';
-  });
-
-  if (mens > cap && cap > 0) {
-    mensEl.style.backgroundColor = 'red';
-    mensEl.style.color = 'white';
-    capEl.style.backgroundColor  = 'red';
-    capEl.style.color  = 'white';
-    // POP-UP UNIQUE (sans boucle)
-    if (!window.alreadyShown) {
-      alert('La mensualité comité dépasse la capacité de paiement !');
-      window.alreadyShown = true;
-      setTimeout(() => window.alreadyShown = false, 2000); // 2 s avant de pouvoir re-déclencher
-    }
-  }
-}
-
-/* -------- vérification immédiate + écouteurs -------- */
 window.addEventListener('DOMContentLoaded', () => {
   const mensEl = document.getElementById('mensualite_comite');
   const capEl  = document.getElementById('capacite_paiement');
 
-  /* écouteurs classiques */
   if (mensEl) mensEl.addEventListener('input', controleMensualite);
   if (capEl)  capEl.addEventListener('input', controleMensualite);
 
-  /* contrôle dès le chargement si valeurs déjà présentes */
   controleMensualite();
-});
-</script>
-<script>
-function toggleReferences() {
-  const wrapper = document.getElementById("references-wrapper");
-  const btn = document.getElementById("btnToggleReferences");
-  if (wrapper.style.display === "none" || wrapper.style.display === "") {
-    wrapper.style.display = "block";
-    btn.textContent = "Masquer";
-  } else {
-    wrapper.style.display = "none";
-    btn.textContent = "Afficher";
-  }
-}
-
-function ajouterLigneReference() {
-  const tbody = document.querySelector('#table_references tbody');
-  const ligneCount = tbody.rows.length + 1;
-  const tr = document.createElement('tr');
-
-  tr.innerHTML = `
-    <td>${ligneCount}</td>
-    <td><input type="text" name="nom_reference[]" style="width:95%;" required></td>
-    <td>
-      <select name="relation_reference[]" style="width:95%;" required>
-        <option value="">-- Sélectionner --</option>
-        <option value="Ami">Ami(e)</option>
-        <option value="Famille">Famille</option>
-        <option value="Époux(se)">Époux(se)</option>
-        <option value="Frère">Frère</option>
-        <option value="Sœur">Sœur</option>
-        <option value="Parent">Parent</option>
-        <option value="Fils">Fils</option>
-        <option value="Fille">Fille</option>
-        <option value="Autres">Autres</option>
-      </select>
-    </td>
-    <td>
-      <input type="text" name="contact_reference[]" required
-             placeholder="xxx xx xxx xx" style="width:95%; text-align:center;"
-             oninput="maskContact(this)" onkeydown="onlyDigits(event)">
-    </td>
-    <td><input type="text" name="adresse_reference[]" style="width:95%;" required></td>
-    <td><button type="button" onclick="supprimerLigne(this)">🗑</button></td>
-  `;
-  tbody.appendChild(tr);
-  renumeroterReferences();
-}
-
-function supprimerLigne(btn) {
-  const tr = btn.closest('tr');
-  tr.remove();
-  renumeroterReferences();
-}
-
-function renumeroterReferences() {
-  document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
-    tr.querySelector('td:first-child').textContent = i + 1;
-  });
-}
-
-// Format de contact : xxx xx xxx xx
-function maskContact(input) {
-  let digits = input.value.replace(/\D/g, ''); // supprimer tout sauf chiffres
   
-  // Limiter à 10 chiffres maximum
-  digits = digits.substring(0, 10);
-  
-  // Formater : xxx xx xxx xx
-  let formatted = '';
-  if (digits.length <= 3) {
-    formatted = digits;
-  } else if (digits.length <= 5) {
-    formatted = digits.substring(0, 3) + ' ' + digits.substring(3);
-  } else if (digits.length <= 8) {
-    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5);
-  } else {
-    formatted = digits.substring(0, 3) + ' ' + digits.substring(3, 5) + ' ' + digits.substring(5, 8) + ' ' + digits.substring(8);
-  }
-  
-  input.value = formatted;
-}
-
-function onlyDigits(event) {
-  if (event.ctrlKey || event.metaKey || event.key === 'Backspace' || event.key === 'Tab' || event.key.startsWith('Arrow')) return;
-  if (!/[0-9]/.test(event.key)) event.preventDefault();
-}
-
-// Validation avant soumission
-document.getElementById('mainForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const rows = document.querySelectorAll('#table_references tbody tr');
-  const noms = document.querySelectorAll('input[name="nom_reference[]"]');
-  const relations = document.querySelectorAll('select[name="relation_reference[]"]');
-  const contacts = document.querySelectorAll('input[name="contact_reference[]"]');
-  const adresses = document.querySelectorAll('input[name="adresse_reference[]"]');
-  
-  let erreurs = [];
-  
-  // Retirer les styles d'erreur précédents
-  noms.forEach(n => n.classList.remove('error'));
-  relations.forEach(r => r.classList.remove('error'));
-  contacts.forEach(c => c.classList.remove('error'));
-  adresses.forEach(a => a.classList.remove('error'));
-  
-  // Vérifier qu'il y a au moins 4 lignes
-  if (rows.length < 4) {
-    alert('⚠️ Vous devez avoir au moins 4 références.');
-    return false;
-  }
-  
-  // Vérifier chaque ligne
-  rows.forEach((row, index) => {
-    const nom = noms[index];
-    const relation = relations[index];
-    const contact = contacts[index];
-    const adresse = adresses[index];
-    
-    // Vérifier nom
-    if (!nom.value.trim()) {
-      nom.classList.add('error');
-      erreurs.push(`Ligne ${index + 1}: Le nom et prénoms sont obligatoires.`);
-    }
-    
-    // Vérifier relation
-    if (!relation.value) {
-      relation.classList.add('error');
-      erreurs.push(`Ligne ${index + 1}: La relation est obligatoire.`);
-    }
-    
-    // Vérifier contact
-    if (!contact.value.trim()) {
-      contact.classList.add('error');
-      erreurs.push(`Ligne ${index + 1}: Le contact est obligatoire.`);
-    } else {
-      const digitsLength = contact.value.replace(/\D/g, '').length;
-      if (digitsLength !== 10) {
-        contact.classList.add('error');
-        erreurs.push(`Ligne ${index + 1}: Le contact doit contenir exactement 10 chiffres (format: xxx xx xxx xx).`);
-      }
-    }
-    
-    // Vérifier adresse
-    if (!adresse.value.trim()) {
-      adresse.classList.add('error');
-      erreurs.push(`Ligne ${index + 1}: L'adresse est obligatoire.`);
-    }
-  });
-  
-  // Afficher les erreurs
-  if (erreurs.length > 0) {
-    alert('⚠️ Veuillez corriger les erreurs suivantes:\n\n' + erreurs.join('\n'));
-    return false;
-  }
-  
-  // Si tout est valide
-  alert('✅ Formulaire valide ! Toutes les références sont complètes.');
-  // Ici vous pouvez ajouter le code pour soumettre réellement le formulaire
-  // this.submit();
-});
-</script>
-<script>
-function autoResize(textarea) {
-  textarea.style.height = 'auto'; // reset
-  textarea.style.height = (textarea.scrollHeight) + 'px';
-}
-
-function ajouterLigneRisque() {
-  const table = document.getElementById('table_risques').getElementsByTagName('tbody')[0];
-  const newRow = table.insertRow();
-
-  // Risques identifiés
-  const cell1 = newRow.insertCell(0);
-  const textareaRisque = document.createElement('textarea');
-  textareaRisque.name = 'risque[]';
-  textareaRisque.style.width = '95%';
-  textareaRisque.style.resize = 'none';
-  textareaRisque.style.overflow = 'hidden';
-  textareaRisque.required = true;
-  textareaRisque.addEventListener('input', () => autoResize(textareaRisque));
-  cell1.appendChild(textareaRisque);
-  autoResize(textareaRisque); // ajuste hauteur dès l'ajout
-
-  // Niveau du Risque
-  const cell2 = newRow.insertCell(1);
-  const selectNiveau = document.createElement('select');
-  selectNiveau.name = 'niveau_risque[]';
-  selectNiveau.style.width = '95%';
-  selectNiveau.required = true;
-  ["", "Faible", "Moyen", "Élevé"].forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt;
-    option.text = opt === "" ? "-- Sélectionner --" : opt;
-    selectNiveau.appendChild(option);
-  });
-  cell2.appendChild(selectNiveau);
-
-  // Mitigation
-  const cell3 = newRow.insertCell(2);
-  const textareaMitigation = document.createElement('textarea');
-  textareaMitigation.name = 'mitigation[]';
-  textareaMitigation.style.width = '95%';
-  textareaMitigation.style.resize = 'none';
-  textareaMitigation.style.overflow = 'hidden';
-  textareaMitigation.required = true;
-  textareaMitigation.addEventListener('input', () => autoResize(textareaMitigation));
-  cell3.appendChild(textareaMitigation);
-  autoResize(textareaMitigation); // ajuste hauteur dès l'ajout
-
-  // Bouton supprimer
-  const cell4 = newRow.insertCell(3);
-  const btnSuppr = document.createElement('button');
-  btnSuppr.type = 'button';
-  btnSuppr.textContent = '🗑';
-  btnSuppr.onclick = function() { supprimerLigne(this); };
-  cell4.appendChild(btnSuppr);
-}
-
-function supprimerLigne(btn) {
-  const row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
-
-function toggleRisques() {
-  const wrapper = document.getElementById('risques-wrapper');
-  const btn = document.getElementById('btnToggleRisques');
-  if (wrapper.style.display === 'none') {
-    wrapper.style.display = 'block';
-    btn.textContent = 'Masquer';
-  } else {
-    wrapper.style.display = 'none';
-    btn.textContent = 'Afficher';
-  }
-}
-</script>
-<script>
-// Fonction pour ajuster automatiquement la hauteur du textarea
-function autoResize(textarea) {
-  textarea.style.height = 'auto'; // reset
-  textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-// Fonction pour afficher/masquer le champ
-function togglePoints() {
-  const wrapper = document.getElementById('point-wrapper');
-  const btn = document.getElementById('btnTogglePoints');
-  if (wrapper.style.display === 'none') {
-    wrapper.style.display = 'block';
-    btn.textContent = 'Masquer';
-  } else {
-    wrapper.style.display = 'none';
-    btn.textContent = 'Afficher';
-  }
-}
-
-// Ajuster la hauteur initiale si le textarea a déjà du texte
-document.addEventListener('DOMContentLoaded', () => {
   const textarea = document.getElementById('pointsTextarea');
-  autoResize(textarea);
+  if (textarea) autoResize(textarea);
 });
 </script>
-
 
 </body>
 </html>
-
