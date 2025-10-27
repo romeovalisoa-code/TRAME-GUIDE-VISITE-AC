@@ -1889,141 +1889,90 @@ function applyPhoneFormat(id) {
   });
 }
 
-function copierEtSauvegarder(){
-  const total = parseNumberFromString(document.getElementById('total_objet')?.value || '0');
-  if(total > 2575000){ alert("⚠️ Le total de l'objet de crédit ne peut pas dépasser 2 575 000 MGA !"); return; }
+function copierEtSauvegarder() {
+  const total = parseFloat(document.getElementById('total_objet')?.value || '0');
+  if (total > 2575000) { alert("⚠️ Le total ne peut pas dépasser 2 575 000 !"); return; }
+
   const nomPrenom = (document.getElementById('nom_prenom_client')?.value || 'Demandeur').replace(/[^a-zA-Z0-9]/g,'_');
   const now = new Date();
   const pad = n => ('0'+n).slice(-2);
-  const dateStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
-  const fileName = `${nomPrenom}_${dateStr}.html`;
-  
-  const selectValues = [];
-  document.querySelectorAll('select').forEach(select => {
-    const selectedOption = select.options[select.selectedIndex];
-    selectValues.push({
-      element: select,
-      text: selectedOption ? selectedOption.text : '',
-      value: selectedOption ? selectedOption.value : ''
-    });
-  });
-  
-  selectValues.forEach((item, index) => {
-    item.element.setAttribute('data-select-index', index);
-  });
-  
+  const fileName = `${nomPrenom}_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.html`;
+
+  // Cloner le body
   const cloneBody = document.body.cloneNode(true);
-  
-  cloneBody.querySelectorAll('select').forEach(selectEl => {
-    const index = parseInt(selectEl.getAttribute('data-select-index'));
-    const savedData = selectValues[index];
-    
-    if (savedData && savedData.text) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = savedData.text;
-      input.setAttribute('readonly', 'readonly');
-      input.setAttribute('data-original-value', savedData.value);
-      
-      const computedStyle = window.getComputedStyle(selectEl);
-      input.style.width = selectEl.style.width || '95%';
-      input.style.padding = '8px';
-      input.style.border = '1px solid #ccc';
-      input.style.borderRadius = '8px';
-      input.style.backgroundColor = '#f0f0f0';
-      input.style.fontFamily = computedStyle.fontFamily;
-      input.style.fontSize = computedStyle.fontSize;
-      
-      selectEl.parentNode.replaceChild(input, selectEl);
-    }
-  });
-  
-  document.querySelectorAll('select').forEach(select => {
-    select.removeAttribute('data-select-index');
-  });
-  
-  cloneBody.querySelectorAll('input:not([data-original-value]), textarea').forEach(el => {
+
+  // Rendre tous les inputs, textarea et selects readonly au départ
+  cloneBody.querySelectorAll('input, textarea, select').forEach(el => {
+    el.setAttribute('data-original-readonly', 'true');
     el.setAttribute('readonly', 'readonly');
-    if (el.tagName === 'TEXTAREA') {
-      el.textContent = el.value;
-    } else {
-      el.setAttribute('value', el.value);
+    if(el.tagName === 'SELECT') {
+      el.disabled = true;
     }
   });
 
-  cloneBody.querySelectorAll('button').forEach(b => b.style.display = 'none');
-  
-  const unlockScript = document.createElement('script');
-  unlockScript.textContent = `
+  // Ajouter le script de déverrouillage + sauvegarde
+  const script = document.createElement('script');
+  script.textContent = `
     document.addEventListener('DOMContentLoaded', () => {
-      const inputContainer = document.createElement('div');
-      inputContainer.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:10000;font-family:Arial,sans-serif;';
-      
-      inputContainer.innerHTML = \`
-        <div style="text-align:center;">
-          <h2 style="margin:0 0 20px 0;color:#2c3e50;">🔒 Fichier verrouillé</h2>
-          <p style="margin:0 0 20px 0;color:#666;">Entrez le mot de passe pour déverrouiller :</p>
-          <input type="password" id="pwdInput" style="width:250px;padding:10px;border:2px solid #3498db;border-radius:8px;font-size:16px;text-align:center;" placeholder="••••••••">
-          <div style="margin-top:20px;">
-            <button id="btnUnlock" style="background:#27ae60;color:white;border:none;padding:10px 30px;border-radius:8px;cursor:pointer;font-size:16px;margin-right:10px;">Déverrouiller</button>
-            <button id="btnCancel" style="background:#e74c3c;color:white;border:none;padding:10px 30px;border-radius:8px;cursor:pointer;font-size:16px;">Annuler</button>
-          </div>
-        </div>
-      \`;
-      
-      const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;';
-      
-      document.body.appendChild(overlay);
-      document.body.appendChild(inputContainer);
-      
-      const pwdInput = document.getElementById('pwdInput');
-      const btnUnlock = document.getElementById('btnUnlock');
-      const btnCancel = document.getElementById('btnCancel');
-      
-      pwdInput.focus();
-      
-      const checkPassword = () => {
-        const pwd = pwdInput.value;
-        if(pwd === '2110'){
-          document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
-          overlay.remove();
-          inputContainer.remove();
-          alert('✅ Fichier déverrouillé !');
-        } else { 
-          pwdInput.value = '';
-          pwdInput.style.borderColor = '#e74c3c';
-          pwdInput.placeholder = 'Mot de passe incorrect !';
-          setTimeout(() => {
-            pwdInput.style.borderColor = '#3498db';
-            pwdInput.placeholder = '••••••••';
-          }, 2000);
-        }
+      const creerOverlay = () => {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;';
+        const container = document.createElement('div');
+        container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:12px;text-align:center;';
+        container.innerHTML = \`
+          <h2>🔒 Fichier verrouillé</h2>
+          <p>Entrez le mot de passe :</p>
+          <input type="password" id="pwdInput" style="padding:10px;width:200px;"><br><br>
+          <button id="btnUnlock">Déverrouiller</button>
+        \`;
+        overlay.appendChild(container);
+        document.body.appendChild(overlay);
+
+        document.getElementById('btnUnlock').addEventListener('click', () => {
+          const pwd = document.getElementById('pwdInput').value;
+          if(pwd === '2110'){
+            document.querySelectorAll('input, textarea, select').forEach(el => {
+              el.removeAttribute('readonly');
+              if(el.tagName === 'SELECT') el.disabled = false;
+            });
+            overlay.remove();
+            alert('✅ Fichier déverrouillé !');
+          } else {
+            alert('❌ Mot de passe incorrect');
+          }
+        });
       };
-      
-      btnUnlock.addEventListener('click', checkPassword);
-      btnCancel.addEventListener('click', () => {
-        overlay.remove();
-        inputContainer.remove();
-        alert('❌ Fichier reste verrouillé en lecture seule.');
-      });
-      
-      pwdInput.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') checkPassword();
+
+      creerOverlay();
+
+      // Bouton sauvegarder pour figer définitivement
+      const btnSave = document.createElement('button');
+      btnSave.textContent = 'Sauvegarder';
+      btnSave.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#27ae60;color:white;border:none;border-radius:8px;cursor:pointer;';
+      document.body.appendChild(btnSave);
+
+      btnSave.addEventListener('click', () => {
+        document.querySelectorAll('input, textarea, select').forEach(el => {
+          el.setAttribute('readonly', 'readonly');
+          if(el.tagName === 'SELECT') el.disabled = true;
+        });
+        alert('✅ Fichier figé !');
       });
     });
   `;
-  cloneBody.appendChild(unlockScript);
-  
+  cloneBody.appendChild(script);
+
   const htmlContent = `<!DOCTYPE html>\n<html lang="fr">\n${document.head.outerHTML}\n<body>\n${cloneBody.innerHTML}\n</body>\n</html>`;
   const blob = new Blob([htmlContent], {type:'text/html'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = fileName;
   a.click();
-  
+
   alert('✅ Fichier sauvegardé avec succès !');
 }
+
+
 
 function genererSynthesePDF() {
   if (!window.jspdf) {
@@ -2038,22 +1987,12 @@ function genererSynthesePDF() {
   let y = 60;
   const pageHeight = doc.internal.pageSize.height;
 
+  // --- UTILITAIRES ---
   const val = (id) => {
     const el = document.getElementById(id);
     if (!el) return '';
     let v = el.value || el.textContent || '';
-
-    if (id === 'id_client' || id === 'id_caution') {
-      return v.replace(/[^a-zA-Z0-9]/g, '').trim();
-    }
-
     v = v.replace(/MGA|Ar/gi, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
-
-    const numOnly = v.replace(/[^\d]/g, '');
-    if (numOnly && !isNaN(numOnly) && id !== 'heure_visite' && id !== 'date_visite') {
-      return parseInt(numOnly, 10).toLocaleString('fr-FR');
-    }
-
     return v;
   };
 
@@ -2076,10 +2015,16 @@ function genererSynthesePDF() {
   const addText = (text, indent = 0) => {
     if (!text) return;
     checkPage();
-    const cleanText = text.replace(/\s+/g, ' ').replace(/\s\/\s/g, '/').trim();
+    const cleanText = text.replace(/\s+/g, ' ').trim();
     doc.setFontSize(10);
-    doc.text(cleanText, marg + indent, y);
-    y += 15;
+
+    // ✅ Retour automatique à la ligne
+    const lines = doc.splitTextToSize(cleanText, 500);
+    lines.forEach(line => {
+      doc.text(line, marg + indent, y);
+      y += 13;
+      checkPage();
+    });
   };
 
   const formatDateFR = (dateStr) => {
@@ -2102,15 +2047,24 @@ function genererSynthesePDF() {
     return '';
   };
 
+  // ✅ Téléphone format "032 24 193 56"
   const formatPhone = (num) => {
     if(!num) return '';
     const digits = num.replace(/\D/g,'');
-    if(digits.length===10){
-      return `${digits.slice(0,3)} ${digits.slice(3,5)} ${digits.slice(5,8)} ${digits.slice(8,10)}`;
-    }
-    return digits;
+    if (digits.length === 9) return `0${digits.slice(0,2)} ${digits.slice(2,4)} ${digits.slice(4,7)} ${digits.slice(7)}`;
+    if (digits.length === 10) return `${digits.slice(0,3)} ${digits.slice(3,5)} ${digits.slice(5,8)} ${digits.slice(8)}`;
+    return num;
   };
 
+  const formatRatio = (valeur, pourcentage = false) => {
+    if (!valeur) return '';
+    const num = parseFloat(valeur.replace(/\s/g,'').replace(',','.'));
+    if (isNaN(num)) return valeur;
+    if (pourcentage) return (num / 100).toFixed(2).replace('.', ',') + ' %';
+    return (num / 100).toFixed(2).replace('.', ',');
+  };
+
+  // --- TITRE ---
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
   const idClient = val('id_client');
@@ -2119,6 +2073,7 @@ function genererSynthesePDF() {
   y += 25;
   doc.setFont('helvetica', 'normal');
 
+  // --- EN-TÊTE ---
   const agence = document.querySelector('select')?.value || '';
   const acTraitant = document.querySelectorAll('input[type="text"]')[0]?.value || '';
   addText(`Agence : ${agence}`);
@@ -2126,6 +2081,7 @@ function genererSynthesePDF() {
   addText(`Date de visite : ${formatDateFR(val('date_visite'))}     Heure : ${formatHeureFR(val('heure_visite'))}`);
   y += 10;
 
+  // --- 1 ---
   addSection('1. INFORMATIONS SUR LA DEMANDE DE CREDIT', 14);
   addText(`Montant de la demande : ${val('montant_demande')} MGA`);
   addText(`Durée : ${document.querySelectorAll('input[type="number"]')[0]?.value || ''} mois`);
@@ -2138,22 +2094,24 @@ function genererSynthesePDF() {
     if (lib) addText(`  - ${lib} : ${mt}`, 10);
   });
 
+  // --- 2 ---
   addSection('2. INFORMATIONS GENERALES', 14);
   addText('DEMANDEUR :');
   addText(`  ID client : ${val('id_client')}`, 5);
   addText(`  Nom : ${val('nom_prenom_client')}`, 5);
+  addText(`  Téléphone : ${formatPhone(val('num_client'))}`, 5);
   addText(`  État civil : ${document.getElementById('etat_civil_client')?.value || ''}`, 5);
   addText(`  Personnes à charge : ${val('nb_client')}`, 5);
-  addText(`  Téléphone : ${formatPhone(val('num_client'))}`, 5);
 
   addText('CAUTION :');
   addText(`  ID : ${val('id_caution')}`, 5);
   addText(`  Nom : ${val('nom_prenom_caution')}`, 5);
-  addText(`  Lien : ${document.getElementById('lien_demandeur')?.value || ''}`, 5);
   addText(`  Téléphone : ${formatPhone(val('num_caution'))}`, 5);
+  addText(`  Lien : ${document.getElementById('lien_demandeur')?.value || ''}`, 5);
   addText(`  Revenus mensuels : ${val('revenus_mensuels_caution')} MGA`, 5);
 
-  addSection('3. HISTORIQUE DE L\'ACTIVITE', 14);
+  // --- 3 ---
+  addSection("3. HISTORIQUE DE L'ACTIVITE", 14);
   document.querySelectorAll('#tbody_activite tr').forEach((tr, i) => {
     const nom = tr.querySelector('select[name="nom_activite[]"]')?.value || '';
     if (!nom) return;
@@ -2163,38 +2121,59 @@ function genererSynthesePDF() {
     addText(`  Activité ${i+1} : ${nom} | Marge: ${mrg} | Ancienneté: ${anc} ans | Secteur: ${sec}`, 5);
   });
 
+  // --- 4 ---
   addSection('4. INFORMATIONS FINANCIERES', 14);
   ['Salaire','solde_mobile','solde_epargne','Caisse','echeances','encours_credit']
     .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)} MGA`));
 
-  addSection('5. FONCTIONNEMENT DE L\'ACTIVITE', 14);
+  // --- 5 ---
+  addSection("5. FONCTIONNEMENT DE L'ACTIVITE", 14);
   addText(`CA ligne 1 : ${val('ca_ligne1')}`);
   addText(`CAMV final : ${val('camv_final')}`);
   addText(`CA ligne 2 : ${val('ca_ligne2')}`);
   addText(`CAMV final 2 : ${val('camv_final2')}`);
 
+  // --- 6 ---
   addSection('6. MARGE MOYENNE PONDEREE (MMP)', 14);
-  addText(`MMP : ${val('mmp')}`);
+  addText(`MMP : ${val('mmp')} `);
 
+  // --- 7 ---
   addSection('7. ACTIFS IMMOBILISES / GARANTIES', 14);
   addText(`Total garanties : ${val('total_garanties')}`);
   addText(`Total actifs : ${val('total_actifs')}`);
 
+  // --- 8 ---
   addSection('8. DEPENSES FAMILIALES', 14);
   addText(`Total dépenses familiales : ${val('df-total')}`);
 
+  // --- 9 ---
   addSection('9. BILAN', 14);
   addText(`Total Actif : ${val('bilan_total_actif')}`);
   addText(`Total Passif : ${val('bilan_total_passif')}`);
 
+  // --- 10 ---
   addSection('10. CASH FLOW', 14);
   ['CA_mensuel','CAMV_mensuel','Cash_flow_brut','Cash_flow_net','Cash_flow','DSCR']
     .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)}`));
 
-  addSection('11. RATIOS', 14);
-  ['ratio_stock','ratio_endettement','ratio_liquidite','ratio_solvabilite','dscr','couverture_garanties']
-    .forEach(id => addText(`${id.replace(/_/g,' ')} : ${val(id)}`));
+ // --- 11. RATIOS ---
+addSection('11. RATIOS', 14);
 
+// Affichage direct des valeurs du HTML
+addText(`Ratio stock : ${val('ratio_stock')}`);
+addText(`Ratio endettement : ${val('ratio_endettement')}`);
+addText(`Ratio liquidité : ${val('ratio_liquidite')}`);
+addText(`Ratio solvabilité : ${val('ratio_solvabilite')}`);
+
+// Ajouter le % pour DSCR et Couverture garanties
+const dscr = val('dscr').replace(/\s/g,'');
+addText(`DSCR : ${dscr} `);
+
+const couverture = val('couverture_garanties').replace(/\s/g,'');
+addText(`Couverture garanties : ${couverture} `);
+
+
+  // --- 12 ---
   addSection('12. PROPOSITION AC / DECISION COMITE', 14);
   const cleanMontant = m => {
     if (!m) return '';
@@ -2206,6 +2185,7 @@ function genererSynthesePDF() {
   addText(`Décision comité : ${cleanMontant(document.querySelector('[name="montant_comite"]')?.value)} MGA / ${(document.querySelector('[name="duree_comite"]')?.value || '')} mois`);
   addText(`Mensualité comité : ${val('mensualite_comite')}`);
 
+  // --- 13 ---
   addSection('13. REFERENCES MORALES ET PROFESSIONNELLES', 14);
   document.querySelectorAll('#table_references tbody tr').forEach((tr, i) => {
     const nom = tr.querySelector('input[name="nom_reference[]"]')?.value || '';
@@ -2213,9 +2193,10 @@ function genererSynthesePDF() {
     const rel = tr.querySelector('select[name="relation_reference[]"]')?.value || '';
     const contact = tr.querySelector('input[name="contact_reference[]"]')?.value || '';
     const adresse = tr.querySelector('input[name="adresse_reference[]"]')?.value || '';
-    addText(`  ${i+1}. ${nom} - ${rel} - ${contact || adresse}`, 5);
+    addText(`${i + 1}. ${nom} - ${rel} - ${contact || ''} - ${adresse || ''}`, 5);
   });
 
+  // --- 14 ---
   addSection('14. RISQUES', 14);
   document.querySelectorAll('#table_risques tbody tr').forEach((tr,i) => {
     const risque = tr.querySelector('textarea[name="risque[]"]')?.value || '';
@@ -2226,17 +2207,22 @@ function genererSynthesePDF() {
     if (mitigation) addText(`  Mitigation : ${mitigation}`, 10);
   });
 
-  addSection('15. POINTS D\'ATTACHE', 14);
+  // --- 15 ---
+  addSection("15. POINTS D'ATTACHE", 14);
   const points = document.getElementById('pointsTextarea')?.value || '';
   points.split('\n').forEach(line => {
     if (line.trim()) addText(`  ${line.trim()}`, 5);
   });
 
-  const safeName = (val('nom_prenom_client') || 'Client').replace(/[^a-z0-9]/gi,'_');
+  // --- FIN ---
+  const safeName = (nomClient || 'Client').replace(/[^a-z0-9]/gi,'_');
   const filename = `Synthese_${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
   doc.save(filename);
   alert('✅ PDF généré avec succès !');
 }
+
+
+
 
 document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelectorAll('.opex-input').forEach(input => {
