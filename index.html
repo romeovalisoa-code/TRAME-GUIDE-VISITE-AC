@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRAME - GUIDE CREDIT < 2 500 000 MGA</title>
+<title>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</title>
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -11,7 +12,29 @@
 
 <style>
   body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 20px; margin: 0; }
-  h1 { text-align: center; color: #2c3e50; text-shadow: 1px 1px 2px #aaa; margin: 0; }
+
+  /* === EN-TÊTE AVEC LOGO === */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  header img {
+    height: 60px;
+  }
+  header h1 {
+    font-size: 22px;
+    margin: 0;
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px #aaa;
+  }
+
   form { max-width: 3000px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
   fieldset { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 12px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); }
   legend { font-weight: bold; color: #34495e; padding: 5px 10px; background: #ecf0f1; border-radius: 8px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
@@ -34,61 +57,21 @@
   #total_objet { font-weight: bold; font-size:16px; text-align:left; }
   #total_objet.warning { background: #e74c3c; color: #fff; padding: 2px 5px; border-radius: 5px; }
   #total_objet.normal { background: #2980B9; color: #fff; padding: 2px 5px; border-radius: 5px; }
-  .opex-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
-  .opex-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
-  .opex-table th, .opex-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  .opex-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
-  .opex-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
-  .df-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
-  .df-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
-  .df-table th, .df-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  .df-table input { width: 100%; padding: 4px; box-sizing: border-box; text-align: left; font-weight: bold; }
-  .df-total td { background-color: #444; color: white; font-weight: bold; padding: 5px; }
-  #tableMMP tfoot td { font-weight: bold; }
-  #tableMMP tfoot tr.total-row td { background-color: #696969; color: #fff; }
-  #tableMMP tfoot tr.mmp-row td { background-color: #f39c12; color: #fff; }
-  .activite-tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #3498db; }
-  .activite-tab { padding: 10px 20px; background: #ecf0f1; border: 1px solid #ddd; border-bottom: none; border-radius: 5px 5px 0 0; cursor: pointer; margin-right: 5px; font-weight: bold; }
-  .activite-tab.active { background: #3498db; color: white; }
-  .activite-content { display: none; }
-  .activite-content.active { display: block; }
   input.result { background:#e3f2fd; font-weight:bold; text-align:right; border:none; width: 100%; padding: 3px; }
   .toggle-btn { cursor: pointer; border: none; background: none; font-size: 14px; margin-left: 10px; color: #007BFF; }
   .hidden { display: none; }
   input.sep{ text-align:right; width:100%; box-sizing:border-box; }
   .readonly-input { font-weight: bold; color: white; background-color: #87CEEB; border: 1px solid #87CEEB; padding: 5px; border-radius: 4px; }
-  .numeric { text-align: right; padding-right: 4px; }
-  .resultat-final { width: 30%; font-weight: bold; color: #fff; background-color: #696969; text-align: right; padding: 4px 6px; border: none; border-radius: 4px; }
-  .resultat-bilan { font-weight: bold; color: #fff; background-color: #696969; text-align: right; padding: 4px 6px; border: none; border-radius: 4px; }
-  .section-title { font-weight: bold; color: #0066cc; text-decoration: underline; font-size: 14px; margin-bottom: 6px; }
-  #hist_activite_content { overflow: hidden; max-height: 2000px; transition: max-height 0.28s ease, opacity 0.22s ease; opacity: 1; }
-  #hist_activite_content.collapsed { max-height: 0; opacity: 0; }
-  #activite-wrapper { overflow: hidden; max-height: 2000px; transition: max-height 0.3s ease, opacity 0.3s ease; opacity: 1; }
-  #activite-wrapper.collapsed { max-height: 0; opacity: 0; }
-  .blue-box { background-color: #87CEEB; color: white; font-weight: bold; border: 1px solid #87CEEB; padding: 4px 6px; border-radius: 4px; text-align: right; }
-  .notes-box { width: 100%; min-height: 100px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; font-size: 12px; }
-  #table_cout { font-size: 12px; }
-  #table_cout input { font-size: 12px; padding: 2px 4px; }
-  #table_cout th, #table_cout td { padding: 4px; }
-  #table_garanties { width: auto; table-layout: auto; }
-  #table_garanties td, #table_garanties th { white-space: nowrap; word-break: break-word; }
-  .bold-row { font-weight: bold; }
-  .red-text { color: #d9534f; }
-  #table_cashflow td, #table_cashflow th { padding: 5px; }
-  #table_cout th, #table_cout td { text-align: center; vertical-align: middle; }
-  #table_cout input { text-align: center; width: 100%; box-sizing: border-box; }
-  .mini-legend { display: inline-block; font-weight: bold; padding: 2px 6px; border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9; margin-bottom: 4px; font-size: 0.85em; }
-  .readonly-blue { background-color: #b3d9ff; border: 1px solid #7fbfff; color: #000; }
-  .ratio-red { background-color: #ff0000 !important; color: white !important; }
-  .ratio-green { background-color: #87CEEB !important; color: white !important; }
-  .error { border: 2px solid red !important; }
 </style>
 </head>
 <body>
 
-<div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
-  <h1>TRAME - GUIDE CREDIT < 2 500 000 MGA</h1>
-</div>
+<header>
+  <img src="logo.png" alt="Logo TRAME">
+  <h1>TRAME - GUIDE CREDIT &lt; 2 500 000 MGA</h1>
+</header>
+
+
 
 <form id="mainForm">
 <fieldset>
